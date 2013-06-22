@@ -1,5 +1,5 @@
 
-priv
+src/hipikat/private
 conf/SECRET_KEY
 
 *.DS_Store
