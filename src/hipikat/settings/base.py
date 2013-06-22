@@ -8,11 +8,11 @@
 # https://docs.djangoproject.com/en/dev/topics/settings/
 ###
 
+from inspect import currentframe, getfile
 import sys
 from django.core.exceptions import ImproperlyConfigured
 from unipath import Path
 from .common import project_settings
-from .utils import SecretKeyMissing 
 
 
 # Load settings already defined by modules importing this one.
@@ -34,17 +34,17 @@ if s('ADMINS') and not s('MANAGERS'):
 ###
 # Diretory structure
 ###
-s('PROJECT_DIR', Path(__file__).ancestor(3))    # Repository base directory
+s('PROJECT_DIR', Path(getfile(currentframe())).ancestor(4))
 s('VAR_DIR', PROJECT_DIR.child('var'))
 s('SRC_DIR', PROJECT_DIR.child('src'))
 s('CONF_DIR', PROJECT_DIR.child('conf'))
-s('TMP_DIR', VAR_DIR.child('tmp')
+s('TMP_DIR', VAR_DIR.child('tmp'))
 # var/
 s('DB_DIR', VAR_DIR.child('db'))
 s('FIXTURE_DIRS', (VAR_DIR.child('fixtures'),))
 s('LOG_DIR', VAR_DIR.child('log'))
 s('STATICFILES_DIRS', (VAR_DIR.child('static'),))
-s('MEDIA_ROOT', TMP_DIR.child('media')          # Set to var/media in base_prod
+s('MEDIA_ROOT', TMP_DIR.child('media'))         # Set to var/media in base_prod
 # src/
 s('TEMPLATE_DIRS', (SRC_DIR.child('templates'),))
 # Add src/apps/ to the front of the Python path
@@ -133,9 +133,6 @@ STATICFILES_FINDERS = (
     #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = ')%ks(9ll0ga49p$^5$fa-$yg66o%s9r48t*0mds_&@@fpej8p#'
-
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -166,6 +163,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'hipikat',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -206,3 +204,8 @@ LOGGING = {
         },
     }
 }
+
+
+# Limit attributes seen by imports to actual settings
+__all__ = [setting for setting in dir() if setting.upper() == setting]
+
