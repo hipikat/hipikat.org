@@ -2,6 +2,9 @@
 from .common import project_settings
 
 
+SECRET_KEY = '12345'
+
+
 ###
 # Push settings defined so far onto the project_settings singleton
 project_settings.update(globals())
