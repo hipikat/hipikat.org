@@ -1,0 +1,9 @@
+
+priv
+conf/SECRET_KEY
+
+*.DS_Store
+*.bak
+*.pyc
+*.swp
+*.vimsession
