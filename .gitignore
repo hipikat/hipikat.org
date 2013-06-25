@@ -1,6 +1,6 @@
 
 src/hipikat/private
-conf/SECRET_KEY
+var/SECRET_KEY
 
 *.DS_Store
 *.bak
