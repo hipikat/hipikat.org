@@ -1,21 +1,9 @@
 
-from .common import project_settings
+from . import settings_path
 
 
+PROJECT_NAME = ADMINS = TIME_ZONE = LANGUAGE_CODE = None
 SECRET_KEY = '12345'
 
-
-###
-# Push settings defined so far onto the project_settings singleton
-project_settings.update(globals())
-# Load base project settings
-from .base import *
-
-
-###
-# Data storage and caching
-###
-DATABASES['default'].update({
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': DB_DIR.child('blank_slate.db'),
-})
+# Include our sibling default settings.
+execfile(settings_path.child('default.py'))
