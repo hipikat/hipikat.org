@@ -9,31 +9,46 @@ from collections import Mapping
 LOGGING_SETTINGS_DEFAULTS = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {}
+    'formatters': {},
     'filters': {},
     'handlers': {},
-    'loggers': {}
+    'loggers': {},
 }
 LOGFILE_DEFAULTS = { 
     'level': 'DEBUG',   # Level's set by loggers, so debug here catch anything.
     'class': 'logging.handlers.RotatingFileHandler',    # Keep files,
     'backupCount': 2,                                   # up to 3,
-    'maxBytes': (10 ** 7)                               # of 10 MB each.
-    'formatter': 'verbose',     # Including all potentailly useful information.
+    'maxBytes': (10 ** 7),                              # of 10 MB each.
+    'formatter': 'verbose',     # Including all potentially useful information.
 }
 
 
+def deep_update(mapping, updated):
+    """
+    Deep, non-destructive updating for dictionaries.
+    From: http://stackoverflow.com/a/3233356/218397
+    """
+    for (key, val) in updated.iteritems():
+        if isinstance(val, Mapping):
+            mapping[key] = deep_update(mapping.get(key, {}), val)
+        else:
+            mapping[key] = updated[key]
+    return mapping
+
+
 class LoggingSettings(dict):
-    def __init__(*args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        # Install the default keys/values, either passed in or defined above.
+        self.update(kwargs.pop('defaults') if 'defaults' in kwargs \
+            else LOGGING_SETTINGS_DEFAULTS)
         # Update self with dicts passed to the constructor.
         for arg in args:
-            if isinstance(args, Mapping):
+            if isinstance(arg, Mapping):
                 self.deep_update(arg)
             else:
+                from pprint import pprint
+                pprint(arg)
                 raise TypeError("Only Mappings are accepted as arguments.")
-        # Install the default keys/values, either passed in or defined above.
-        self.deep_update(kwargs.pop('defaults') if 'defaults' in kwargs \
-            else LOGGING_SETTINGS_DEFAULTS)
         # Set logfile defaults from a passed paramter or the defaults above.
         self.logfile_defaults = kwargs.pop('logfile_defaults') \
             if 'logfile_defaults' in kwargs else LOGFILE_DEFAULTS
@@ -44,19 +59,8 @@ class LoggingSettings(dict):
         for (k, v) in kwargs.iteritems():
             self[k] = v
 
-    def deep_update(self, u):
-        """
-        Deep, non-destructive updating for dictionaries.
-        From: http://stackoverflow.com/a/3233356/218397
-        """
-        for (k, v) in u.iteritems():
-            if isinstance(v, Mapping):
-                self[k] = LoggingSettings.deep_update(
-                    self.get(k, LoggingSettings()), v
-                )
-            else:
-                self[k] = u[k]
-        return self
+    def deep_update(self, updated):
+        self = deep_update(self, updated)
 
     def add_logfile_handler_for_app(app_name=None, *prefixes, **kwargs):
         """ 

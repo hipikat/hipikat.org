@@ -12,8 +12,8 @@ from unipath import Path
 
 from django.core.exceptions import ImproperlyConfigured
 
-from . import settings_path, settings_macros
-from .utils import LoggingSettings
+from hipikat.settings import settings_path, settings_macros
+from hipikat.settings.utils import LoggingSettings
 
 
 # Defines g and s; shortcuts to check for and set default settings.
@@ -22,42 +22,37 @@ execfile(settings_macros())
 
 # Required, pre-defined settings.
 try:
-    # Metadata
-    PROJECT_NAME, ADMINS, TIME_ZONE, LANGUAGE_CODE
-    # Debug and development modes
-    DEBUG
+    PROJECT_NAME, DEBUG, ADMINS, TIME_ZONE, LANGUAGE_CODE
 except NameError as e:
-    raise ImproperlyConfigured("%s missing expected setting: %s" %
+    raise ImproperlyConfigured(
+        "Settings module %s missing expected setting: %s" %
         (__name__, e.message))
 
 ###
 # Metadata
 ###
+TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'en-us'
 if not s('MANAGERS'):
     MANAGERS = ADMINS
 
 ###
 # Diretory structure
 ###
-# Project directory is the repository root
+# Project directory is the repository root.
 s('PROJECT_DIR', Path(getfile(currentframe())).ancestor(4))
-s('VAR_DIR', PROJECT_DIR.child('var'))
-s('CONF_DIR', VAR_DIR)
-s('SRC_DIR', PROJECT_DIR.child('src'))
-s('TMP_DIR', VAR_DIR.child('tmp'))
-
-# var/
-s('DB_DIR', VAR_DIR.child('db'))
-s('FIXTURE_DIRS', (VAR_DIR.child('fixtures'),))
-s('LOG_DIR', VAR_DIR.child('log'))
-s('STATIC_ROOT', VAR_DIR.child('static'))
-
-# src/
-s('STATICFILES_DIRS', (SRC_DIR.child('static'),))
-s('TEMPLATE_DIRS', (SRC_DIR.child('templates'),))
-
-# Add src/apps/ to the front of the Python path
-sys.path.insert(0, SRC_DIR.child('apps'))
+# Only fixtures, static and template directories are used internally by Django.
+s('VAR_DIR', PROJECT_DIR.child('var'))              # var/
+s('CONF_DIR', VAR_DIR)                              # var/
+s('DB_DIR', VAR_DIR.child('db'))                    # var/db/
+s('FIXTURE_DIRS', (VAR_DIR.child('fixtures'),))     # var/fixtures/
+s('LOG_DIR', VAR_DIR.child('log'))                  # var/log/
+s('STATIC_ROOT', VAR_DIR.child('static'))           # var/static/
+s('TMP_DIR', VAR_DIR.child('tmp'))                  # var/tmp/
+s('SRC_DIR', PROJECT_DIR.child('src'))              # src/
+s('STATICFILES_DIRS', (SRC_DIR.child('static'),))   # src/static/
+s('TEMPLATE_DIRS', (SRC_DIR.child('templates'),))   # src/templates/
+sys.path.insert(0, SRC_DIR.child('apps'))           # src/apps/
 
 ###
 # Security
@@ -72,7 +67,7 @@ ALLOWED_HOSTS = list(set(list(s('ALLOWED_HOSTS', [])) + ['localhost']))
 if not s('SECRET_KEY'):
     if s('SECRET_KEY_FILE') and s('SECRET_KEY_FILE').exists():
         SECRET_KEY = s('SECRET_KEY_FILE').read_file()
-    else if CONF_DIR.child('SECRET_KEY').exists():
+    elif CONF_DIR.child('SECRET_KEY').exists():
         SECRET_KEY = CONF_DIR.child('SECRET_KEY').read_file()
 
 ###

@@ -1,5 +1,5 @@
 
-from . import settings_path
+from hipikat.settings import settings_path
 
 
 PROJECT_NAME = ADMINS = TIME_ZONE = LANGUAGE_CODE = None

@@ -1,5 +1,5 @@
 
-from . import settings_path
+from hipikat.settings import settings_path
 
 
 # Debugging and development modes
