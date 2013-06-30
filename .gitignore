@@ -1,3 +1,4 @@
+apps
 docs/_build
 src/hipikat/private
 var/SECRET_KEY

@@ -1,3 +1,6 @@
 [submodule "lib/pure"]
 	path = lib/pure
 	url = git@github.com:yui/pure.git
+[submodule "lib/django-revkom"]
+	path = lib/django-revkom
+	url = git@github.com:hipikat/django-revkom.git
