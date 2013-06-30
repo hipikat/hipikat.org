@@ -34,4 +34,19 @@ INSTALLED_APPS = INSTALLED_APPS[0:1] + [
     # django-crispy-forms: Forms have never been this crispy.
     # http://django-crispy-forms.readthedocs.org/en/latest/
     'crispy_forms',
+
+    # django-fluent-blogs: A basic blogging engine.
+    # https://github.com/edoburu/django-fluent-blogs/
+    'fluent_blogs',
+
+    # django-fluent-contents: The fluent_contents module offers a widget.
+    # engine to display various content on a Django page.
+    # https://github.com/edoburu/django-fluent-contents
+    'fluent_contents',
+    'fluent_contents.plugins.text',
+
+    # django-wysiwyg: Converts HTML textareas into rich HTML editors.
+    # https://github.com/pydanny/django-wysiwyg
+    'django_wysiwyg',
+
 ] + INSTALLED_APPS[1:]
