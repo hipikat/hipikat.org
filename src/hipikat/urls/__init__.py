@@ -1,5 +1,8 @@
+
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+
+from hipikat.views import front_page
 
 
 admin.autodiscover()
@@ -14,4 +17,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^', front_page(), name="front_page"),
 )

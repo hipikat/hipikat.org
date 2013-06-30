@@ -1,5 +1,5 @@
 
-from hipikat.settings import settings_path
+from revkom.settings import settings_path
 
 
 # Debugging and development modes
@@ -9,4 +9,7 @@ DEBUG = True
 execfile(settings_path.child('base.py'))
 
 # Directory structure
-s('MEDIA_ROOT', TMP_DIR.child('media'))
+s('MEDIA_ROOT', VAR_DIR.child('media'))
+
+# Databases
+DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2'}}
