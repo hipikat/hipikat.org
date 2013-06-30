@@ -1,3 +1,4 @@
+# hipikat/urls/__init__.py
 
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
@@ -7,16 +8,12 @@ from hipikat.views import front_page
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'hipikat.views.home', name='home'),
-    # url(r'^hipikat/', include('hipikat.foo.urls')),
+urlpatterns = patterns(
+    '',
+    # Django admin and admin docs
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
-
+    # Front page
     url(r'^', front_page(), name="front_page"),
 )

@@ -1,3 +1,4 @@
+# hipikat/settings/dev.py
 
 from inspect import currentframe, getfile
 

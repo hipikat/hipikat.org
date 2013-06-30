@@ -1,3 +1,4 @@
+# hipikat/settings/base.py
 
 from revkom.settings import settings_path
 
@@ -17,7 +18,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = 'hipikat'
 CACHES = {'default': {
     'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
     'LOCATION': '127.0.0.1:11211',
-    'TIMEOUT': 60, 
+    'TIMEOUT': 60,
 }}
 
 ###
