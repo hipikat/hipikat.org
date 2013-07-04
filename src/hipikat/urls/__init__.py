@@ -15,7 +15,10 @@ urlpatterns = patterns(
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Blog
-    url(r'^blog/', include('fluent_blogs.urls')),
+    #url(r'^blog/', include('fluent_blogs.urls')),
+
+    # Fluent pages
+    url(r'', include('fluent_pages.urls')),
 
     # Front page
     url(r'^', front_page(), name="front_page"),
