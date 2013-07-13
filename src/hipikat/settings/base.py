@@ -1,5 +1,6 @@
 # hipikat/settings/base.py
 
+from unipath import Path
 from revkom.settings import base_settings_mixin
 
 
@@ -10,6 +11,7 @@ g = globals()
 ###
 # Metadata
 PROJECT_NAME = 'hipikat'
+PROJECT_DIR = Path(__file__).ancestor(4)
 ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
 LANGUAGE_CODE = 'en-au'
 TIME_ZONE = 'Australia/Perth'
@@ -22,6 +24,9 @@ CACHES = {'default': {
     'LOCATION': '127.0.0.1:11211',
     'TIMEOUT': 60,
 }}
+# Testing
+#TEST_RUNNER = 'hipikat.testrunner.OurCoverageRunner'
+
 
 # Enable pre-configured apps from revkom_settings
 REVKOM_INSTALL_APPS = [
@@ -34,25 +39,25 @@ REVKOM_INSTALL_APPS = [
     # django-fluent-contents: The fluent_contents module offers a widget.
     # engine to display various content on a Django page.
     # https://github.com/edoburu/django-fluent-contents
-    'fluent_contents',
-    'fluent_contents.plugins.code',
-    'fluent_contents.plugins.gist',
-    'fluent_contents.plugins.rawhtml',
-    'fluent_contents.plugins.text',
+    #'fluent_contents',
+    #'fluent_contents.plugins.code',
+    #'fluent_contents.plugins.gist',
+    #'fluent_contents.plugins.rawhtml',
+    #'fluent_contents.plugins.text',
     # django-fluent-pages: A polymorphic page structure... content in a tree.
     # https://github.com/edoburu/django-fluent-pages
-    'fluent_pages',
-    'mptt',
-    'polymorphic',
-    'polymorphic_tree',
-    'fluent_pages.pagetypes.fluentpage',
-    'fluent_pages.pagetypes.redirectnode',
+    #'fluent_pages',
+    #'mptt',
+    #'polymorphic',
+    #'polymorphic_tree',
+    #'fluent_pages.pagetypes.fluentpage',
+    #'fluent_pages.pagetypes.redirectnode',
     # django-fluent-blogs: A basic blogging engine.
     # https://github.com/edoburu/django-fluent-blogs/
-    'fluent_blogs',
-    'categories',
-    'categories.editor',
-    'fluent_blogs.pagetypes.blogpage',
+    #'fluent_blogs',
+    #'categories',
+    #'categories.editor',
+    #'fluent_blogs.pagetypes.blogpage',
 ]
 
 ###
@@ -62,3 +67,16 @@ execfile(base_settings_mixin('prod' if not g.get('DEBUG', False) else 'debug'))
 ###
 # TODO: Inherit default settings for installed apps
 #map(execfile, default_settings_mixins(g))
+
+
+###
+# Third-party apps
+###
+# coverage
+#COVERAGE_MODULE_EXCLUDES = ['tests$', 'settings$', 'urls$', 'common.views.test',
+#    'init', 'django', 'south', 'crispy_forms'] + INSTALLED_APPS
+#print("********" + COVERAGE_MODULE_EXCLUDES[0])
+#COVERAGE_MODULE_EXCLUDES.pop(COVERAGE_MODULE_EXCLUDES.index(PROJECT_NAME))
+#COVERAGE_MODULE_EXCLUDES.pop(COVERAGE_MODULE_EXCLUDES.index('revkom'))
+
+#PROJECT_APPS = ['hipikat', 'revkom']
