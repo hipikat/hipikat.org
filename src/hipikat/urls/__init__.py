@@ -1,5 +1,6 @@
 # hipikat/urls/__init__.py
 
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -7,6 +8,7 @@ from hipikat.views import front_page
 
 
 admin.autodiscover()
+
 
 urlpatterns = patterns(
     '',
@@ -18,8 +20,8 @@ urlpatterns = patterns(
     #url(r'^blog/', include('fluent_blogs.urls')),
 
     # Fluent pages
-    url(r'', include('fluent_pages.urls')),
+    #url(r'', include('fluent_pages.urls')),
 
     # Front page
-    url(r'^', front_page(), name="front_page"),
+    url(r'^$', front_page(), name="front_page"),
 )

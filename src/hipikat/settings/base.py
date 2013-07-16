@@ -15,8 +15,10 @@ PROJECT_DIR = Path(__file__).ancestor(4)
 ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
 LANGUAGE_CODE = 'en-au'
 TIME_ZONE = 'Australia/Perth'
+
 # Security
 ALLOWED_HOSTS = ['.hipikat.org']
+
 # Caching
 CACHE_MIDDLEWARE_KEY_PREFIX = 'hipikat'
 CACHES = {'default': {
@@ -24,9 +26,6 @@ CACHES = {'default': {
     'LOCATION': '127.0.0.1:11211',
     'TIMEOUT': 60,
 }}
-# Testing
-#TEST_RUNNER = 'hipikat.testrunner.OurCoverageRunner'
-
 
 # Enable pre-configured apps from revkom_settings
 REVKOM_INSTALL_APPS = [
@@ -63,20 +62,3 @@ REVKOM_INSTALL_APPS = [
 ###
 # Inherit default settings from a revkom settings file.
 execfile(base_settings_mixin('prod' if not g.get('DEBUG', False) else 'debug'))
-
-###
-# TODO: Inherit default settings for installed apps
-#map(execfile, default_settings_mixins(g))
-
-
-###
-# Third-party apps
-###
-# coverage
-#COVERAGE_MODULE_EXCLUDES = ['tests$', 'settings$', 'urls$', 'common.views.test',
-#    'init', 'django', 'south', 'crispy_forms'] + INSTALLED_APPS
-#print("********" + COVERAGE_MODULE_EXCLUDES[0])
-#COVERAGE_MODULE_EXCLUDES.pop(COVERAGE_MODULE_EXCLUDES.index(PROJECT_NAME))
-#COVERAGE_MODULE_EXCLUDES.pop(COVERAGE_MODULE_EXCLUDES.index('revkom'))
-
-#PROJECT_APPS = ['hipikat', 'revkom']

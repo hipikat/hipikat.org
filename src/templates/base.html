@@ -1,12 +1,17 @@
 {# load revkom_tags #}
+{% load static %}
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7 no-js" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8 no-js" lang="en"> <![endif]-->
 <!--[if IE 8]> <html class="lt-ie9 no-js" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<!-- Conditional <html> classes follow Paul Irish's recommendation -->
+<!-- Conditional <html> classes follow Paul Irish's recommendation circa 2013 -->
 <head>
     <title>{% block page_title %}{% if page_title %}{{ page_title }} •
         {% endif %}Hipikat.org{% endblock %}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/hipikat.css' %}" />
 </head>
 <body>
 
