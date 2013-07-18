@@ -61,4 +61,11 @@ REVKOM_INSTALL_APPS = [
 
 ###
 # Inherit default settings from a revkom settings file.
-execfile(base_settings_mixin('prod' if not g.get('DEBUG', False) else 'debug'))
+execfile(base_settings_mixin('prod' if not g.get('DEBUG') else 'debug'))
+###
+
+# Add static files from submodule libraries to known staticfiles.
+REVKOM_STATICFILES = {
+    'lib/foundation/modernizr.js': g['LIB_DIR'].child(
+        *'zurb-foundation/js/vendor/custom.modernizr.js'.split('/')),
+}

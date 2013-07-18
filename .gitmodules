@@ -1,3 +1,6 @@
 [submodule "lib/django-revkom"]
 	path = lib/django-revkom
 	url = git@github.com:hipikat/django-revkom.git
+[submodule "lib/zurb-foundation"]
+	path = lib/zurb-foundation
+	url = git@github.com:zurb/foundation.git
