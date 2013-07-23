@@ -4,3 +4,9 @@
 [submodule "lib/zurb-foundation"]
 	path = lib/zurb-foundation
 	url = git@github.com:zurb/foundation.git
+[submodule "lib/compass"]
+	path = lib/compass
+	url = git@github.com:chriseppstein/compass.git
+[submodule "lib/pyScss"]
+	path = lib/pyScss
+	url = git@github.com:hipikat/pyScss.git

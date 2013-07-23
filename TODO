@@ -1,8 +1,9 @@
 
-Change unique_list(flat_list( to set_list(; make it convert Nones to
-empty lists. - expand the tests for these things
-
 Versioning
 http://www.python.org/dev/peps/pep-0440/#pre-releases
 
 Class-based template tags: revkom.templatetags.common.TemplateTag
+
+Docs
+
+Search

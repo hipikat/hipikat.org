@@ -16,24 +16,29 @@ DEBUG = True
 ###
 # Inherit from local base (and implicitely revkom.settings.base_debug).
 execfile(Path(getfile(currentframe())).parent.child('base.py'))
+###
+
 
 # Directory structure
 DEV_DIR = g['PROJECT_DIR'].child('dev')
+
 # Caching
 CACHE_MIDDLEWARE_KEY_PREFIX = 'hipikat-dev'
+
 # Databases
-if 'TESTING' not in g:
+if g.get('TESTING', False):
+    DATABASES = {'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': g['DB_DIR'].child('dev-test.db')
+    }}
+else:
     DATABASES = {'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'hipikat_dev',
         'USER': 'zeno',
         'HOST': '127.0.0.1',
     }}
-else:
-    DATABASES = {'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': g['DB_DIR'].child('dev-test.db')
-    }}
+
 # Security
 ALLOWED_HOSTS = unique_string_list(
     g.get('ALLOWED_HOSTS'), ['evilspa.dyndns.org'])
@@ -52,6 +57,3 @@ remove_middleware = [
 map(partial(middleware.insert, 0), prepend_middleware)
 map(middleware.append, append_middleware)
 map(middleware.remove, remove_middleware)
-
-# Theme development
-g['STATICFILES_DIRS'].insert(0, DEV_DIR.child('theme-dev'))

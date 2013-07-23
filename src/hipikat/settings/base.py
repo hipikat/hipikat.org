@@ -1,5 +1,6 @@
 # hipikat/settings/base.py
 
+from functools import partial
 from unipath import Path
 from revkom.settings import base_settings_mixin
 
@@ -64,8 +65,33 @@ REVKOM_INSTALL_APPS = [
 execfile(base_settings_mixin('prod' if not g.get('DEBUG') else 'debug'))
 ###
 
+
+# Logging
+#g['LOGGING'].deep_update({
+#    'loggers': {
+#    }
+#})
+
+# TODO: Make this shit better by making a settings string list class
+[apply(partial(g['STATICFILES_FINDERS'].insert,0), finder) for finder in (
+    ['revkom.staticfiles.finders.custom.CustomFileFinder'],
+    ['revkom.staticfiles.finders.sassy.SassyFileFinder'],
+)]
+
 # Add static files from submodule libraries to known staticfiles.
 REVKOM_STATICFILES = {
-    'lib/foundation/modernizr.js': g['LIB_DIR'].child(
-        *'zurb-foundation/js/vendor/custom.modernizr.js'.split('/')),
+    'lib/foundation/modernizr.js': Path(g['LIB_DIR'],
+        'zurb-foundation/js/vendor/custom.modernizr.js'),
 }
+REVKOM_SASSYFILES_DEBUG = True
+REVKOM_SASSYFILES_LOAD_PATHS = [
+    Path(g['LIB_DIR'], 'zurb-foundation/scss/'),
+    Path(g['LIB_DIR'], 'compass/frameworkds/compass/stylesheets/'),
+]
+REVKOM_SASSYFILES_BUILD_DIR = g['TMP_DIR'].child('_build_sassyfiles')
+REVKOM_SASSYFILES_BUILD_DIR.mkdir()
+REVKOM_SASSYFILES_COMPRESS = False
+REVKOM_SASSYFILES = {
+    'stylesheets/hipikat.css': Path(SRC_DIR, 'sass/hipikat.scss')
+}
+
