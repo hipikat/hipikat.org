@@ -10,3 +10,6 @@
 [submodule "lib/pyScss"]
 	path = lib/pyScss
 	url = git@github.com:hipikat/pyScss.git
+[submodule "lib/kr-sphinx-themes"]
+	path = lib/kr-sphinx-themes
+	url = git@github.com:hipikat/kr-sphinx-themes.git
