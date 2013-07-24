@@ -13,3 +13,6 @@
 [submodule "lib/kr-sphinx-themes"]
 	path = lib/kr-sphinx-themes
 	url = git@github.com:hipikat/kr-sphinx-themes.git
+[submodule "lib/django"]
+	path = lib/django
+	url = git@github.com:django/django.git

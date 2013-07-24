@@ -1,29 +1,27 @@
-.. Hipikat.org documentation master file, created by
-   sphinx-quickstart on Sat Jun 29 16:41:21 2013.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Welcome to the Hipikat.org docs!
+================================
 
-Welcome to Hipikat.org's documentation!
-=======================================
+Hipikat.org is a personal website belonging to me – Adam Wright. It's built in
+the Python_ web framework Django_ and the design uses `Zurb Foundation`_. I
+make the site open source, release it under an `MIT license`_ and write this
+documentation:
 
-Hipikat.org is the personal website belonging to me – Adam Wright. It's built
-in Django and the design uses Zurb Foundation. I make it open source, release
-it under an MIT license and write this documentation:
+.. _Python: http://python.org
+.. _Django: https://www.djangoproject.com
+.. _Zurb Foundation: http://foundation.zurb.com
+.. _MIT License: https://en.wikipedia.org/wiki/MIT_License
 
 - For the interest of developers integrating the same or similar components
 - Due to mild communist tendencies
-- To remind myself how it works once I've forgotten, and want to change it
-- I enjoy fastidiously documenting things
-- As a live portfolio for potential future employers and co-conspirators.
+- To remind myself how it works once I've forgotten, and need to change things
+- Because I enjoy fastidiously documenting things
+- As a portfolio and demonstration of some technologies that interest me.
 
-Here i am referencing Python's ``enumerate()`` function:
+My settings make use of the :py:func:`execfile` things and :django:automodule:`django.db.models`.
 
-.. py:function:: enumerate(sequence[, start=0])
+.. automodule:: hipikat.middleware
+   :members:
 
-   Return an iterator that yields tuples of an index and an item of the
-      *sequence*. (And so on.)
-
-Contents:
 
 .. toctree::
    :maxdepth: 2

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Hipikat.org documentation build configuration file, created by
-# sphinx-quickstart on Sat Jun 29 16:41:21 2013.
+# sphinx-quickstart on Tue Jul 23 20:51:03 2013.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -16,7 +16,8 @@ import sys, os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../src'))
+sys.path.insert(0, os.path.abspath('../lib/kr-sphinx-themes'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -25,9 +26,7 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage',
-    'sphinx.ext.viewcode']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.viewcode']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -96,7 +95,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'nature'
+html_theme = 'kletsin'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -104,7 +103,7 @@ html_theme = 'nature'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+html_theme_path = ['_themes']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -169,7 +168,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Hipikatorgdoc'
+htmlhelp_basename = 'Hipikatdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -188,7 +187,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Hipikatorg.tex', u'Hipikat.org Documentation',
+  ('index', 'Hipikat.tex', u'Hipikat.org Documentation',
    u'Adam Wright', 'manual'),
 ]
 
@@ -218,7 +217,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'hipikatorg', u'Hipikat.org Documentation',
+    ('index', 'hipikat', u'Hipikat.org Documentation',
      [u'Adam Wright'], 1)
 ]
 
@@ -232,8 +231,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Hipikatorg', u'Hipikat.org Documentation',
-   u'Adam Wright', 'Hipikatorg', 'One line description of project.',
+  ('index', 'Hipikat', u'Hipikat.org Documentation',
+   u'Adam Wright', 'Hipikat', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -251,4 +250,8 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/2/', None),
+    'django': ('http://docs.djangoproject.com/en/dev/',
+        'http://docs.djangoproject.com/en/dev/_objects/'),
+}
