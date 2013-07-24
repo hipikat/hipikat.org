@@ -19,6 +19,8 @@ documentation:
 
 My settings make use of the :py:func:`execfile` things and :django:automodule:`django.db.models`.
 
+Referencing a Django setting: :django:setting:`ROOT_URLCONF`
+
 .. automodule:: hipikat.middleware
    :members:
 
