@@ -84,7 +84,7 @@ body
     font-weight: 400
     line-height: $base-line-height
     // Debug vertical rhythm
-    //@include debug-vertical-alignment
+    @include debug-vertical-alignment
 
 @function mobile-heading-reducer($font-size, $reduction: $mobile-heading-reduction)
     $original-increase: $font-size - $base-font-size
@@ -100,7 +100,6 @@ h1
     color: #202020
     font-family: "Roboto Slab", sans-serif
     font-weight: 700
-    //+adjust-font-size-to(mobile-heading-reducer($h1-font-size))
     +adjust-mobile-heading($h1-font-size)
     @media #{$small}
         +font-with-margins($h1-font-size, 0.625, 2)
@@ -123,8 +122,8 @@ h3
 h4
     +font-with-margins($h4-font-size, 0.7, 2)
     font-weight: 700
-    //+adjust-font-size-to($base-font-size)
-    +adjust-mobile-heading($h4-font-size)
+    +adjust-font-size-to($base-font-size)
+    //+adjust-mobile-heading($h4-font-size)
     @media #{$small}
         +font-with-margins($h4-font-size, 0.7, 2)
         font-weight: normal
@@ -133,10 +132,13 @@ h5, h6
     +font-with-margins($h5-font-size, 0.7, 2)
     font-weight: 700
     letter-spacing: 0.375px
-    //+adjust-font-size-to($base-font-size)
-    +adjust-mobile-heading($h5-font-size)
+    +adjust-font-size-to($base-font-size)
+    //+adjust-mobile-heading($h5-font-size)
     @media #{$small}
-        +font-with-margins($h5-font-size, 0.7, 2)
+        //+font-with-margins($h5-font-size, 0.4, 2)
+        +adjust-font-size-to($h5-font-size)
+        margin-top: 0
+        +margin-trailer(1, $base-font-size)
         font-weight: normal
 p
     margin: 0

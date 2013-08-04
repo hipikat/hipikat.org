@@ -1374,7 +1374,17 @@ body {
   background-color: #f1f1f1;
   font-family: "Roboto", sans-serif;
   font-weight: 400;
-  line-height: 22px; }
+  line-height: 22px;
+  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(5%, rgba(0, 0, 0, 0.5)), color-stop(5%, rgba(0, 0, 0, 0)));
+  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%);
+  background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%);
+  background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%);
+  background-image: linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%);
+  -webkit-background-size: 100% 1.375em;
+  -moz-background-size: 100% 1.375em;
+  -o-background-size: 100% 1.375em;
+  background-size: 100% 1.375em;
+  background-position: left top; }
 
 /* line 99, ../../styles/sass/hipikat.sass */
 h1 {
@@ -1389,10 +1399,10 @@ h1 {
     h1 {
       font-size: 2.33333em;
       line-height: 1.17857em;
-      margin-top: 0.3683em;
-      margin-bottom: 0.22098em; } }
+      margin-top: 0.73661em;
+      margin-bottom: 0.44196em; } }
 
-/* line 107, ../../styles/sass/hipikat.sass */
+/* line 106, ../../styles/sass/hipikat.sass */
 h2 {
   color: #202020;
   font-family: "Roboto Slab", sans-serif;
@@ -1402,14 +1412,14 @@ h2 {
   line-height: 1.73684em;
   line-height: 28.5px; }
   @media only screen and (min-width: 768px) {
-    /* line 107, ../../styles/sass/hipikat.sass */
+    /* line 106, ../../styles/sass/hipikat.sass */
     h2 {
       font-size: 2em;
       line-height: 1.375em;
-      margin-top: 0.44688em;
-      margin-bottom: 0.24062em; } }
+      margin-top: 0.89375em;
+      margin-bottom: 0.48125em; } }
 
-/* line 116, ../../styles/sass/hipikat.sass */
+/* line 115, ../../styles/sass/hipikat.sass */
 h3 {
   font-weight: 500;
   letter-spacing: 0.375px;
@@ -1417,69 +1427,67 @@ h3 {
   line-height: 1.98em;
   line-height: 25px; }
   @media only screen and (min-width: 768px) {
-    /* line 116, ../../styles/sass/hipikat.sass */
+    /* line 115, ../../styles/sass/hipikat.sass */
     h3 {
       font-size: 1.66667em;
       line-height: 1.65em;
-      margin-top: 0.5775em;
-      margin-bottom: 0.2475em; } }
+      margin-top: 1.155em;
+      margin-bottom: 0.495em; } }
 
-/* line 123, ../../styles/sass/hipikat.sass */
+/* line 122, ../../styles/sass/hipikat.sass */
 h4 {
   font-size: 1.33333em;
   line-height: 2.0625em;
-  margin-top: 0.72188em;
-  margin-bottom: 0.30938em;
+  margin-top: 1.44375em;
+  margin-bottom: 0.61875em;
   font-weight: 700;
-  font-size: 1.19444em;
-  line-height: 2.30233em;
-  line-height: 21.5px; }
+  font-size: 1em;
+  line-height: 1.375em; }
   @media only screen and (min-width: 768px) {
-    /* line 123, ../../styles/sass/hipikat.sass */
+    /* line 122, ../../styles/sass/hipikat.sass */
     h4 {
       font-size: 1.33333em;
       line-height: 2.0625em;
-      margin-top: 0.72188em;
-      margin-bottom: 0.30938em;
+      margin-top: 1.44375em;
+      margin-bottom: 0.61875em;
       font-weight: normal; } }
 
-/* line 131, ../../styles/sass/hipikat.sass */
+/* line 130, ../../styles/sass/hipikat.sass */
 h5, h6 {
   font-family: "Roboto Condensed";
   font-size: 1.11111em;
   line-height: 1.2375em;
-  margin-top: 0.86625em;
-  margin-bottom: 0.37125em;
+  margin-top: 1.7325em;
+  margin-bottom: 0.7425em;
   font-weight: 700;
   letter-spacing: 0.375px;
-  font-size: 1.06481em;
-  line-height: 1.2913em;
-  line-height: 19.16667px; }
+  font-size: 1em;
+  line-height: 1.375em; }
   @media only screen and (min-width: 768px) {
-    /* line 131, ../../styles/sass/hipikat.sass */
+    /* line 130, ../../styles/sass/hipikat.sass */
     h5, h6 {
       font-size: 1.11111em;
       line-height: 1.2375em;
-      margin-top: 0.86625em;
-      margin-bottom: 0.37125em;
+      margin-top: 0;
+      margin-bottom: 1.375em;
       font-weight: normal; } }
 
-/* line 141, ../../styles/sass/hipikat.sass */
+/* line 143, ../../styles/sass/hipikat.sass */
 p {
   margin: 0;
   margin-bottom: 1.375em; }
 
-/* line 148, ../../styles/sass/hipikat.sass */
+/* line 150, ../../styles/sass/hipikat.sass */
 .head .site-title {
   margin-top: 0.125em; }
-  /* line 150, ../../styles/sass/hipikat.sass */
+  /* line 152, ../../styles/sass/hipikat.sass */
   .head .site-title h1, .head .site-title p {
     display: inline; }
     @media only screen and (min-width: 768px) {
-      /* line 150, ../../styles/sass/hipikat.sass */
+      /* line 152, ../../styles/sass/hipikat.sass */
       .head .site-title h1, .head .site-title p {
         display: block; } }
-  /* line 154, ../../styles/sass/hipikat.sass */
+  /* line 156, ../../styles/sass/hipikat.sass */
   .head .site-title h1 {
     margin: 0;
     font-family: Roboto, sans-serif;
@@ -1487,14 +1495,14 @@ p {
     font-size: 15.55556px;
     line-height: 26.66667px; }
   @media only screen and (min-width: 768px) {
-    /* line 148, ../../styles/sass/hipikat.sass */
+    /* line 150, ../../styles/sass/hipikat.sass */
     .head .site-title {
       text-align: right; }
-      /* line 162, ../../styles/sass/hipikat.sass */
+      /* line 164, ../../styles/sass/hipikat.sass */
       .head .site-title h1 {
         font-size: 26.66667px; } }
 
-/* line 167, ../../styles/sass/hipikat.sass */
+/* line 169, ../../styles/sass/hipikat.sass */
 .page .note p {
   font-size: 0.8em;
   line-height: 1.71875em; }
