@@ -1,4 +1,10 @@
-/* Top-level stylesheet for pages under http://hipikat.org
+/* Top-level stylesheet (source) for pages under http://hipikat.org/
+ * 
+ * This layout currently relies on the inclusion of a sub-set of faces
+ * from Roboto, on Google Fonts. The current selection is at:
+ * http://www.google.com/fonts#UsePlace:use/Collection:Roboto+Condensed:\
+ * 400,700|Roboto:400,400italic,500,700,700italic|Roboto+Slab:400,700
+
 
 // Required global Foundation settings
 @import settings
@@ -72,12 +78,10 @@ $prev-breakpoint: $small-screen - 1
     $prev-breakpoint: $prev-breakpoint + floor($addition)
     $body-padding: floor(($prev-breakpoint - $small-screen) / 2) * $prev-breakpoint / $max-breakpoint
 
-
 // Debug grid system
 //.columns
 //    border: 1px solid orange
 //    margin-top: -2px
-
 
 // Typography
 body
@@ -140,13 +144,12 @@ h5, h6
         +margin-trailer(1, $base-font-size)
         font-weight: normal
 p
-    margin: 0
     +adjust-font-size-to($mobile-font-size)
+    margin: 0
     +margin-trailer(1, $mobile-font-size)
     @media #{$small}
         +adjust-font-size-to($base-font-size)
         +margin-trailer(1, $base-font-size)
-        
 
 // Page header
 .head
