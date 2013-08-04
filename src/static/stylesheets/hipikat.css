@@ -1,6 +1,4 @@
-/* Zurb Foundation's global settings file is a big-ass list of commented-out
- * defaults - set any we customise here for readability and keep the
- * settings mixin file on hand as a reference. */
+/* Top-level stylesheet for pages under http://hipikat.org */
 /*! normalize.css v2.1.1 | MIT License | git.io/normalize */
 /* ==========================================================================
    HTML5 display definitions
@@ -378,6 +376,9 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
+/* Zurb Foundation's global settings file is a big-ass list of
+ * commented-out defaults - set any we customise here for readability
+ * and keep the settings mixin file on hand as a reference. */
 /* line 264, ../../../../../.rvm/gems/ruby-1.9.3-p448/gems/zurb-foundation-4.3.1/scss/foundation/components/_global.scss */
 *,
 *:before,
@@ -1323,124 +1324,151 @@ html {
   font-size: 15px;
   line-height: 1.375em; }
 
-/* line 31, ../../styles/sass/hipikat.scss */
+/* line 43, ../../styles/sass/hipikat.sass */
 body {
   color: #404040;
   background-color: #f1f1f1;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   line-height: 20.625px; }
 
-/* line 41, ../../styles/sass/hipikat.scss */
+/* Letter spacing is used subtly for optical balance between the second
+ * and third-level headings. */
+/* line 59, ../../styles/sass/hipikat.sass */
 h1 {
+  font-family: "Roboto Slab", sans-serif;
+  font-size: 2.33333em;
+  line-height: 1.17857em;
+  margin-top: 0.73661em;
+  margin-bottom: 0.44196em;
+  font-weight: 700; }
+
+/* line 63, ../../styles/sass/hipikat.sass */
+h2 {
+  font-family: "Roboto Slab", sans-serif;
   font-size: 2em;
   line-height: 1.375em;
-  margin: 1.54688em 0 0.51563em 0; }
+  margin-top: 0.89375em;
+  margin-bottom: 0.48125em;
+  font-weight: 400;
+  letter-spacing: -0.375px; }
 
-/* line 51, ../../styles/sass/hipikat.scss */
-h2 {
-  font-size: 25.0px; }
-
-/* line 54, ../../styles/sass/hipikat.scss */
+/* line 68, ../../styles/sass/hipikat.sass */
 h3 {
-  font-size: 20px; }
+  font-size: 1.66667em;
+  line-height: 1.65em;
+  margin-top: 1.155em;
+  margin-bottom: 0.495em;
+  font-weight: 400;
+  letter-spacing: 0.375px; }
 
-/* line 57, ../../styles/sass/hipikat.scss */
+/* line 72, ../../styles/sass/hipikat.sass */
 h4 {
-  font-size: 15px; }
+  font-size: 25.0px;
+  font-weight: 300; }
 
-/* line 60, ../../styles/sass/hipikat.scss */
+/* line 76, ../../styles/sass/hipikat.sass */
 h5 {
-  font-size: 15px; }
+  font-family: "Roboto Condensed";
+  margin-top: 0;
+  margin-bottom: 1.03125em;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.375px; }
 
-/* line 63, ../../styles/sass/hipikat.scss */
+/* line 83, ../../styles/sass/hipikat.sass */
 h6 {
-  font-size: 15px; }
+  font-family: "Roboto Condensed";
+  margin-top: 0;
+  margin-bottom: 1.2375em;
+  font-size: 16.66667px;
+  font-weight: 300;
+  letter-spacing: 0.375px; }
 
-/* line 66, ../../styles/sass/hipikat.scss */
+/* line 91, ../../styles/sass/hipikat.sass */
 p {
   margin: 0;
   margin-bottom: 1.375em; }
 
 @media only screen and (min-width: 341px) {
-  /* line 77, ../../styles/sass/hipikat.scss */
+  /* line 102, ../../styles/sass/hipikat.sass */
   body {
     padding: 0 0px; } }
 @media only screen and (min-width: 426px) {
-  /* line 77, ../../styles/sass/hipikat.scss */
+  /* line 102, ../../styles/sass/hipikat.sass */
   body {
-    padding: 0 3.48633px; } }
+    padding: 0 3.48632px; } }
 @media only screen and (min-width: 532px) {
-  /* line 77, ../../styles/sass/hipikat.scss */
+  /* line 102, ../../styles/sass/hipikat.sass */
   body {
-    padding: 0 9.85254px; } }
+    padding: 0 9.85252px; } }
 @media only screen and (min-width: 664px) {
-  /* line 77, ../../styles/sass/hipikat.scss */
+  /* line 102, ../../styles/sass/hipikat.sass */
   body {
-    padding: 0 20.84825px; } }
+    padding: 0 20.8482px; } }
 @media only screen and (min-width: 768px) {
-  /* line 87, ../../styles/sass/hipikat.scss */
+  /* line 113, ../../styles/sass/hipikat.sass */
   body {
     padding: 0 0; } }
 @media only screen and (min-width: 959px) {
-  /* line 87, ../../styles/sass/hipikat.scss */
+  /* line 113, ../../styles/sass/hipikat.sass */
   body {
     padding: 0 29.62565px; } }
 @media only screen and (min-width: 1198px) {
-  /* line 87, ../../styles/sass/hipikat.scss */
+  /* line 113, ../../styles/sass/hipikat.sass */
   body {
     padding: 0 83.38477px; } }
 @media only screen and (min-width: 1497px) {
-  /* line 87, ../../styles/sass/hipikat.scss */
+  /* line 113, ../../styles/sass/hipikat.sass */
   body {
     padding: 0 177.26042px; } }
 @media only screen and (min-width: 1871px) {
-  /* line 87, ../../styles/sass/hipikat.scss */
+  /* line 113, ../../styles/sass/hipikat.sass */
   body {
     padding: 0 335.4069px; } }
 @media only screen and (min-width: 2338px) {
-  /* line 87, ../../styles/sass/hipikat.scss */
+  /* line 113, ../../styles/sass/hipikat.sass */
   body {
     padding: 0 596.42188px; } }
 @media only screen and (min-width: 2922px) {
-  /* line 87, ../../styles/sass/hipikat.scss */
+  /* line 113, ../../styles/sass/hipikat.sass */
   body {
     padding: 0 1023.11068px; } }
-/* line 95, ../../styles/sass/hipikat.scss */
+/* line 120, ../../styles/sass/hipikat.sass */
 .header .site-title h1, .header .site-title p {
   display: inline;
   font-weight: 300; }
   @media only screen and (min-width: 768px) {
-    /* line 95, ../../styles/sass/hipikat.scss */
+    /* line 120, ../../styles/sass/hipikat.sass */
     .header .site-title h1, .header .site-title p {
       display: block; } }
-/* line 102, ../../styles/sass/hipikat.scss */
+/* line 125, ../../styles/sass/hipikat.sass */
 .header .site-title h1 {
-  font-size: 20px;
-  line-height: 20px;
+  font-size: 25.0px;
+  line-height: 25.0px;
   margin: 0; }
 @media only screen and (min-width: 768px) {
-  /* line 94, ../../styles/sass/hipikat.scss */
+  /* line 119, ../../styles/sass/hipikat.sass */
   .header .site-title {
     text-align: right; } }
 
-/* line 113, ../../styles/sass/hipikat.scss */
+/* line 133, ../../styles/sass/hipikat.sass */
 .blog-summary h1 {
   padding-right: 0.5em; }
-/* line 117, ../../styles/sass/hipikat.scss */
+/* line 136, ../../styles/sass/hipikat.sass */
 .blog-summary .meta p {
   display: inline;
   font-size: 0.8em;
   line-height: 1.71875em;
   margin: 0; }
 @media only screen and (min-width: 768px) {
-  /* line 127, ../../styles/sass/hipikat.scss */
+  /* line 144, ../../styles/sass/hipikat.sass */
   .blog-summary .meta {
     margin-top: 4.125em;
     text-align: right; }
-    /* line 130, ../../styles/sass/hipikat.scss */
+    /* line 147, ../../styles/sass/hipikat.sass */
     .blog-summary .meta p {
       display: block; }
-    /* line 133, ../../styles/sass/hipikat.scss */
+    /* line 149, ../../styles/sass/hipikat.sass */
     .blog-summary .meta .bullet {
       display: none; } }

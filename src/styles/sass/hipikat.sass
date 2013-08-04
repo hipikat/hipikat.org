@@ -1,0 +1,150 @@
+/* Top-level stylesheet for pages under http://hipikat.org
+
+// Required global Foundation settings
+@import settings
+
+// Use Foundation's customised normalize sheets
+@import normalize
+
+/* Zurb Foundation's global settings file is a big-ass list of
+ * commented-out defaults - set any we customise here for readability
+ * and keep the settings mixin file on hand as a reference.
+
+// Foundation variables
+$base-font-size: 15px
+$base-line-height: $base-font-size * (1 + 3/8)
+$small-font-size: $base-font-size * 0.8
+$em-base: $base-font-size
+
+// Grid variables
+$row-width: none
+$column-gutter: emCalc(36)
+
+// Typography variables
+$h1-font-size: $base-font-size * (2 + 1/3)
+$h2-font-size: $base-font-size * (2)
+$h3-font-size: $base-font-size * (1 + 2/3)
+$h4-font-size: $base-font-size * (1 + 2/3)
+$h5-font-size: $base-font-size * (1 + 1/3)
+$h6-font-size: $base-font-size * (1 + 1/9)
+
+// Compass does most of our typographic heavy lifting
+@import compass
+
+// Import Foundation components
+@import components
+
+// Custom helper functions and mixins for this project
+@import helpers
+
+// Set font-size and line-height on ``html`` and ``* html``
++establish-baseline
+
+body
+    color: #404040
+    background-color: #f1f1f1
+    font-family: 'Roboto', sans-serif
+    font-weight: 400
+    line-height: $base-line-height
+    // Debug vertical rhythm
+    //@include debug-vertical-alignment
+
+// Debug grid system
+//.columns
+//    border: 1px solid orange
+//    margin-top: -2px
+
+/* Letter spacing is used subtly for optical balance between the second
+ * and third-level headings.
+h1
+    font-family: "Roboto Slab", sans-serif
+    +font-with-margins($h1-font-size, 0.625, 2)
+    font-weight: 700
+h2
+    font-family: "Roboto Slab", sans-serif
+    +font-with-margins($h2-font-size, 0.65, 2)
+    font-weight: 400
+    letter-spacing: -0.375px
+h3
+    +font-with-margins($h3-font-size, 0.7, 2)
+    font-weight: 400
+    letter-spacing: 0.375px
+h4
+    font-size: $h4-font-size
+    font-weight: 300
+    //font-style: italic
+h5
+    font-family: "Roboto Condensed"
+    margin-top: 0
+    +margin-trailer(1, $h5-font-size)
+    font-size: $h5-font-size
+    font-weight: 300
+    letter-spacing: 0.375px
+h6
+    font-family: "Roboto Condensed"
+    margin-top: 0
+    +margin-trailer(1, $h6-font-size)
+    font-size: $h6-font-size
+    font-weight: 300
+    letter-spacing: 0.375px
+
+p
+    margin: 0
+    +margin-trailer(1)
+
+$first-breakpoint: 340px
+$prev-breakpoint: $first-breakpoint
+$body-padding: 0px
+$max-breakpoint: 3072px
+
+@while $prev-breakpoint < $small-screen
+    @media only screen and (min-width: $prev-breakpoint + 1)
+        body
+            padding: 0 $body-padding
+    $addition: $prev-breakpoint / 4
+    $prev-breakpoint: $prev-breakpoint + floor($addition)
+    $body-padding: floor(($prev-breakpoint - $first-breakpoint) / 2) * $prev-breakpoint / 1.66667 / $max-breakpoint
+
+$body-padding: 0
+$prev-breakpoint: $small-screen - 1
+
+@while $prev-breakpoint < $max-breakpoint
+    @media only screen and (min-width: $prev-breakpoint + 1)
+        body
+            padding: 0 $body-padding
+    $addition: $prev-breakpoint / 4
+    $prev-breakpoint: $prev-breakpoint + floor($addition)
+    $body-padding: floor(($prev-breakpoint - $small-screen) / 2) * $prev-breakpoint / $max-breakpoint
+
+.header .site-title
+    h1, p
+        display: inline
+        font-weight: 300
+        @media #{$small}
+            display: block
+    h1
+        font-size: $h3-font-size
+        line-height: $h3-font-size
+        margin: 0
+    @media #{$small}
+        text-align: right
+
+.blog-summary
+    h1
+        padding-right: 0.5em
+    .meta
+        p
+            display: inline
+            $meta-p-rhythm: rhythm(1, $small-font-size)
+            $meta-p-offset: 11 / 12
+            +adjust-font-size-to($small-font-size)
+            margin: 0
+            //padding: ($meta-p-rhythm * (1-$meta-p-offset)) 0 ($meta-p-rhythm * $meta-p-offset) 0;
+    @media #{$small}
+        .meta
+            +margin-leader(3)
+            text-align: right
+            p
+                display: block
+            .bullet
+                display: none
