@@ -1,9 +1,13 @@
 
+@mixin offset-in-leading($font-size, $margin-offset: 0.5, $extra-lines: 1)
+    // Apply fractional top and bottom margins
+    $margin-height: rhythm($extra-lines, $font-size)
+    margin-top: $margin-height * $margin-offset
+    margin-bottom: $margin-height * (1 - $margin-offset)
+
 // Set font size and line-height, and add top and bottom margins, keeping rhythm
 @mixin font-with-margins($font-size, $margin-offset: 0.5, $extra-lines: 1)
     // Set font size and line-height
     +adjust-font-size-to($font-size)
     // Apply fractional top and bottom margins
-    $margin-height: rhythm($extra-lines, $font-size)
-    margin-top: $margin-height * $margin-offset
-    margin-bottom: $margin-height * (1 - $margin-offset)
+    +offset-in-leading($font-size, $margin-offset, $extra-lines: 1)

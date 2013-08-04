@@ -11,7 +11,7 @@
  * and keep the settings mixin file on hand as a reference.
 
 // Foundation variables
-$base-font-size: 15px
+$base-font-size: 16px
 $base-line-height: $base-font-size * (1 + 3/8)
 $small-font-size: $base-font-size * 0.8
 $em-base: $base-font-size
@@ -24,9 +24,13 @@ $column-gutter: emCalc(36)
 $h1-font-size: $base-font-size * (2 + 1/3)
 $h2-font-size: $base-font-size * (2)
 $h3-font-size: $base-font-size * (1 + 2/3)
-$h4-font-size: $base-font-size * (1 + 2/3)
-$h5-font-size: $base-font-size * (1 + 1/3)
-$h6-font-size: $base-font-size * (1 + 1/9)
+$h4-font-size: $base-font-size * (1 + 1/3)
+$h5-font-size: $base-font-size * (1 + 1/9)
+$h6-font-size: $h5-font-size
+
+$mobile-reduction: (7/12)
+$mobile-heading-reduction: $mobile-reduction
+$mobile-heading-leading: (1/8)
 
 // Compass does most of our typographic heavy lifting
 @import compass
@@ -40,58 +44,7 @@ $h6-font-size: $base-font-size * (1 + 1/9)
 // Set font-size and line-height on ``html`` and ``* html``
 +establish-baseline
 
-body
-    color: #404040
-    background-color: #f1f1f1
-    font-family: 'Roboto', sans-serif
-    font-weight: 400
-    line-height: $base-line-height
-    // Debug vertical rhythm
-    //@include debug-vertical-alignment
-
-// Debug grid system
-//.columns
-//    border: 1px solid orange
-//    margin-top: -2px
-
-/* Letter spacing is used subtly for optical balance between the second
- * and third-level headings.
-h1
-    font-family: "Roboto Slab", sans-serif
-    +font-with-margins($h1-font-size, 0.625, 2)
-    font-weight: 700
-h2
-    font-family: "Roboto Slab", sans-serif
-    +font-with-margins($h2-font-size, 0.65, 2)
-    font-weight: 400
-    letter-spacing: -0.375px
-h3
-    +font-with-margins($h3-font-size, 0.7, 2)
-    font-weight: 400
-    letter-spacing: 0.375px
-h4
-    font-size: $h4-font-size
-    font-weight: 300
-    //font-style: italic
-h5
-    font-family: "Roboto Condensed"
-    margin-top: 0
-    +margin-trailer(1, $h5-font-size)
-    font-size: $h5-font-size
-    font-weight: 300
-    letter-spacing: 0.375px
-h6
-    font-family: "Roboto Condensed"
-    margin-top: 0
-    +margin-trailer(1, $h6-font-size)
-    font-size: $h6-font-size
-    font-weight: 300
-    letter-spacing: 0.375px
-
-p
-    margin: 0
-    +margin-trailer(1)
-
+// Stepped body margins
 $first-breakpoint: 340px
 $prev-breakpoint: $first-breakpoint
 $body-padding: 0px
@@ -116,35 +69,105 @@ $prev-breakpoint: $small-screen - 1
     $prev-breakpoint: $prev-breakpoint + floor($addition)
     $body-padding: floor(($prev-breakpoint - $small-screen) / 2) * $prev-breakpoint / $max-breakpoint
 
-.header .site-title
-    h1, p
-        display: inline
-        font-weight: 300
-        @media #{$small}
-            display: block
-    h1
-        font-size: $h3-font-size
-        line-height: $h3-font-size
-        margin: 0
-    @media #{$small}
-        text-align: right
 
-.blog-summary
-    h1
-        padding-right: 0.5em
-    .meta
-        p
-            display: inline
-            $meta-p-rhythm: rhythm(1, $small-font-size)
-            $meta-p-offset: 11 / 12
-            +adjust-font-size-to($small-font-size)
-            margin: 0
-            //padding: ($meta-p-rhythm * (1-$meta-p-offset)) 0 ($meta-p-rhythm * $meta-p-offset) 0;
+// Debug grid system
+//.columns
+//    border: 1px solid orange
+//    margin-top: -2px
+
+
+// Typography
+body
+    color: #404040
+    background-color: #f1f1f1
+    font-family: 'Roboto', sans-serif
+    font-weight: 400
+    line-height: $base-line-height
+    // Debug vertical rhythm
+    //@include debug-vertical-alignment
+
+@function mobile-heading-reducer($font-size, $reduction: $mobile-heading-reduction)
+    $original-increase: $font-size - $base-font-size
+    $new-increase: $original-increase * $reduction
+    @return $base-font-size + $new-increase
+
+=adjust-mobile-heading($font-size)
+    $reduced-font-size: mobile-heading-reducer($font-size)
+    +adjust-font-size-to($reduced-font-size)
+    line-height: $reduced-font-size * (1 + $mobile-heading-leading)
+
+h1
+    color: #202020
+    font-family: "Roboto Slab", sans-serif
+    font-weight: 700
+    //+adjust-font-size-to(mobile-heading-reducer($h1-font-size))
+    +adjust-mobile-heading($h1-font-size)
     @media #{$small}
-        .meta
-            +margin-leader(3)
-            text-align: right
-            p
+        +font-with-margins($h1-font-size, 0.625, 2)
+h2
+    color: #202020
+    font-family: "Roboto Slab", sans-serif
+    font-weight: 400
+    letter-spacing: -0.375px
+    //+adjust-font-size-to(mobile-heading-reducer($h2-font-size))
+    +adjust-mobile-heading($h2-font-size)
+    @media #{$small}
+        +font-with-margins($h2-font-size, 0.65, 2)
+h3
+    font-weight: 500
+    letter-spacing: 0.375px
+    //+adjust-font-size-to(mobile-heading-reducer($h3-font-size))
+    +adjust-mobile-heading($h3-font-size)
+    @media #{$small}
+        +font-with-margins($h3-font-size, 0.7, 2)
+h4
+    +font-with-margins($h4-font-size, 0.7, 2)
+    font-weight: 700
+    //+adjust-font-size-to($base-font-size)
+    +adjust-mobile-heading($h4-font-size)
+    @media #{$small}
+        +font-with-margins($h4-font-size, 0.7, 2)
+        font-weight: normal
+h5, h6
+    font-family: "Roboto Condensed"
+    +font-with-margins($h5-font-size, 0.7, 2)
+    font-weight: 700
+    letter-spacing: 0.375px
+    //+adjust-font-size-to($base-font-size)
+    +adjust-mobile-heading($h5-font-size)
+    @media #{$small}
+        +font-with-margins($h5-font-size, 0.7, 2)
+        font-weight: normal
+p
+    margin: 0
+    +margin-trailer(1)
+
+// Page header
+$site-title-font-size: $base-font-size * (1 + 2/3)
+.head
+    .site-title
+        margin-top: 0.125em
+        h1, p
+            display: inline
+            @media #{$small}
                 display: block
-            .bullet
-                display: none
+        h1
+            margin: 0
+            font-family: Roboto, sans-serif
+            font-weight: 700
+            font-size: $site-title-font-size * $mobile-heading-reduction
+            line-height: $site-title-font-size
+        @media #{$small}
+            text-align: right
+            h1
+                font-size: $site-title-font-size
+
+// Main page body
+.page
+    .note p
+        +adjust-font-size-to($small-font-size)
+
+// Page footer
+//.foot
+
+@import pages
