@@ -16,3 +16,6 @@
 [submodule "lib/django"]
 	path = lib/django
 	url = git@github.com:django/django.git
+[submodule "lib/django-sassmouth"]
+	path = lib/django-sassmouth
+	url = git@github.com:hipikat/django-sassmouth.git

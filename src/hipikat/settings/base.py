@@ -7,6 +7,7 @@ from revkom.settings import base_settings_mixin
 
 g = globals()
 
+
 ###
 # Local project settings
 ###
@@ -33,6 +34,8 @@ REVKOM_INSTALL_APPS = [
     # django-crispy-forms: Forms have never been this crispy.
     # http://django-crispy-forms.readthedocs.org/en/latest/
     'crispy_forms',
+    # django-sassmouth: TODO
+    #'sassmouth',
     # django-wysiwyg: Converts HTML textareas into rich HTML editors.
     # https://github.com/pydanny/django-wysiwyg
     'django_wysiwyg',
@@ -75,7 +78,7 @@ execfile(base_settings_mixin('prod' if not g.get('DEBUG') else 'debug'))
 # TODO: Make this shit better by making a settings string list class
 [apply(partial(g['STATICFILES_FINDERS'].insert,0), finder) for finder in (
     ['revkom.staticfiles.finders.custom.CustomFileFinder'],
-    ['revkom.staticfiles.finders.sassy.SassyFileFinder'],
+    #['sassmouth.SassyFileFinder'],
 )]
 
 # Add static files from submodule libraries to known staticfiles.
@@ -83,15 +86,30 @@ REVKOM_STATICFILES = {
     'lib/foundation/modernizr.js': Path(g['LIB_DIR'],
         'zurb-foundation/js/vendor/custom.modernizr.js'),
 }
-REVKOM_SASSYFILES_DEBUG = True
-REVKOM_SASSYFILES_LOAD_PATHS = [
-    Path(g['LIB_DIR'], 'zurb-foundation/scss/'),
-    Path(g['LIB_DIR'], 'compass/frameworkds/compass/stylesheets/'),
-]
-REVKOM_SASSYFILES_BUILD_DIR = g['TMP_DIR'].child('_build_sassyfiles')
-REVKOM_SASSYFILES_BUILD_DIR.mkdir()
-REVKOM_SASSYFILES_COMPRESS = False
-REVKOM_SASSYFILES = {
-    'stylesheets/hipikat.css': Path(SRC_DIR, 'sass/hipikat.scss')
-}
+#REVKOM_SASSYFILES_DEBUG = True
+#REVKOM_SASSYFILES_LOAD_PATHS = [
+#    Path(g['LIB_DIR'], 'zurb-foundation/scss/'),
+#    Path(g['LIB_DIR'], 'compass/frameworkds/compass/stylesheets/'),
+#]
+#REVKOM_SASSYFILES_BUILD_DIR = g['TMP_DIR'].child('_build_sassyfiles')
+#REVKOM_SASSYFILES_BUILD_DIR.mkdir()
+#REVKOM_SASSYFILES_COMPRESS = False
+#REVKOM_SASSYFILES = {
+#    'stylesheets/hipikat.css': Path(SRC_DIR, 'sass/hipikat.scss')
+#}
 
+#SASSMOUTH_COMPRESS = False
+#SASSMOUTH_DEBUG = True
+#SASSMOUTH_BUILD_DIR = g['TMP_DIR'].child('_build_sassyfiles')
+#SASSMOUTH_SEARCH_PATHS = [
+#    #Path(g['LIB_DIR'], 'zurb-foundation/scss/'),
+#    #Path(g['LIB_DIR'], 'compass/frameworkds/compass/stylesheets/'),
+#    '/Users/zeno/prj/hipi-dev/lib/zurb-foundation/scss',
+#    '/Users/zeno/prj/hipi-dev/lib/compass/frameworkds/compass/stylesheets',
+#]
+#SASSMOUTH_TARGETS = {
+#    'stylesheets/hipikat.css': {
+#        'src': Path(SRC_DIR, 'sass/hipikat.scss'),
+#        
+#    }
+#}
