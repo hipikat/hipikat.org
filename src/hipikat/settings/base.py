@@ -113,3 +113,8 @@ REVKOM_STATICFILES = {
 #        
 #    }
 #}
+
+###
+# Site settings
+###
+SITE_RECENT_POST_COUNT = 30

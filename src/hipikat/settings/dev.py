@@ -52,7 +52,7 @@ append_middleware = [
     'hipikat.middleware.DebugInnerMiddleware',
 ]
 remove_middleware = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 map(partial(middleware.insert, 0), prepend_middleware)
 map(middleware.append, append_middleware)

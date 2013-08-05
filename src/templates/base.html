@@ -10,8 +10,8 @@
         {% endif %}Hipikat.org{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <!--<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700|Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic|Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>-->
-    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:400,400italic,500,700,700italic|Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+<!--<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700|Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic|Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>-->
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/hipikat.css' %}" />
     <script src="scripts/modernizr.js"></script>
 </head>
@@ -20,7 +20,7 @@
     <div class="row head">
         <div class="large-3 columns site-title">
             <h1>Hipikat.org</h1>
-            <p>by Adam Wright</p>
+            <p style="display: none;">by Adam Wright</p>
         </div>
         <div class="large-10 columns right" style="">
             <div class="row">
@@ -28,6 +28,9 @@
             </div>
         </div>
     </div>
+
+    {% block page %}
+    {% endblock %}
 
     <div class="row page blog-summary">
         <div class="large-9 push-3 columns">
