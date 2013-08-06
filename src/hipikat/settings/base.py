@@ -29,8 +29,21 @@ CACHES = {'default': {
     'TIMEOUT': 60,
 }}
 
+# Request pipeline
+MIDDLEWARE_CLASSES = [
+    'hostess.middleware.VirtualHostURLConfMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
 # Enable pre-configured apps from revkom_settings
 REVKOM_INSTALL_APPS = [
+    'hostess',
     # django-crispy-forms: Forms have never been this crispy.
     # http://django-crispy-forms.readthedocs.org/en/latest/
     'crispy_forms',
