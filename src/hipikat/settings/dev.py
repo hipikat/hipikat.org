@@ -3,7 +3,6 @@
 from inspect import currentframe, getfile
 from functools import partial
 from unipath import Path
-from revkom.utils import unique_string_list
 
 
 g = globals()
@@ -40,8 +39,9 @@ else:
     }}
 
 # Security
-ALLOWED_HOSTS = unique_string_list(
-    g.get('ALLOWED_HOSTS'), ['evilspa.dyndns.org'])
+G('ALLOWED_HOSTS').add('evilspa.dyndns.org')
+#ALLOWED_HOSTS.
+#    g.get('ALLOWED_HOSTS'), ['evilspa.dyndns.org'])
 
 # Middleware
 middleware = g['MIDDLEWARE_CLASSES']
