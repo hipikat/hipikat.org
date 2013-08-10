@@ -1,59 +1,43 @@
 # hipikat/settings/dev.py
 
 from inspect import currentframe, getfile
-from functools import partial
 from unipath import Path
+from cinch import db_setting
 
 
-g = globals()
+G = globals()
+S = G.setdefault
 
 
 # Debugging and development modes
-DEBUG = True
-
-
-###
-# Inherit from local base (and implicitely revkom.settings.base_debug).
-execfile(Path(getfile(currentframe())).parent.child('base.py'))
-###
-
-
-# Directory structure
-DEV_DIR = g['PROJECT_DIR'].child('dev')
+S('DEBUG', True)
 
 # Caching
-CACHE_MIDDLEWARE_KEY_PREFIX = 'hipikat-dev'
+S('CACHE_MIDDLEWARE_KEY_PREFIX', 'hipikat-dev')
+
+# Include settings from this project's base settings file.
+execfile(Path(getfile(currentframe())).parent.child('base.py'))
+
+# Directory structure
+S('DEV_DIR', G['PROJECT_DIR'].child('dev'))
 
 # Databases
-if g.get('TESTING', False):
-    DATABASES = {'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': g['DB_DIR'].child('dev-test.db')
-    }}
+if G.get('TESTING', False):
+    G['DATABASES']['default'] = db_setting(engine='sqlite3',
+                                           name=G['DB_DIR'].child('dev-test.db'))
 else:
-    DATABASES = {'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'hipikat_dev',
-        'USER': 'zeno',
-        'HOST': '127.0.0.1',
-    }}
+    G['DATABASES']['default'] = db_setting(engine='postgresql',
+                                           name='hipikat_dev',
+                                           user='zeno')
 
 # Security
-G('ALLOWED_HOSTS').add('evilspa.dyndns.org')
-#ALLOWED_HOSTS.
-#    g.get('ALLOWED_HOSTS'), ['evilspa.dyndns.org'])
+G['ALLOWED_HOSTS'].append('evilspa.dyndns.org')
 
 # Middleware
-middleware = g['MIDDLEWARE_CLASSES']
-prepend_middleware = [
+G['MIDDLEWARE_CLASSES'].prepend(
     'hipikat.middleware.DebugOuterMiddleware',
-]
-append_middleware = [
+).append(
     'hipikat.middleware.DebugInnerMiddleware',
-]
-remove_middleware = [
+).remove(
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
-map(partial(middleware.insert, 0), prepend_middleware)
-map(middleware.append, append_middleware)
-map(middleware.remove, remove_middleware)
+)

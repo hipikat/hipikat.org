@@ -1,54 +1,58 @@
 # hipikat/settings/base.py
 
-from functools import partial
 from unipath import Path
-from revkom.settings import base_settings_mixin
+from cinch.settings import base_settings_mixin, cache_setting
 
 
-g = globals()
+G = globals()
+S = G.setdefault
 
 
 ###
 # Local project settings
 ###
 # Metadata
-PROJECT_NAME = 'hipikat'
 PROJECT_DIR = Path(__file__).ancestor(4)
-ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
+PROJECT_NAME = 'hipikat'
+ADMINS = [('Adam Wright', 'adam@hipikat.org')]
 LANGUAGE_CODE = 'en-au'
 TIME_ZONE = 'Australia/Perth'
 
+# Caching
+S('CACHE_MIDDLEWARE_KEY_PREFIX', 'hipikat')
+
+# Include default settings from a django-cinch settings file.
+execfile(base_settings_mixin('prod' if not G.get('DEBUG') else 'debug'))
+
 # Security
-ALLOWED_HOSTS = ['.hipikat.org']
+G['ALLOWED_HOSTS'].append('.hipikat.org')
 
 # Caching
-CACHE_MIDDLEWARE_KEY_PREFIX = 'hipikat'
-CACHES = {'default': {
-    'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-    'LOCATION': '127.0.0.1:11211',
-    'TIMEOUT': 60,
-}}
+G['CACHES']['default'] = cache_setting(backend='memcached', timeout=60)
+
+# File discovery
+G['TEMPLATE_LOADERS'].prepend('revkom.staticfiles.finders.CustomFileFinder')
+S('REVKOM_STATICFILES', {
+    # Add static files from submodule libraries to discoverable staticfiles.
+    'lib/foundation/modernizr.js': Path(
+        G['LIB_DIR'], 'zurb-foundation/js/vendor/custom.modernizr.js'),
+})
 
 # Request pipeline
-MIDDLEWARE_CLASSES = [
-    'hostess.middleware.VirtualHostURLConfMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
+G['MIDDLEWARE_CLASSES'].prepend(
+    'hostess.middleware.VirtualHostURLConfMiddleware'
+).append(
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
+)
 
-# Enable pre-configured apps from revkom_settings
-REVKOM_INSTALL_APPS = [
+# Installed apps
+G['INSTALLED_APPS'].prepend(
+    # djagno-hostess: Virtual host and subdomain processing
+    # http://github.com/hipikat/django-hostess
     'hostess',
     # django-crispy-forms: Forms have never been this crispy.
     # http://django-crispy-forms.readthedocs.org/en/latest/
     'crispy_forms',
-    # django-sassmouth: TODO
-    #'sassmouth',
     # django-wysiwyg: Converts HTML textareas into rich HTML editors.
     # https://github.com/pydanny/django-wysiwyg
     'django_wysiwyg',
@@ -74,58 +78,21 @@ REVKOM_INSTALL_APPS = [
     #'categories',
     #'categories.editor',
     #'fluent_blogs.pagetypes.blogpage',
+)
+
+# django-sassmouth (NB: this project is on hold; settings not currently used)
+SASSMOUTH_DEBUG = G['DEBUG']
+SASSMOUTH_COMPRESS = not G['DEBUG']
+SASSMOUTH_BUILD_DIR = G['TMP_DIR'].child('_build_sassyfiles')
+SASSMOUTH_SEARCH_PATHS = [
+    Path(G['LIB_DIR'], 'zurb-foundation/scss/'),
+    Path(G['LIB_DIR'], 'compass/frameworkds/compass/stylesheets/'),
 ]
-
-###
-# Inherit default settings from a revkom settings file.
-execfile(base_settings_mixin('prod' if not g.get('DEBUG') else 'debug'))
-###
-
-
-# Logging
-#g['LOGGING'].deep_update({
-#    'loggers': {
-#    }
-#})
-
-# TODO: Make this shit better by making a settings string list class
-[apply(partial(g['STATICFILES_FINDERS'].insert,0), finder) for finder in (
-    ['revkom.staticfiles.finders.custom.CustomFileFinder'],
-    #['sassmouth.SassyFileFinder'],
-)]
-
-# Add static files from submodule libraries to known staticfiles.
-REVKOM_STATICFILES = {
-    'lib/foundation/modernizr.js': Path(g['LIB_DIR'],
-        'zurb-foundation/js/vendor/custom.modernizr.js'),
+SASSMOUTH_TARGETS = {
+    'stylesheets/hipikat.css': {
+        'src': Path(G['SRC_DIR'], 'sass/hipikat.scss'),
+    }
 }
-#REVKOM_SASSYFILES_DEBUG = True
-#REVKOM_SASSYFILES_LOAD_PATHS = [
-#    Path(g['LIB_DIR'], 'zurb-foundation/scss/'),
-#    Path(g['LIB_DIR'], 'compass/frameworkds/compass/stylesheets/'),
-#]
-#REVKOM_SASSYFILES_BUILD_DIR = g['TMP_DIR'].child('_build_sassyfiles')
-#REVKOM_SASSYFILES_BUILD_DIR.mkdir()
-#REVKOM_SASSYFILES_COMPRESS = False
-#REVKOM_SASSYFILES = {
-#    'stylesheets/hipikat.css': Path(SRC_DIR, 'sass/hipikat.scss')
-#}
-
-#SASSMOUTH_COMPRESS = False
-#SASSMOUTH_DEBUG = True
-#SASSMOUTH_BUILD_DIR = g['TMP_DIR'].child('_build_sassyfiles')
-#SASSMOUTH_SEARCH_PATHS = [
-#    #Path(g['LIB_DIR'], 'zurb-foundation/scss/'),
-#    #Path(g['LIB_DIR'], 'compass/frameworkds/compass/stylesheets/'),
-#    '/Users/zeno/prj/hipi-dev/lib/zurb-foundation/scss',
-#    '/Users/zeno/prj/hipi-dev/lib/compass/frameworkds/compass/stylesheets',
-#]
-#SASSMOUTH_TARGETS = {
-#    'stylesheets/hipikat.css': {
-#        'src': Path(SRC_DIR, 'sass/hipikat.scss'),
-#        
-#    }
-#}
 
 ###
 # Site settings
