@@ -1,7 +1,11 @@
 # hipikat/settings/base.py
 
+import sys
 from unipath import Path
-from cinch.settings import base_settings_mixin, cache_setting
+
+sys.path.insert(0, Path(__file__).ancestor(3).child('apps'))
+
+from cinch.settings import cinch_settings_file, cache_setting
 
 
 G = globals()

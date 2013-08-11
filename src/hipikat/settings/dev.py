@@ -1,8 +1,13 @@
 # hipikat/settings/dev.py
 
+import sys
+from unipath import Path
+
+sys.path.insert(0, Path(__file__).ancestor(3).child('apps'))
+
 from inspect import currentframe, getfile
 from unipath import Path
-from cinch import db_setting
+#from cinch import db_setting
 
 
 G = globals()
@@ -16,7 +21,8 @@ S('DEBUG', True)
 S('CACHE_MIDDLEWARE_KEY_PREFIX', 'hipikat-dev')
 
 # Include settings from this project's base settings file.
-execfile(Path(getfile(currentframe())).parent.child('base.py'))
+#execfile(Path(getfile(currentframe())).parent.child('base.py'))
+execfile(sibling_settings_file('base'))
 
 # Directory structure
 S('DEV_DIR', G['PROJECT_DIR'].child('dev'))

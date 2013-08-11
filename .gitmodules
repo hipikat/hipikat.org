@@ -22,3 +22,6 @@
 [submodule "lib/django-hostess"]
 	path = lib/django-hostess
 	url = git@github.com:hipikat/django-hostess.git
+[submodule "lib/django-cinch"]
+	path = lib/django-cinch
+	url = git@github.com:hipikat/django-cinch.git
