@@ -1,13 +1,9 @@
 # hipikat/settings/dev.py
 
+from runpy import run_module
 import sys
 from unipath import Path
-
-sys.path.insert(0, Path(__file__).ancestor(3).child('apps'))
-
-from inspect import currentframe, getfile
-from unipath import Path
-#from cinch import db_setting
+from cinch import DatabasesSetting
 
 
 G = globals()
@@ -17,33 +13,31 @@ S = G.setdefault
 # Debugging and development modes
 S('DEBUG', True)
 
-# Caching
-S('CACHE_MIDDLEWARE_KEY_PREFIX', 'hipikat-dev')
-
 # Include settings from this project's base settings file.
-#execfile(Path(getfile(currentframe())).parent.child('base.py'))
-execfile(sibling_settings_file('base'))
-
-# Directory structure
-S('DEV_DIR', G['PROJECT_DIR'].child('dev'))
+G.update(run_module('hipikat.settings.base', G))
 
 # Databases
 if G.get('TESTING', False):
-    G['DATABASES']['default'] = db_setting(engine='sqlite3',
-                                           name=G['DB_DIR'].child('dev-test.db'))
+    DATABASES = DatabasesSetting()['default'] = {
+        'engine': 'sqlite3',
+        'name': G['DB_DIR'].child('dev-test.db'),
+    }
 else:
-    G['DATABASES']['default'] = db_setting(engine='postgresql',
-                                           name='hipikat_dev',
-                                           user='zeno')
+    DATABASES = DatabasesSetting()['default'] = {
+        'engine': 'postgresql',
+        'name': 'hipikat_dev',
+        'user': 'zeno'
+    }
 
 # Security
 G['ALLOWED_HOSTS'].append('evilspa.dyndns.org')
 
-# Middleware
-G['MIDDLEWARE_CLASSES'].prepend(
+# Request pipeline
+MIDDLEWARE_CLASSES = [
     'hipikat.middleware.DebugOuterMiddleware',
-).append(
+] + G['MIDDLEWARE_CLASSES'] + [
     'hipikat.middleware.DebugInnerMiddleware',
-).remove(
+]
+map(MIDDLEWARE_CLASSES.remove, [
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
+    ])
