@@ -94,20 +94,6 @@ INSTALLED_APPS = SettingList(
     'django.contrib.sites',
 )
 
-# django-sassmouth (NB: this project is on hold; settings not currently used)
-SASSMOUTH_DEBUG = G['DEBUG']
-SASSMOUTH_COMPRESS = not G['DEBUG']
-SASSMOUTH_BUILD_DIR = G['TMP_DIR'].child('_build_sassyfiles')
-SASSMOUTH_SEARCH_PATHS = [
-    Path(G['LIB_DIR'], 'zurb-foundation/scss/'),
-    Path(G['LIB_DIR'], 'compass/frameworkds/compass/stylesheets/'),
-]
-SASSMOUTH_TARGETS = {
-    'stylesheets/hipikat.css': {
-        'src': Path(G['SRC_DIR'], 'sass/hipikat.scss'),
-    }
-}
-
 ###
 # Site settings
 ###
