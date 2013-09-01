@@ -1,1 +1,0 @@
-../src/hipikat/settings/base.py

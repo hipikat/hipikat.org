@@ -1,0 +1,11 @@
+{
+    "read_files": [
+        "SECRET_KEY"
+    ],
+    "env_vars": [
+        "AWS_SECRET_KEY"
+    ],
+    "settings": {
+        "parrot_dead": true
+    }
+}

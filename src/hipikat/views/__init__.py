@@ -5,8 +5,8 @@ from django.views.generic import TemplateView
 from hipikat.models import Post
 
 
-class FrontPageView(TemplateView):
-    template_name = 'front-page.html'
+class MainLandingView(TemplateView):
+    template_name = 'landing-main.html'
 
     def get_context_data(self, **kwargs):
         recent_count = settings.SITE_RECENT_POST_COUNT
@@ -17,5 +17,4 @@ class FrontPageView(TemplateView):
         except IndexError:
             context['posts'] = list(recent_posts)
         return context
-
-front_page = FrontPageView.as_view
+main_landing_view = MainLandingView.as_view

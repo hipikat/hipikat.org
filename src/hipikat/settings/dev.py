@@ -6,38 +6,54 @@ from unipath import Path
 from cinch import DatabasesSetting
 
 
-G = globals()
-S = G.setdefault
+g = globals()
+S = g.setdefault
 
 
 # Debugging and development modes
 S('DEBUG', True)
 
 # Include settings from this project's base settings file.
-G.update(run_module('hipikat.settings.base', G))
+g.update(run_module('hipikat.settings.base', g))
+g = globals()
 
 # Databases
-if G.get('TESTING', False):
-    DATABASES = DatabasesSetting()['default'] = {
-        'engine': 'sqlite3',
-        'name': G['DB_DIR'].child('dev-test.db'),
+if g.get('TESTING', False):
+    DATABASES = {
+        'default': {
+            'engine': 'sqlite3',
+            'name': g['DB_DIR'].child('dev-test.db'),
+        }
     }
 else:
-    DATABASES = DatabasesSetting()['default'] = {
-        'engine': 'postgresql',
-        'name': 'hipikat_dev',
-        'user': 'zeno'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'hipikat_dev',
+            'USER': 'zeno'
+        }
     }
 
 # Security
-G['ALLOWED_HOSTS'].append('evilspa.dyndns.org')
+ALLOWED_HOSTS = g['ALLOWED_HOSTS'] + [
+    'evilspa.dyndns.org',
+    '.hipikat.local',
+]
 
 # Request pipeline
+#import pdb; pdb.set_trace()
 MIDDLEWARE_CLASSES = [
     'hipikat.middleware.DebugOuterMiddleware',
-] + G['MIDDLEWARE_CLASSES'] + [
+] + g['MIDDLEWARE_CLASSES'] + [
     'hipikat.middleware.DebugInnerMiddleware',
 ]
 map(MIDDLEWARE_CLASSES.remove, [
+    # Uncomment the following to disable django-debug-toolbar
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
-    ])
+])
+
+# Installed apps
+INSTALLED_APPS = g['INSTALLED_APPS'] + [
+    'debug_toolbar'
+]
+

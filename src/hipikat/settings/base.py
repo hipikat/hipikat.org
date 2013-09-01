@@ -1,11 +1,10 @@
 # hipikat/settings/base.py
 
-from runpy import run_module
 from unipath import Path
-from cinch import CachesSetting, SettingList, cinch_settings
+from cinch import cinch_settings
 
 
-G = globals()
+g = globals()
 
 
 ###
@@ -19,28 +18,35 @@ LANGUAGE_CODE = 'en-au'
 TIME_ZONE = 'Australia/Perth'
 
 # Security
-ALLOWED_HOSTS = ['.hipikat.org']
+ALLOWED_HOSTS = [
+    '.hipikat.org',
+    '.hipikat.local',
+]
 
 # Include settings from cinch.settings.[prod|debug]
-G.update(cinch_settings(G))
+g.update(cinch_settings(g))
 
-# Caching
-CACHES = CachesSetting()['default'] = {'backend': 'MemcachedCache'}
+# Caching TODO
+#CACHES = CachesSetting()['default'] = {'backend': 'MemcachedCache'}
+
+# URLs
+ROOT_URLCONF = 'hipikat.urls._default'
+HOSTESS_URL_PACKAGE = 'hipikat.urls'
 
 # File discovery
-TEMPLATE_LOADERS = SettingList(
-    'revkom.staticfiles.finders.CustomFileFinder'
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
+STATICFILES_FINDERS = [
+    'revkom.staticfiles.finders.CustomFileFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 REVKOM_STATICFILES = {
     'lib/foundation/modernizr.js': Path(
-        G['LIB_DIR'], 'zurb-foundation/js/vendor/custom.modernizr.js'),
+        g['LIB_DIR'], 'zurb-foundation/js/vendor/custom.modernizr.js'),
 }
 
 # Request pipeline
-MIDDLEWARE_CLASSES = SettingList(
-    'hostess.middleware.VirtualHostURLConfMiddleware'
+MIDDLEWARE_CLASSES = [
+    'hostess.middleware.VirtualHostURLConfMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -48,10 +54,10 @@ MIDDLEWARE_CLASSES = SettingList(
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware'
-)
+]
 
 # Installed apps
-INSTALLED_APPS = SettingList(
+INSTALLED_APPS = [
     'hipikat',      # This project
     'revkom',       # revkom-helpers: Software patterns, utils, mixins etc
     'hostess',      # djagno-hostess: Virtual host and subdomain processing
@@ -92,7 +98,7 @@ INSTALLED_APPS = SettingList(
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-)
+]
 
 ###
 # Site settings

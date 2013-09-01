@@ -1,0 +1,2 @@
+Compile CSS and watch for changes with
+$ bundle exec compass watch
