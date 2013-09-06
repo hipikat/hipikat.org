@@ -1,21 +1,30 @@
 """
-Django settings for http://hipikat.org/, using django-configurations:
-http://django-configurations.readthedocs.org/en/latest/
+Django settings for http://hipikat.org/, using django-configurations.
 """
 
-import sys
+from os import environ
 from os.path import dirname, join
+import sys
 from configurations import Configuration
 
 
-class Base(Configuration):
-
+class LocalSiteMixin(object):
     # Metadata
-    PROJECT_NAME = 'hipikat'
     ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
     LANGUAGE_CODE = 'en-au'
     TIME_ZONE = 'Australia/Perth'
+
+    # Site-specific settings
+    SITE_RECENT_POST_COUNT = 30
+
+
+class Base(LocalSiteMixin, Configuration):
+
+    PROJECT_NAME = 'hipikat'
     SITE_ID = 1
+    USE_I18N = False    # Internationalisation framework
+    USE_L10N = True     # Localisation framework
+    USE_TZ = True       # Timezone support for dates
 
     # Directory structure
     BASE_DIR = dirname(dirname(dirname(__file__)))
@@ -23,12 +32,9 @@ class Base(Configuration):
     VAR_DIR = join(BASE_DIR, 'var')
     ETC_DIR = join(BASE_DIR, 'etc')
     SRC_DIR = join(BASE_DIR, 'src')
-    STATICFILES_DIRS = [join(SRC_DIR, 'static')]
-    TEMPLATE_DIRS = [join(SRC_DIR, 'templates')]
     DB_DIR = join(VAR_DIR, 'db')
     LOG_DIR = join(VAR_DIR, 'log')
-    STATIC_ROOT = join(VAR_DIR, 'static')
-    MEDIA_ROOT = join(VAR_DIR, 'media')
+    #sys.path.insert(0, join(SRC_DIR, 'apps'))
 
     # Debugging, development and testing
     TESTING = True if 'test' in sys.argv else False
@@ -36,25 +42,36 @@ class Base(Configuration):
     @staticmethod
     def _setup__debug(cls):
         cls.TEMPLATE_DEBUG = cls.DEBUG
+        cls.DEBUG_URL_PATTERNS = cls.DEBUG
 
     # Databases
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'hipikat.org',
-            'USER': 'hipikat',
+            'NAME': 'hipikat_dev',
+            'USER': 'zeno',
         }
     }
+    #DATABASES = { 
+    #    'default': {
+    #        'engine': 'sqlite3',
+    #        'name': join(DB_DIR, 'base.db'),
+    #    }   
+    #} 
 
     # Security
     ALLOWED_HOSTS = ['.hipikat.org', '.hipikat.local']
     INTERNAL_IPS = ['127.0.0.1']
+    SECRET_KEY_FILE = join(VAR_DIR, 'env/SECRET_KEY')
+    SECRET_KEY = environ['SECRET_KEY']
 
     # URLs
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
 
     # File discovery
+    MEDIA_ROOT = join(VAR_DIR, 'media')
+    STATIC_ROOT = join(VAR_DIR, 'static')
     STATICFILES_DIRS = [join(SRC_DIR, 'static')]
     STATICFILES_FINDERS = [
         'revkom.staticfiles.finders.CustomFileFinder',
@@ -64,22 +81,20 @@ class Base(Configuration):
     REVKOM_STATICFILES = {
         'lib/foundation/modernizr.js': join(
             LIB_DIR, 'zurb-foundation/js/vendor/custom.modernizr.js'),
+        'lib/foundation/foundation.js': join(
+            LIB_DIR, 'zurb-foundation/js/foundation/foundation.js'),
     }
+    FLUENT_PAGES_TEMPLATE_DIR = join(SRC_DIR, 'layouts')
+    FLUENT_PAGES_BASE_TEMPLATE = 'base-fluent.html'
+    TEMPLATE_DIRS = [
+        join(SRC_DIR, 'templates'),
+        FLUENT_PAGES_TEMPLATE_DIR,
+    ]
 
     # Request pipeline
-    ROOT_HOSTCONF = 'hipikat.hosts'
+    ROOT_HOSTCONF = PROJECT_NAME + '.hosts'
     DEFAULT_HOST = 'main'
-    ROOT_URLCONF = 'hipikat.urls._default'
-    TEMPLATE_CONTEXT_PROCESSORS = [
-        "django.contrib.auth.context_processors.auth",
-        "django.core.context_processors.debug",
-        "django.core.context_processors.i18n",
-        "django.core.context_processors.media",
-        "django.core.context_processors.static",
-        "django.core.context_processors.tz",
-        "django.contrib.messages.context_processors.messages",
-        "django.core.context_processors.request",
-    ]
+    ROOT_URLCONF = PROJECT_NAME + '.urls._default'
     MIDDLEWARE_CLASSES = [
         'django_hosts.middleware.HostsMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -89,10 +104,22 @@ class Base(Configuration):
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
+    TEMPLATE_CONTEXT_PROCESSORS = [
+        'django.contrib.auth.context_processors.auth',
+        'django.core.context_processors.debug',
+        'django.core.context_processors.i18n',
+        'django.core.context_processors.media',
+        'django.core.context_processors.static',
+        'django.core.context_processors.tz',
+        'django.contrib.messages.context_processors.messages',
+        'django.core.context_processors.request',
+        'hipikat.styles.context_processor',
+    ]
 
     # Installed apps
     INSTALLED_APPS = [
-        'hipikat',      # This project
+        PROJECT_NAME,   # This project
+
         'revkom',       # revkom-helpers: Software patterns, utils, mixins etc
 
         'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
@@ -101,6 +128,17 @@ class Base(Configuration):
 
         'django_hosts',
     
+        # Django contrib packages - https://docs.djangoproject.com/en/dev/ref/contrib/
+        'django.contrib.admin',
+        'django.contrib.admindocs',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.humanize',
+        'django.contrib.messages',
+        'django.contrib.sessions',
+        'django.contrib.staticfiles',
+        'django.contrib.sites',
+
         # django-fluent-pages: A polymorphic-pages-in-a-tree structure.
         'fluent_pages',
         'fluent_pages.pagetypes.flatpage',          # requires django-wysiwyg
@@ -124,16 +162,6 @@ class Base(Configuration):
         'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
         'any_urlfield',         # django-any-urlfield: URL selector supprting external URLs and models
 
-        # Django contrib packages - https://docs.djangoproject.com/en/dev/ref/contrib/
-        'django.contrib.admin',
-        'django.contrib.admindocs',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.humanize',
-        'django.contrib.messages',
-        'django.contrib.sessions',
-        'django.contrib.staticfiles',
-        'django.contrib.sites',
     ]
 
     @classmethod
@@ -201,9 +229,22 @@ class Default(Debug):
         }
 
 
+class Core(Base):
+    """
+    A configuration which reduces ``INSTALLED_APPS`` to a core set of apps,
+    used for (inital) ``manage.py syncdb`` calls on blank databases,
+    beacuse sometimes third-party apps have a dependance on a content_types
+    table already having been created.
+    """
+    INSTALLED_APPS = ['south'] + ['djang.contrib.' + dj_app
+        for dj_app in ('admin', 'admindocs', 'auth', 'contenttypes', 'humanize',
+                       'messages', 'sessions', 'staticfiles', 'sites')]
+
+
 class Development(Debug):
     pass
 
 
 class Production(Base):
     pass
+

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load placeholder_tags %}
+
+{% block headtitle %}{% block title %}{% endblock %}{% endblock %}
+
+{% block main %}
+    {% block content %}
+        {% page_placeholder "main" role='m' %}
+    {% endblock %}
+{% endblock %}

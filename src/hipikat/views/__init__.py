@@ -20,4 +20,4 @@ class MainLandingView(TemplateView):
         except IndexError:
             context['posts'] = list(recent_posts)
         return context
-www_landing_view = MainLandingView.as_view
+main_landing_view = MainLandingView.as_view

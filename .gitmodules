@@ -25,3 +25,6 @@
 [submodule "lib/foobar"]
 	path = lib/foobar
 	url = git@github.com:hipikat/django-hostess.git
+[submodule "lib/django-mptt"]
+	path = lib/django-mptt
+	url = git@github.com:django-mptt/django-mptt.git
