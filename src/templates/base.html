@@ -1,4 +1,4 @@
-{# load revkom_tags #}
+{% load fluent_pages_tags %}
 {% load static %}
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7 no-js" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8 no-js" lang="en"> <![endif]-->
@@ -6,7 +6,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <!-- Conditional <html> classes follow Paul Irish's recommendation circa 2013 -->
 <head>
-    <title>{% block page_title %}{% if page_title %}{{ page_title }} •
+    <title>{% block headtitle %}{% if page.title %}{{ page.title }} •
         {% endif %}Hipikat.org{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -24,7 +24,13 @@
         </div>
         <div class="large-10 columns right" style="">
             <div class="row">
-                
+
+    <header>
+        {% render_menu %}
+    </header>
+<br />
+    {% render_breadcrumb %}
+
             </div>
         </div>
     </div>
@@ -32,9 +38,16 @@
     {% block page %}
     {% endblock %}
 
+    <div class="row page">
+        <div class="small-12 columns">
+            {% block main %}{% endblock %}
+        </div>
+    </div>
+
     <div class="row page blog-summary">
         <div class="large-9 push-3 columns">
             <div class="row">
+
                 <div class="small-12 columns title">
                     <h1>Maintaining the system</h1>
                 </div>

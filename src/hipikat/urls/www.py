@@ -1,7 +1,7 @@
 
-from django.conf.urls import patterns, include, urls
+from django.conf.urls import patterns, include, url
 from ._global import urlpatterns
-from ..views import www_landing
+from ..views import www_landing_view
 
 
 urlpatterns += patterns(
@@ -14,5 +14,7 @@ urlpatterns += patterns(
     #url(r'', include('fluent_pages.urls')),
 
     # Front page
-    url(r'^$', www_landing(), name="front_page"),
+    #url(r'^$', www_landing_view(), name="front_page"),
+
+    url(r'', include('fluent_pages.urls')),
 )
