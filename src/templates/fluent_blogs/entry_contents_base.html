@@ -1,0 +1,59 @@
+{% load i18n placeholder_tags fluent_blogs_tags %}
+{% comment %}
+
+  This is a special template for the entry_archive and entry_detail pages.
+  It manages the appearance of entries for both the archive and detail view in the same template.
+  This is extended by:
+
+  * fluent_blogs/entry_archive/item.html
+  * fluent_blogs/entry_detail/contents.html
+
+  Common appearance of the archive and detail pages can be included in this template.
+  When both pages differ a lot, simply place the desired HTML in those pages instead of extending this base template.
+
+{% endcomment %}
+{% with comments_url=object.get_absolute_url|add:"#comments" comment_count=object.comments.count pingback_count=object.pingbacks.count trackback_count=object.trackbacks.count %}
+
+
+{% block entry-row %}
+<div class="row page blog-entry">
+  {% block entry-columns %}
+  <div class="columns large-9 push-3">
+    <div class="row">
+      {% block entry-header %}
+      <div class="columns small-12 title">
+        {% block entry-header-contents %}
+        <h1><a href="{{ object.get_absolute_url }}"
+               title="{{ object.title }}"
+               rel="bookmark">{{ object.title }}</a></h1>
+        {% endblock %}
+      </div>
+      {% endblock %}
+      {% block entry-body %}
+      <div class="columns small-12 large-8 content">
+        {% block entry-body-contents %}
+          {% render_placeholder object.contents %}
+        {% endblock %}
+      </div>
+      <div class="columns small-11 small-offset-1 large-4 large-offset-0 note">
+        <!--<p>This is a footnote. Or rather a side-note. I guess it depends on your device?</p>-->
+      </div>
+      {% endblock %}
+    </div>
+  </div>
+  {% block entry-footer %}
+  <div class="columns large-3 pull-9 meta">
+    {% block entry-footer-contents %}
+    <p>
+      <span class="bullet">— </span>
+      Posted {{ object.creation_date|date:"DATE_FORMAT" }}
+    </p>
+    <p>at %TIME%</p>
+    {% endblock %}
+  </div>
+  {% endblock %}
+  {% endblock %}
+</div>
+{% endblock %}
+
+{% endwith %}

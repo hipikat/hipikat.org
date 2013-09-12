@@ -39,7 +39,7 @@ class Base(LocalSiteMixin, Configuration):
     # Debugging, development and testing
     TESTING = True if 'test' in sys.argv else False
     DEBUG = False
-    @staticmethod
+    #@staticmethod
     def _setup__debug(cls):
         cls.TEMPLATE_DEBUG = cls.DEBUG
         cls.DEBUG_URL_PATTERNS = cls.DEBUG
@@ -86,6 +86,7 @@ class Base(LocalSiteMixin, Configuration):
     }
     FLUENT_PAGES_TEMPLATE_DIR = join(SRC_DIR, 'layouts')
     FLUENT_PAGES_BASE_TEMPLATE = 'base-fluent.html'
+    #FLUENT_BLOGS_BASE_TEMPLATE
     TEMPLATE_DIRS = [
         join(SRC_DIR, 'templates'),
         FLUENT_PAGES_TEMPLATE_DIR,
@@ -155,13 +156,18 @@ class Base(LocalSiteMixin, Configuration):
         #'fluent_contents.plugins.markup',
         'fluent_contents.plugins.rawhtml',
 
+        # django-fluent-blogs
+        'fluent_blogs',
+
         'mptt',
         'polymorphic',
         'polymorphic_tree',
-    
+        'categories',
+        'categories.editor',
+        'taggit',
+        'taggit_autocomplete_modified',
         'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
         'any_urlfield',         # django-any-urlfield: URL selector supprting external URLs and models
-
     ]
 
     @classmethod
@@ -177,6 +183,9 @@ class Base(LocalSiteMixin, Configuration):
 
     # django-fluent-contents
     FLUENT_MARKUP_LANGUAGE = 'reStructuredText'        # can also be markdown or textile
+
+    # django-wysiwyg
+    DJANGO_WYSIWYG_FLAVOR = "yui_advanced"
 
 
 class Debug(Base):
