@@ -4,88 +4,58 @@ Django settings for http://hipikat.org/, using django-configurations.
 
 from os import environ
 from os.path import dirname, join
-import sys
 from configurations import Configuration
+from cinch.configurations import (BaseConfiguration, EnvdirMixin, FHSDirsMixin,
+    HostsURLsMixin)
 
 
-class LocalSiteMixin(object):
+class LocalSiteBase(EnvSettingsMixin, FHSDirsMixin, HostsURLsMixin,
+    BaseConfiguration):
+
     # Metadata
-    ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
+    ADMINS = (
+        ('Adam Wright', 'adam@hipikat.org'),
+    )
+    ALLOWED_HOSTS = ['.hipikat.org']
+    BASE_DIR = dirname(dirname(dirname(__file__)))
     LANGUAGE_CODE = 'en-au'
+    PROJECT_NAME = 'hipikat'
     TIME_ZONE = 'Australia/Perth'
 
-    # Site-specific settings
-    SITE_RECENT_POST_COUNT = 30
-
-
-class Base(LocalSiteMixin, Configuration):
-
-    PROJECT_NAME = 'hipikat'
-    SITE_ID = 1
-    USE_I18N = False    # Internationalisation framework
-    USE_L10N = True     # Localisation framework
-    USE_TZ = True       # Timezone support for dates
-
-    # Directory structure
-    BASE_DIR = dirname(dirname(dirname(__file__)))
-    LIB_DIR = join(BASE_DIR, 'lib')
-    VAR_DIR = join(BASE_DIR, 'var')
-    ETC_DIR = join(BASE_DIR, 'etc')
-    SRC_DIR = join(BASE_DIR, 'src')
-    DB_DIR = join(VAR_DIR, 'db')
-    LOG_DIR = join(VAR_DIR, 'log')
-    #sys.path.insert(0, join(SRC_DIR, 'apps'))
-
-    # Debugging, development and testing
-    TESTING = True if 'test' in sys.argv else False
-    DEBUG = False
-    #@staticmethod
-    def _setup__debug(cls):
-        cls.TEMPLATE_DEBUG = cls.DEBUG
-        cls.DEBUG_URL_PATTERNS = cls.DEBUG
-
-    # Databases
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'hipikat_dev',
-            'USER': 'zeno',
-        }
-    }
-    #DATABASES = { 
-    #    'default': {
-    #        'engine': 'sqlite3',
-    #        'name': join(DB_DIR, 'base.db'),
-    #    }   
-    #} 
-
-    # Security
-    ALLOWED_HOSTS = ['.hipikat.org', '.hipikat.local']
-    INTERNAL_IPS = ['127.0.0.1']
-    SECRET_KEY_FILE = join(VAR_DIR, 'env/SECRET_KEY')
-    SECRET_KEY = environ['SECRET_KEY']
-
-    # URLs
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'
+    # EnvSettingsMixin
+    ENV_SETTINGS = ['SECRET_KEY']
 
     # File discovery
-    MEDIA_ROOT = join(VAR_DIR, 'media')
-    STATIC_ROOT = join(VAR_DIR, 'static')
-    STATICFILES_DIRS = [join(SRC_DIR, 'static')]
     STATICFILES_FINDERS = [
         'revkom.staticfiles.finders.CustomFileFinder',
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    ]
+    ]  
+
+    # Site-specific settings
+    SITE_RECENT_POST_COUNT = 30
+
+    ###
+    # Third-party app settings
+    ###
+
+    # Revkom - Adam Wright's in vitro shared code base...
     REVKOM_STATICFILES = {
         'lib/foundation/modernizr.js': join(
             LIB_DIR, 'zurb-foundation/js/vendor/custom.modernizr.js'),
         'lib/foundation/foundation.js': join(
             LIB_DIR, 'zurb-foundation/js/foundation/foundation.js'),
     }
-    FLUENT_PAGES_TEMPLATE_DIR = join(SRC_DIR, 'layouts')
-    FLUENT_PAGES_BASE_TEMPLATE = 'base-fluent.html'
+
+    # The Fluent suite
+    @classmethod
+    def setup__fluent(cls):
+        FLUENT_PAGES_TEMPLATE_DIR = join(cls.SRC_DIR, 'layouts')
+        FLUENT_PAGES_BASE_TEMPLATE = 'base-fluent.html'
+
+
+class Base(LocalSiteMixin, Configuration):
+
     #FLUENT_BLOGS_BASE_TEMPLATE
     TEMPLATE_DIRS = [
         join(SRC_DIR, 'templates'),
@@ -93,9 +63,6 @@ class Base(LocalSiteMixin, Configuration):
     ]
 
     # Request pipeline
-    ROOT_HOSTCONF = PROJECT_NAME + '.hosts'
-    DEFAULT_HOST = 'main'
-    ROOT_URLCONF = PROJECT_NAME + '.urls._default'
     MIDDLEWARE_CLASSES = [
         'django_hosts.middleware.HostsMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -118,64 +85,59 @@ class Base(LocalSiteMixin, Configuration):
     ]
 
     # Installed apps
-    INSTALLED_APPS = [
-        PROJECT_NAME,   # This project
-
-        'revkom',       # revkom-helpers: Software patterns, utils, mixins etc
-
-        'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
-        'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
-        'south',                # South: Database-agnostic migrations for Django applications
-
-        'django_hosts',
+    @staticmethod
+    def _setup__intalled_apps(cls):
+        cls.INSTALLED_APPS = [
+            cls.PROJECT_NAME,   # This project
     
-        # Django contrib packages - https://docs.djangoproject.com/en/dev/ref/contrib/
-        'django.contrib.admin',
-        'django.contrib.admindocs',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.humanize',
-        'django.contrib.messages',
-        'django.contrib.sessions',
-        'django.contrib.staticfiles',
-        'django.contrib.sites',
-
-        # django-fluent-pages: A polymorphic-pages-in-a-tree structure.
-        'fluent_pages',
-        'fluent_pages.pagetypes.flatpage',          # requires django-wysiwyg
-        'fluent_pages.pagetypes.fluentpage',        # requires django-fluent-contents(?)
-        'fluent_pages.pagetypes.redirectnode',      # requires django-any-urlfield
+            'revkom',       # revkom-helpers: Software patterns, utils, mixins etc
     
-        # django-fluent-contents: A collection of apps to build an end-user CMS for Django admin.
-        'fluent_contents',
-        'fluent_contents.plugins.text',                # requires django-wysiwyg
-        'fluent_contents.plugins.code',                # requires pygments
-        'fluent_contents.plugins.gist',
-        'fluent_contents.plugins.googledocsviewer',
-        'fluent_contents.plugins.iframe',
-        #'fluent_contents.plugins.markup',
-        'fluent_contents.plugins.rawhtml',
-
-        # django-fluent-blogs
-        'fluent_blogs',
-
-        'mptt',
-        'polymorphic',
-        'polymorphic_tree',
-        'categories',
-        'categories.editor',
-        'taggit',
-        'taggit_autocomplete_modified',
-        'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
-        'any_urlfield',         # django-any-urlfield: URL selector supprting external URLs and models
-    ]
-
-    @classmethod
-    def setup(cls):
-        super(Base, cls).setup()
-        for name in dir(cls):
-            if name.startswith('_setup__'):
-                getattr(cls, name)(cls)
+            'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
+            'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
+            'south',                # South: Database-agnostic migrations for Django applications
+    
+            'django_hosts',
+        
+            # Django contrib packages - https://docs.djangoproject.com/en/dev/ref/contrib/
+            'django.contrib.admin',
+            'django.contrib.admindocs',
+            'django.contrib.auth',
+            'django.contrib.contenttypes',
+            'django.contrib.humanize',
+            'django.contrib.messages',
+            'django.contrib.sessions',
+            'django.contrib.staticfiles',
+            'django.contrib.sites',
+    
+            # django-fluent-pages: A polymorphic-pages-in-a-tree structure.
+            'fluent_pages',
+            'fluent_pages.pagetypes.flatpage',          # requires django-wysiwyg
+            'fluent_pages.pagetypes.fluentpage',        # requires django-fluent-contents(?)
+            'fluent_pages.pagetypes.redirectnode',      # requires django-any-urlfield
+        
+            # django-fluent-contents: A collection of apps to build an end-user CMS for Django admin.
+            'fluent_contents',
+            'fluent_contents.plugins.text',                # requires django-wysiwyg
+            'fluent_contents.plugins.code',                # requires pygments
+            'fluent_contents.plugins.gist',
+            'fluent_contents.plugins.googledocsviewer',
+            'fluent_contents.plugins.iframe',
+            #'fluent_contents.plugins.markup',
+            'fluent_contents.plugins.rawhtml',
+    
+            # django-fluent-blogs
+            'fluent_blogs',
+    
+            'mptt',
+            'polymorphic',
+            'polymorphic_tree',
+            'categories',
+            'categories.editor',
+            'taggit',
+            'taggit_autocomplete_modified',
+            'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
+            'any_urlfield',         # django-any-urlfield: URL selector supprting external URLs and models
+        ]
 
     ###
     # Third-party apps

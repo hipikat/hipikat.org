@@ -17,6 +17,6 @@ urlpatterns = patterns(
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 )
 
-if settings.DEBUG_URL_PATTERNS:
+if settings.DEBUG_URLPATTERNS_ENABLED:
     from ._debug import urlpatterns as debug_patterns
     urlpatterns += debug_patterns
