@@ -1,13 +1,10 @@
 
-from django.conf.urls import patterns, include, url
-from django.shortcuts import render
-
-
-def blog_layout(request):
-    return render(request, "dev/blog-layout.html")
+from django.conf.urls import patterns, url
+#from ..views import debug as debug_views
 
 
 urlpatterns = patterns(
-    "",
-    url(r"^blog-layout/$", blog_layout, name="blog_layout"),
+    'hipikat.views.debug',
+    url(r"^scratch/$", 'scratch', name="debug-scratch"),
+    url(r"^blog-layout/$", 'blog_layout', name="blog_layout"),
 )

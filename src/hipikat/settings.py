@@ -2,65 +2,68 @@
 Django settings for http://hipikat.org/, using django-configurations.
 """
 
-from os import environ
-from os.path import dirname, join
-from configurations import Configuration
-from cinch.configurations import (BaseConfiguration, EnvdirMixin, FHSDirsMixin,
-    HostsURLsMixin)
+from itertools import chain
+from os import path
+from os.path import dirname
+from cinch import BaseConfiguration, FHSDirsMixin, HostsURLsMixin
+#from configurations.values import SecretValue
+from configurations import values
 
 
-class LocalSiteBase(EnvSettingsMixin, FHSDirsMixin, HostsURLsMixin,
-    BaseConfiguration):
+class Base(
+        # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR
+        FHSDirsMixin,
+        # Setup for django-hosts, using global and debug url modules
+        HostsURLsMixin,
+        # Normalize settings
+        BaseConfiguration):
+
+    # TODO: Abstract configurable local site settings into a 'local settings model'(?)
+    SITE_RECENT_POST_COUNT = 30
 
     # Metadata
-    ADMINS = (
-        ('Adam Wright', 'adam@hipikat.org'),
-    )
+    ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
     ALLOWED_HOSTS = ['.hipikat.org']
     BASE_DIR = dirname(dirname(dirname(__file__)))
     LANGUAGE_CODE = 'en-au'
     PROJECT_NAME = 'hipikat'
+    #SECRET_KEY = values.SecretValue()
+    SECRET_KEY = values.Value('12345')
     TIME_ZONE = 'Australia/Perth'
 
-    # EnvSettingsMixin
-    ENV_SETTINGS = ['SECRET_KEY']
+    class CinchMeta(object):
+        """django-cinch simplifies some core configuration."""
+        # Databases
+        DATABASE_TYPE = 'postgresql'
+        DATABASE_NAME = 'hipikat_prod'
+
+        # Logging (TODO: implement)
+        LOGGING_SETUP = 'filesystem'
+        LOGFILE_BACKUPS = 2
 
     # File discovery
     STATICFILES_FINDERS = [
-        'revkom.staticfiles.finders.CustomFileFinder',
+        #'revkom.staticfiles.finders.CustomFileFinder',
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    ]  
-
-    # Site-specific settings
-    SITE_RECENT_POST_COUNT = 30
-
-    ###
-    # Third-party app settings
-    ###
-
-    # Revkom - Adam Wright's in vitro shared code base...
-    REVKOM_STATICFILES = {
-        'lib/foundation/modernizr.js': join(
-            LIB_DIR, 'zurb-foundation/js/vendor/custom.modernizr.js'),
-        'lib/foundation/foundation.js': join(
-            LIB_DIR, 'zurb-foundation/js/foundation/foundation.js'),
-    }
-
-    # The Fluent suite
-    @classmethod
-    def setup__fluent(cls):
-        FLUENT_PAGES_TEMPLATE_DIR = join(cls.SRC_DIR, 'layouts')
-        FLUENT_PAGES_BASE_TEMPLATE = 'base-fluent.html'
-
-
-class Base(LocalSiteMixin, Configuration):
-
-    #FLUENT_BLOGS_BASE_TEMPLATE
-    TEMPLATE_DIRS = [
-        join(SRC_DIR, 'templates'),
-        FLUENT_PAGES_TEMPLATE_DIR,
     ]
+    @classmethod
+    def _setup__staticfiles_dirs(cls):
+        STATICFILES_DIRS = [
+            path.join(cls.SRC_DIR, 'static'),
+            ('zurb', path.join(cls.LIB_DIR, 'zurb-foundation', 'js')),
+        ]
+
+    # TODO: Add this to documentation somewhere before deleting it since it's
+    # currently the only actual use of the CustomFileFinder staticfile finder.
+    #@classmethod
+    #def _setup__revkom_staticfiles(cls):
+    #    cls.REVKOM_STATICFILES_CUSTOM = {
+    #        'lib/foundation/modernizr.js': path.join(
+    #            cls.LIB_DIR, 'zurb-foundation/js/vendor/custom.modernizr.js'),
+    #        'lib/foundation/foundation.js': path.join(
+    #            cls.LIB_DIR, 'zurb-foundation/js/foundation/foundation.js'),
+    #    }
 
     # Request pipeline
     MIDDLEWARE_CLASSES = [
@@ -85,63 +88,60 @@ class Base(LocalSiteMixin, Configuration):
     ]
 
     # Installed apps
-    @staticmethod
-    def _setup__intalled_apps(cls):
-        cls.INSTALLED_APPS = [
-            cls.PROJECT_NAME,   # This project
-    
-            'revkom',       # revkom-helpers: Software patterns, utils, mixins etc
-    
-            'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
-            'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
-            'south',                # South: Database-agnostic migrations for Django applications
-    
-            'django_hosts',
-        
-            # Django contrib packages - https://docs.djangoproject.com/en/dev/ref/contrib/
-            'django.contrib.admin',
-            'django.contrib.admindocs',
-            'django.contrib.auth',
-            'django.contrib.contenttypes',
-            'django.contrib.humanize',
-            'django.contrib.messages',
-            'django.contrib.sessions',
-            'django.contrib.staticfiles',
-            'django.contrib.sites',
-    
-            # django-fluent-pages: A polymorphic-pages-in-a-tree structure.
-            'fluent_pages',
-            'fluent_pages.pagetypes.flatpage',          # requires django-wysiwyg
-            'fluent_pages.pagetypes.fluentpage',        # requires django-fluent-contents(?)
-            'fluent_pages.pagetypes.redirectnode',      # requires django-any-urlfield
-        
-            # django-fluent-contents: A collection of apps to build an end-user CMS for Django admin.
-            'fluent_contents',
-            'fluent_contents.plugins.text',                # requires django-wysiwyg
-            'fluent_contents.plugins.code',                # requires pygments
-            'fluent_contents.plugins.gist',
-            'fluent_contents.plugins.googledocsviewer',
-            'fluent_contents.plugins.iframe',
-            #'fluent_contents.plugins.markup',
-            'fluent_contents.plugins.rawhtml',
-    
-            # django-fluent-blogs
-            'fluent_blogs',
-    
-            'mptt',
-            'polymorphic',
-            'polymorphic_tree',
-            'categories',
-            'categories.editor',
-            'taggit',
-            'taggit_autocomplete_modified',
-            'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
-            'any_urlfield',         # django-any-urlfield: URL selector supprting external URLs and models
-        ]
+    INSTALLED_APPS = [
+        'hipikat',              # This project
+        'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
+
+        'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
+        'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
+        'south',                # South: Database-agnostic migrations for Django applications
+        'django_hosts',
+
+        # django-fluent-pages: A polymorphic-pages-in-a-tree structure.
+        'fluent_pages',
+        'fluent_pages.pagetypes.flatpage',          # requires django-wysiwyg
+        'fluent_pages.pagetypes.fluentpage',        # requires django-fluent-contents(?)
+        'fluent_pages.pagetypes.redirectnode',      # requires django-any-urlfield
+
+        # django-fluent-contents: A collection of apps to build an end-user CMS for Django admin.
+        'fluent_contents',
+        'fluent_contents.plugins.text',                # requires django-wysiwyg
+        'fluent_contents.plugins.code',                # requires pygments
+        'fluent_contents.plugins.gist',
+        'fluent_contents.plugins.googledocsviewer',
+        'fluent_contents.plugins.iframe',
+        'fluent_contents.plugins.markup',   # this was commented out? breaks something?
+        'fluent_contents.plugins.rawhtml',
+
+        # django-fluent-blogs
+        'fluent_blogs',
+
+        # Required by django-fluent apps
+        'mptt',
+        'polymorphic',
+        'polymorphic_tree',
+        'categories',
+        'categories.editor',
+        'taggit',
+        'taggit_autocomplete_modified',
+        'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
+        'any_urlfield',         # django-any-urlfield: URL selector for external URLs and models
+    ]
+    # Separate out contrib apps for the 'Core' configuration; see below.
+    installed_django_contrib_apps = ['django.contrib.' + dj_app for dj_app in
+                                     ('admin', 'admindocs', 'auth', 'contenttypes', 'humanize',
+                                      'messages', 'sessions', 'staticfiles', 'sites')]
+    INSTALLED_APPS += installed_django_contrib_apps
 
     ###
-    # Third-party apps
+    # Third-party app settings
     ###
+
+    # The Fluent suite
+    @classmethod
+    def _setup__fluent(cls):
+        cls.FLUENT_PAGES_TEMPLATE_DIR = path.join(cls.SRC_DIR, 'layouts')
+        cls.FLUENT_PAGES_BASE_TEMPLATE = 'base-fluent.html'
 
     # django-fluent-contents
     FLUENT_MARKUP_LANGUAGE = 'reStructuredText'        # can also be markdown or textile
@@ -151,65 +151,70 @@ class Base(LocalSiteMixin, Configuration):
 
 
 class Debug(Base):
+    """
+    Configuration for debugging. This class attempts to remain close to
+    a production profile, while just switching on more debugging features
+    and increasing logging. For development, use Development.
+    """
 
     DEBUG = True
-    DEBUG_TOOLBAR_CONFIG = { 
+    DEBUG_TOOLBAR_CONFIG = {
         'INTERCEPT_REDIRECTS': False,
     }
-    TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT[%s]'
+    TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
 
     @classmethod
     def setup(cls):
         super(Debug, cls).setup()
 
+        # Use an sqlite database during testing to increase test speeds
         if cls.TESTING:
-            DATABASES = {
-                'default': {
-                    'engine': 'sqlite3',
-                    'name': join(cls.DB_DIR, 'test-run.db'),
-                }
+            cls.DATABASES['default'] = {
+                'engine': 'sqlite3',
+                'name': path.join(cls.DB_DIR, 'test-run.db'),
             }
 
-        cls.MIDDLEWARE_CLASSES = [
-            'hipikat.middleware.DebugOuterMiddleware',
-        ] + cls.MIDDLEWARE_CLASSES + [
+        # Request pipeline
+        cls.MIDDLEWARE_CLASSES = tuple(chain([
+            'hipikat.middleware.debug.DebugOuterMiddleware',
+        ], cls.MIDDLEWARE_CLASSES, [
             'debug_toolbar.middleware.DebugToolbarMiddleware',
-            'hipikat.middleware.DebugInnerMiddleware',
-        ]
+            'hipikat.middleware.debug.DebugInnerMiddleware',
+        ]))
 
-        cls.INSTALLED_APPS = cls.INSTALLED_APPS + [
-            'debug_toolbar', 
-        ]
-
-
-class Default(Debug):
-
-    # Security
-    SECRET_KEY = '12345'
-
-    @classmethod
-    def setup(cls):
-        super(Default, cls).setup()
-
-        # Databases
-        cls.DATABASES = { 
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': join(cls.DB_DIR, 'default.db'),
-            }   
-        }
+        # Installed apps
+        cls.INSTALLED_APPS = tuple(chain(
+            cls.INSTALLED_APPS,
+            ['debug_toolbar']
+        ))
 
 
 class Core(Base):
     """
     A configuration which reduces ``INSTALLED_APPS`` to a core set of apps,
-    used for (inital) ``manage.py syncdb`` calls on blank databases,
-    beacuse sometimes third-party apps have a dependance on a content_types
-    table already having been created.
+    used for (inital) ``manage.py syncdb`` calls on blank databases... because
+    sometimes third-party apps have a dependance on the content_types table
+    having already been created. (I'm looking at you, django-fluent family.)
     """
-    INSTALLED_APPS = ['south'] + ['djang.contrib.' + dj_app
-        for dj_app in ('admin', 'admindocs', 'auth', 'contenttypes', 'humanize',
-                       'messages', 'sessions', 'staticfiles', 'sites')]
+    INSTALLED_APPS = ['south'] + Base.installed_django_contrib_apps
+
+
+class Default(Debug):
+    pass
+    # Security
+    #SECRET_KEY = '12345'
+
+    #@classmethod
+    #def setup(cls):
+    #    super(Default, cls).setup()
+
+    #    # Databases
+    #    cls.DATABASES = {
+    #        'default': {
+    #            'ENGINE': 'django.db.backends.sqlite3',
+    #            'NAME': path.join(cls.DB_DIR, 'default.db'),
+    #        }
+    #    }
 
 
 class Development(Debug):
@@ -218,4 +223,3 @@ class Development(Debug):
 
 class Production(Base):
     pass
-

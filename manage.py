@@ -5,7 +5,7 @@ from sys import argv
 import envdir
 
 if __name__ == "__main__":
-    # Read files from var/env/ into environment variables
+    # Copy text from files in var/env/ into environment variables
     envdir.read(join(dirname(__file__), 'var/env'))
 
     # Default to a dumb configuration, which provides its own (insecure)

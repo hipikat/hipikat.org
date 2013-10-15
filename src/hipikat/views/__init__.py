@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from hipikat.models import Post
 
 
-__all__ = ['MainLandingView', 'www_landing_view',]
+__all__ = ['MainLandingView', 'main_landing_view',]
 
 
 class MainLandingView(TemplateView):
@@ -20,4 +20,9 @@ class MainLandingView(TemplateView):
         except IndexError:
             context['posts'] = list(recent_posts)
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        import pdb; pdb.set_trace()
+        return super(MainLandingView, self).dispatch(request, *args, **kwargs)
+
 main_landing_view = MainLandingView.as_view
