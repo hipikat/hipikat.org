@@ -21,8 +21,13 @@ class MainLandingView(TemplateView):
             context['posts'] = list(recent_posts)
         return context
 
-    def dispatch(self, request, *args, **kwargs):
+    #def dispatch(self, request, *args, **kwargs):
+    #    import pdb; pdb.set_trace()
+    #    return super(MainLandingView, self).dispatch(request, *args, **kwargs)
+
+    def render_to_response(self, *args, **kwargs):
+        response = super(MainLandingView, self).render_to_response(*args, **kwargs)
         import pdb; pdb.set_trace()
-        return super(MainLandingView, self).dispatch(request, *args, **kwargs)
+        return response
 
 main_landing_view = MainLandingView.as_view

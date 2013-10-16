@@ -49,7 +49,7 @@ class Base(
     ]
     @classmethod
     def _setup__staticfiles_dirs(cls):
-        STATICFILES_DIRS = [
+        cls.STATICFILES_DIRS = [
             path.join(cls.SRC_DIR, 'static'),
             ('zurb', path.join(cls.LIB_DIR, 'zurb-foundation', 'js')),
         ]
