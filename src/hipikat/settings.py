@@ -223,3 +223,13 @@ class Development(Debug):
 
 class Production(Base):
     pass
+
+
+#update_globals_from_class(
+#        class_from_env('DJANGO_CONFIGURATION'),
+#        restrict=[cinch.UPPERCASE_NAMES])
+
+#from os import environ
+#ConfigurationClass = globals()[environ['DJANGO_CONFIGURATION']]
+#ConfigurationSettings = {att: getattr(Barr, att) for att in dir(Barr) if att == att.upper()}
+#globals().update(ConfigurationSettings)
