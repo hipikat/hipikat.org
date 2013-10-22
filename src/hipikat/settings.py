@@ -3,69 +3,50 @@ Django settings for http://hipikat.org/, using django-configurations.
 """
 
 from itertools import chain
-from os import path
+from os import getenv, path
 from os.path import dirname
-from cinch import BaseConfiguration, FHSDirsMixin, HostsURLsMixin
+from cinch import cinch_django_settings, CinchSettings, NormaliseSettings
+from cinch.mixins import FHSDirsMixin, DjangoHostsURLsMixin
 #from configurations.values import SecretValue
-from configurations import values
+#from configurations import values
+
+
+class LocalSiteSettings(object):
+    """
+    TODO: Abstract configurable local site settings into a 'local settings model'(?)
+    """
+    SITE_RECENT_POST_COUNT = 30
 
 
 class Base(
+        # Normalise settings to sensible defaults, add some conveniences
+        NormaliseSettings,
+        # Hard-coded (bad!) settings specific to hipikat.org
+        LocalSiteSettings,
         # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR
         FHSDirsMixin,
-        # Setup for django-hosts, using global and debug url modules
-        HostsURLsMixin,
-        # Normalize settings
-        BaseConfiguration):
+        # Base class for a django-cinch settings class
+        CinchSettings):
 
-    # TODO: Abstract configurable local site settings into a 'local settings model'(?)
-    SITE_RECENT_POST_COUNT = 30
-
-    # Metadata
+    ### Project metadata
     ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
     ALLOWED_HOSTS = ['.hipikat.org']
     BASE_DIR = dirname(dirname(dirname(__file__)))
     LANGUAGE_CODE = 'en-au'
-    PROJECT_NAME = 'hipikat'
-    #SECRET_KEY = values.SecretValue()
-    SECRET_KEY = values.Value('12345')
+    PROJECT_MODULE = 'hipikat'
+    SECRET_KEY = getenv('SECRET_KEY')
     TIME_ZONE = 'Australia/Perth'
 
-    class CinchMeta(object):
-        """django-cinch simplifies some core configuration."""
-        # Databases
-        DATABASE_TYPE = 'postgresql'
-        DATABASE_NAME = 'hipikat_prod'
+    ### Data stores
+    DATABASES = { 
+        'default': {
+            'USER': 'hipikat',
+            'NAME': 'hipikat.org',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        }   
+    }
 
-        # Logging (TODO: implement)
-        LOGGING_SETUP = 'filesystem'
-        LOGFILE_BACKUPS = 2
-
-    # File discovery
-    STATICFILES_FINDERS = [
-        #'revkom.staticfiles.finders.CustomFileFinder',
-        'django.contrib.staticfiles.finders.FileSystemFinder',
-        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    ]
-    @classmethod
-    def _setup__staticfiles_dirs(cls):
-        cls.STATICFILES_DIRS = [
-            path.join(cls.SRC_DIR, 'static'),
-            ('zurb', path.join(cls.LIB_DIR, 'zurb-foundation', 'js')),
-        ]
-
-    # TODO: Add this to documentation somewhere before deleting it since it's
-    # currently the only actual use of the CustomFileFinder staticfile finder.
-    #@classmethod
-    #def _setup__revkom_staticfiles(cls):
-    #    cls.REVKOM_STATICFILES_CUSTOM = {
-    #        'lib/foundation/modernizr.js': path.join(
-    #            cls.LIB_DIR, 'zurb-foundation/js/vendor/custom.modernizr.js'),
-    #        'lib/foundation/foundation.js': path.join(
-    #            cls.LIB_DIR, 'zurb-foundation/js/foundation/foundation.js'),
-    #    }
-
-    # Request pipeline
+    ### Request pipeline
     MIDDLEWARE_CLASSES = [
         'django_hosts.middleware.HostsMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -86,16 +67,22 @@ class Base(
         'django.core.context_processors.request',
         'hipikat.styles.context_processor',
     ]
+    ROOT_URLCONF = 'hipikat.urls'
 
-    # Installed apps
+    # django-hosts
+    ROOT_HOSTCONF = 'hipikat.hosts'
+    DEFAULT_HOST = 'main'
+
+    ### Installed apps
     INSTALLED_APPS = [
         'hipikat',              # This project
         'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
 
-        'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
-        'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
         'south',                # South: Database-agnostic migrations for Django applications
-        'django_hosts',
+        'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
+        'django_hosts',         # django-hosts: Routes to urlconfs based on the requested domain
+
+        'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
 
         # django-fluent-pages: A polymorphic-pages-in-a-tree structure.
         'fluent_pages',
@@ -126,35 +113,43 @@ class Base(
         'taggit_autocomplete_modified',
         'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
         'any_urlfield',         # django-any-urlfield: URL selector for external URLs and models
+
+        'django.contrib.admin',
+        'django.contrib.admindocs',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.humanize',
+        'django.contrib.messages',
+        'django.contrib.sessions',
+        'django.contrib.staticfiles',
+        'django.contrib.sites',
     ]
-    # Separate out contrib apps for the 'Core' configuration; see below.
-    installed_django_contrib_apps = ['django.contrib.' + dj_app for dj_app in
-                                     ('admin', 'admindocs', 'auth', 'contenttypes', 'humanize',
-                                      'messages', 'sessions', 'staticfiles', 'sites')]
-    INSTALLED_APPS += installed_django_contrib_apps
 
-    ###
-    # Third-party app settings
-    ###
+    def setup(cnf):
+        """Configure settings which require initialised base classes/mixins."""
+        super(Base, cnf).setup()
 
-    # The Fluent suite
-    @classmethod
-    def _setup__fluent(cls):
-        cls.FLUENT_PAGES_TEMPLATE_DIR = path.join(cls.SRC_DIR, 'layouts')
-        cls.FLUENT_PAGES_BASE_TEMPLATE = 'base-fluent.html'
+        ### Debugging, testing, development
+        cnf.setdefault('DEBUG_URLPATTERNS_ENABLED', cnf.DEBUG)
 
-    # django-fluent-contents
+        ### Static files
+        cnf.STATICFILES_DIRS = [
+            path.join(cnf.SRC_DIR, 'static'),
+            ('zurb', path.join(cnf.LIB_DIR, 'zurb-foundation', 'js')),
+        ]
+
+    ### Fluent apps
     FLUENT_MARKUP_LANGUAGE = 'reStructuredText'        # can also be markdown or textile
 
-    # django-wysiwyg
-    DJANGO_WYSIWYG_FLAVOR = "yui_advanced"
+    ### Miscellaneous apps
+    cnf.DJANGO_WYSIWYG_FLAVOR = "yui_advanced"
 
 
 class Debug(Base):
     """
-    Configuration for debugging. This class attempts to remain close to
-    a production profile, while just switching on more debugging features
-    and increasing logging. For development, use Development.
+    Settings for debugging. This class attempts to remain close to a
+    production profile, while switching on more debugging features and
+    increasing logging output. For development, use Development.
     """
 
     DEBUG = True
@@ -163,58 +158,43 @@ class Debug(Base):
     }
     TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
 
-    @classmethod
-    def setup(cls):
-        super(Debug, cls).setup()
+    def setup(cnf):
+        super(Debug, cnf).setup()
 
-        # Use an sqlite database during testing to increase test speeds
-        if cls.TESTING:
-            cls.DATABASES['default'] = {
+        # If tests are being run (added by NormaliseSettings)
+        if cnf.TESTING:
+            # Use an sqlite database while testing to violently increase test speed
+            cnf.DATABASES['default'] = {
                 'engine': 'sqlite3',
-                'name': path.join(cls.DB_DIR, 'test-run.db'),
+                'name': path.join(cnf.DB_DIR, 'test-run.db'),
             }
 
         # Request pipeline
-        cls.MIDDLEWARE_CLASSES = tuple(chain([
+        cnf.MIDDLEWARE_CLASSES = tuple(chain([
             'hipikat.middleware.debug.DebugOuterMiddleware',
-        ], cls.MIDDLEWARE_CLASSES, [
+        ], cnf.MIDDLEWARE_CLASSES, [
             'debug_toolbar.middleware.DebugToolbarMiddleware',
             'hipikat.middleware.debug.DebugInnerMiddleware',
         ]))
 
         # Installed apps
-        cls.INSTALLED_APPS = tuple(chain(
-            cls.INSTALLED_APPS,
+        cnf.INSTALLED_APPS = list(chain(
+            cnf.INSTALLED_APPS,
             ['debug_toolbar']
         ))
 
 
 class Core(Base):
     """
-    A configuration which reduces ``INSTALLED_APPS`` to a core set of apps,
-    used for (inital) ``manage.py syncdb`` calls on blank databases... because
-    sometimes third-party apps have a dependance on the content_types table
-    having already been created. (I'm looking at you, django-fluent family.)
+    Settings which reduce ``INSTALLED_APPS`` to a core set of apps, used for
+    inital ``manage.py syncdb`` calls on blank databases, because sometimes
+    third-party apps require certain tables (usually related to content types)
+    to have already been created. (I'm looking at you, django-fluent family.)
     """
-    INSTALLED_APPS = ['south'] + Base.installed_django_contrib_apps
-
-
-class Default(Debug):
-    pass
-    # Security
-    #SECRET_KEY = '12345'
-
-    #@classmethod
-    #def setup(cls):
-    #    super(Default, cls).setup()
-
-    #    # Databases
-    #    cls.DATABASES = {
-    #        'default': {
-    #            'ENGINE': 'django.db.backends.sqlite3',
-    #            'NAME': path.join(cls.DB_DIR, 'default.db'),
-    #        }
-    #    }
+    #INSTALLED_APPS = ['south'] + Base.installed_django_contrib_apps
+    def setup(cnf):
+        cnf.INSTALLED_APPS = [app for app in cnf.INSTALLED_APPS
+                              if app.startswith('django.') or app == 'south']
 
 
 class Development(Debug):
@@ -233,3 +213,8 @@ class Production(Base):
 #ConfigurationClass = globals()[environ['DJANGO_CONFIGURATION']]
 #ConfigurationSettings = {att: getattr(Barr, att) for att in dir(Barr) if att == att.upper()}
 #globals().update(ConfigurationSettings)
+
+
+# Instantitate a class specified by the DJANGO_SETTINGS_CLASS environment
+# variable, and copy its (uppercase) attributes to this module's globals.
+cinch_django_settings(globals())
