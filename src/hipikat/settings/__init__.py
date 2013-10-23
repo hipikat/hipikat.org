@@ -1,6 +1,5 @@
 """
-Settings for the Django project (which also happens to be the personal,
-multi-purpose website of Adam Wright) at http://hipikat.org/.
+Settings for the Django project; in this case, http://hipikat.org/.
 """
 
 from itertools import chain
@@ -8,8 +7,7 @@ from os import getenv, path
 from os.path import dirname
 from cinch import cinch_django_settings, CinchSettings, NormaliseSettings
 from cinch.mixins import FHSDirsMixin       #, DjangoHostsURLsMixin
-#from configurations.values import SecretValue
-#from configurations import values
+from .logging import FileLoggingMixin
 
 
 class LocalSiteSettings(object):
@@ -20,19 +18,21 @@ class LocalSiteSettings(object):
 
 
 class Base(
+        # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR
+        FHSDirsMixin,
         # Normalise settings to sensible defaults, add some conveniences
         NormaliseSettings,
         # Hard-coded (bad!) settings specific to hipikat.org
         LocalSiteSettings,
-        # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR
-        FHSDirsMixin,
+        # Basic file logging, to var/log/, with rotating 5M files (or thereabouts).
+        FileLoggingMixin,
         # Base class for a django-cinch settings class
         CinchSettings):
 
     ### Project metadata
     ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
     ALLOWED_HOSTS = ['.hipikat.org']
-    BASE_DIR = dirname(dirname(dirname(__file__)))
+    BASE_DIR = dirname(dirname(dirname(dirname(__file__))))     # [repo]/src/[proj]/settings/[me]
     LANGUAGE_CODE = 'en-au'
     PROJECT_MODULE = 'hipikat'
     SECRET_KEY = getenv('SECRET_KEY')
@@ -142,10 +142,11 @@ class Base(
             ('zurb', path.join(cnf.LIB_DIR, 'zurb-foundation', 'js')),
         ]
 
-    ### Fluent apps
+    ### Third-party apps
+    # Fluent apps
     FLUENT_MARKUP_LANGUAGE = 'reStructuredText'     # Can also be markdown or textile
 
-    ### Miscellaneous apps
+    # Miscellaneous...
     DJANGO_WYSIWYG_FLAVOR = "yui_advanced"
 
 

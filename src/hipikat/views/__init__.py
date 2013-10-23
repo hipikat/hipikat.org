@@ -27,7 +27,7 @@ class MainLandingView(TemplateView):
 
     def render_to_response(self, *args, **kwargs):
         response = super(MainLandingView, self).render_to_response(*args, **kwargs)
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         return response
 
-main_landing_view = MainLandingView.as_view
+main_landing_view = MainLandingView.as_view()

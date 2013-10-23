@@ -1,6 +1,5 @@
 
 from django.conf.urls import patterns, url
-#from ..views import debug as debug_views
 
 
 urlpatterns = patterns(

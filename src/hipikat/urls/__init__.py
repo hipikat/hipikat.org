@@ -18,16 +18,19 @@ urlpatterns = patterns(
     url('^', 'NotConfiguredView'),
 )
 
-# Sub-modules should extend their urlpatterns from this base
-global_urlpatterns = patterns(
+# Django admin interface and admin docs
+admin_urlpatterns = patterns(
     '', 
-    # Django admin and admin docs
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 )
 
-
+# Sub-modules should extend their urlpatterns with global_urlpatterns
+# global_urlpatterns currently comprises:
+# - Django admin and admin docs
+# - Debug urlpatterns (if DEBUG is True)
+global_urlpatterns = admin_urlpatterns
 if settings.DEBUG_URLPATTERNS_ENABLED:
     from ._debug import urlpatterns as debug_patterns
-    urlpatterns += debug_patterns
+    global_urlpatterns += debug_patterns
 
