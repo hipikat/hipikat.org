@@ -35,7 +35,7 @@ class Base(
     BASE_DIR = dirname(dirname(dirname(dirname(__file__))))     # [repo]/src/[proj]/settings/[me]
     LANGUAGE_CODE = 'en-au'
     PROJECT_MODULE = 'hipikat'
-    SECRET_KEY = getenv('SECRET_KEY')
+    SECRET_KEY = getenv('DJANGO_SECRET_KEY')
     TIME_ZONE = 'Australia/Perth'
 
     ### Security
