@@ -1,5 +1,5 @@
 """
-Settings for the Django project; in this case, http://hipikat.org/.
+Settings for the Django project on http://hipikat.org/.
 """
 
 from itertools import chain
