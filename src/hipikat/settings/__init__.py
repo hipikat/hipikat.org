@@ -94,6 +94,10 @@ class Base(
         'fluent_pages.pagetypes.fluentpage',        # requires django-fluent-contents(?)
         'fluent_pages.pagetypes.redirectnode',      # requires django-any-urlfield
 
+        # django-fluent-blogs
+        'fluent_blogs',
+        'fluent_blogs.pagetypes.blogpage',
+
         # django-fluent-contents: A collection of apps to build an end-user CMS for Django admin.
         'fluent_contents',
         'fluent_contents.plugins.text',                # requires django-wysiwyg
@@ -103,9 +107,6 @@ class Base(
         'fluent_contents.plugins.iframe',
         'fluent_contents.plugins.markup',   # this was commented out? breaks something?
         'fluent_contents.plugins.rawhtml',
-
-        # django-fluent-blogs
-        'fluent_blogs',
 
         # Required by django-fluent apps
         'mptt',

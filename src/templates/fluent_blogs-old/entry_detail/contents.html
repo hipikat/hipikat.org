@@ -1,5 +1,14 @@
 {% extends "fluent_blogs/entry_contents_base.html" %}
 
+{% block entry-row %}
+<div class="row page blog-detail">
+  {% block entry-columns %}
+    {{ block.super }}
+  {% endblock %}
+</div>
+{% endblock %}
+
+
 {% block entry-footer-contents %}
     {{ block.super }}
 

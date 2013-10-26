@@ -19,6 +19,7 @@ urlpatterns = patterns(
 )
 
 # Django admin interface and admin docs
+admin.autodiscover()
 admin_urlpatterns = patterns(
     '', 
     url(r'^admin/', include(admin.site.urls)),

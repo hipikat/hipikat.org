@@ -14,46 +14,46 @@
 {% endcomment %}
 {% with comments_url=object.get_absolute_url|add:"#comments" comment_count=object.comments.count pingback_count=object.pingbacks.count trackback_count=object.trackbacks.count %}
 
+  {% block entry-header %}
+    <header class="entry-header clearfix">
+      {% block entry-header-contents %}
+      <h2><a href="{{ object.get_absolute_url }}" title="{{ object.title }}" rel="bookmark">{{ object.title }}</a></h2>
+      <p class="entry-info">
+        {% block entry-header-info %}
+          <abbr class="published" title="{{ object.creation_date }}">{{ object.creation_date|date:"DATE_FORMAT" }}</abbr>
 
-{% block entry-row %}
-<div class="row page blog-entry">
-  {% block entry-columns %}
-  <div class="columns large-9 push-3">
-    <div class="row">
-      {% block entry-header %}
-      <div class="columns small-12 title">
-        {% block entry-header-contents %}
-        <h1><a href="{{ object.get_absolute_url }}"
-               title="{{ object.title }}"
-               rel="bookmark">{{ object.title }}</a></h1>
+          {% if object.categories.all %}
+            <span class="categories">
+              {% trans "in" %}
+              {% for category in object.categories.all %}
+                <a href="{% blogurl 'entry_archive_category' category.slug %}" rel="category">{{ category }}</a>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </span>
+          {% endif %}
         {% endblock %}
-      </div>
+      </p>
       {% endblock %}
-      {% block entry-body %}
-      <div class="columns small-12 large-8 content">
-        {% block entry-body-contents %}
-          {% render_placeholder object.contents %}
-        {% endblock %}
-      </div>
-      <div class="columns small-11 small-offset-1 large-4 large-offset-0 note">
-        <!--<p>This is a footnote. Or rather a side-note. I guess it depends on your device?</p>-->
-      </div>
-      {% endblock %}
-    </div>
+    </header>
+  {% endblock %}
+
+  {% block entry-body %}
+  <div class="entry-body">
+    {% block entry-body-contents %}{% render_placeholder object.contents %}{% endblock %}
   </div>
+  {% endblock %}
+
   {% block entry-footer %}
-  <div class="columns large-3 pull-9 meta">
-    {% block entry-footer-contents %}
-    <p>
-      <span class="bullet">— </span>
-      Posted {{ object.creation_date|date:"DATE_FORMAT" }}
-    </p>
-    <p>at %TIME%</p>
-    {% endblock %}
-  </div>
+    <footer class="entry-footer clearfix">
+      {% block entry-footer-contents %}
+        {% with tags=object.tags.all %}{% if tags %}
+        <p class="entry-tags">
+          <strong>{% trans "Tags" %}</strong>:
+          {% for tag in object.tags.all %}
+            <a href="{% blogurl 'entry_archive_tag' tag.slug %}" title="Tag {{ tag }}" rel="tag">{{ tag }}</a>
+          {% endfor %}
+        </p>
+        {% endif %}{% endwith %}
+      {% endblock %}
+    </footer>
   {% endblock %}
-  {% endblock %}
-</div>
-{% endblock %}
-
 {% endwith %}
