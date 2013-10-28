@@ -4,44 +4,99 @@
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8 no-js" lang="en"> <![endif]-->
 <!--[if IE 8]> <html class="lt-ie9 no-js" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<!-- Conditional <html> classes follow Paul Irish's recommendations circa 2013 -->
-<head>
-    <title>{% block head_title %}{% if page.title %}{{ page.title }} •
-        {% endif %}Hipikat.org{% endblock %}</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+<!-- Conditional <html> classes following Paul Irish's recommendations as of 2012-01-17 -->
+
+{# <head> #}
+{% block head_block %}<head>
+
+    {# Page title #}
+    {% spaceless %}<title>{% block head_title_inner %}{% if page.title %}{{ page.title }} •
+        {% endif %}Hipikat.org{% endblock %}</title>{% endspaceless %}
+
+  {% block head_meta %}
+    {# Default meta elements #}
+    {% block head_meta_charset %}<meta charset="utf-8" />{% endblock %}
+    {% block head_meta_viewport %}
+             <meta name="viewport" content="width=device-width" />{% endblock %}
 
     {# Metadata provided by apps (e.g. django-fluent-blogs) #}
-    {% block app_meta %}{% endblock %}
+    {% block head_meta_apps %}{% endblock %}
+  {% endblock head_meta %}
 
-    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/hipikat.css' %}" />
+  {% block head_style %}
+
+    {# Site CSS (fonts, Bootstrap-like template base styles, etc. #}
+    {% block style_site %}{% for href in css_site_hrefs %}
+        <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
+
+    {# Project-level CSS (i.e. this project's customisations, overriding framework bases) #}
+    {% block style_project %}{% spaceless %}<link rel="stylesheet" type="text/css"
+      {% with "stylesheets/"|add:PROJECT_MODULE|add:".css" as site_css_href %}
+        href="{% static site_css_href  %}" />{% endwith %}{% endspaceless %}{% endblock %}
+
+    {# Page-type CSS (for e.g. blog pages, error pages, galleries, app-specific, etc.) #}
+    {% block style_page_type %}{% for href in css_page_hrefs %}
+        <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
+ 
+    {# Page-specific CSS (typically for style overrides by a view, named url or individual page) #}
+    {% block style_page_type %}{% for href in css_page_hrefs %}
+        <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
+
+  {% endblock head_style %}
+
+  {% block head_scripts %}
     <script src="{% static 'lib/foundation/modernizr.js' %}"></script>
-</head>
-<body>
+  {% endblock head_scripts %}
 
+</head>{% endblock head_block %}
+{% block body_block %}
+  {% block body_element_open %}<body>{% endblock %}
+
+  {# Page header #}
+  {% block body_header %}
     <div class="row head">
+        {#  #}
         <div class="large-3 columns site-title">
+          {% block site_title %}{% spaceless %}
             <h1>Hipikat.org</h1>
             <p style="display: none;">by Adam Wright</p>
+          {% endblock site_title %}
         </div>
         <div class="large-8 columns right" style="">
+          {% block menu_top_level %} 
             <div class="row">
                 {#% render_menu %#}
             </div>
+          {% endblock menu_top_level %}
         </div>
     </div>
+  {% endblock body_header %}
 
+  {# Page content #}
+  {% block body_content %}{% block content %}{% endblock %}{% endblock body_content %}
 
-  {% block main %}{% block content %}{% endblock %}{% endblock %}
+  {# Page footer #}
+  {% block body_footer %}
+  {% endblock body_footer %}
 
+  {# Late-loaded JavaScript #}
+  {% block body_javascript %}
 
-  <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.js" type="text/javascript"></script>
-  <script src="{% static 'lib/foundation/foundation.js' %}"></script>
-    
-  <script>
-    $(document).foundation();
-  </script>
+    {# Lowest-level JavaScript libraries; replace with jQuery or call super and Backbone, etc. #}
+    {% block body_javascript_stack %}
+      <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.js" type="text/javascript"></script>
+    {% endblock %}
 
+    {% block body_javascript_layout %}
+      <script src="{% static 'lib/foundation/foundation.js' %}"></script>
+    {% endblock %}
+
+    {% block body_javascript_inner %}
+      <script>
+          $(document).foundation();
+      </script>
+    {% endblock body_javascript_inner %}
+
+  {% endblock body_javascript %}
 
 </body></html>

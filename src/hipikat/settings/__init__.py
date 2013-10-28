@@ -69,17 +69,17 @@ class Base(
         'django.core.context_processors.tz',
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
-        'hipikat.styles.context_processor',
+        PROJECT_MODULE + 'styles.context_processor',
     ]
-    ROOT_URLCONF = 'hipikat.urls'
+    ROOT_URLCONF = PROJECT_MODULE + '.urls'
 
     # django-hosts
-    ROOT_HOSTCONF = 'hipikat.hosts'
+    ROOT_HOSTCONF = PROJECT_MODULE + '.hosts'
     DEFAULT_HOST = 'main'
 
     ### Installed apps
     INSTALLED_APPS = [
-        'hipikat',              # This project
+        PROJET_MODULE,          # This project
         'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
 
         'south',                # South: Database-agnostic migrations for Django applications
@@ -178,10 +178,10 @@ class Debug(Base):
 
         # Request pipeline
         cnf.MIDDLEWARE_CLASSES = tuple(chain([
-            'hipikat.middleware.debug.DebugOuterMiddleware',
+            cnf.PROJECT_MODULE + '.middleware.debug.DebugOuterMiddleware',
         ], cnf.MIDDLEWARE_CLASSES, [
             'debug_toolbar.middleware.DebugToolbarMiddleware',
-            'hipikat.middleware.debug.DebugInnerMiddleware',
+            cnf.PROJECT_MODULE + '.middleware.debug.DebugInnerMiddleware',
         ]))
 
         # Installed apps
