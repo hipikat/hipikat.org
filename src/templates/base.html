@@ -44,9 +44,10 @@
 
   {% endblock head_style %}
 
-  {% block head_scripts %}
+  {# Head JavaScript blocks (which should be kept to a minimum...) #}
+  {% block head_javascripts %}
     <script src="{% static 'lib/foundation/modernizr.js' %}"></script>
-  {% endblock head_scripts %}
+  {% endblock head_javascripts %}
 
 </head>{% endblock head_block %}
 {% block body_block %}
