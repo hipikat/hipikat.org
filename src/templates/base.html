@@ -91,11 +91,11 @@
       <script src="{% static 'lib/foundation/foundation.js' %}"></script>
     {% endblock %}
 
-    {% block body_javascript_inner %}
+    {% block body_javascript_setup %}
       <script>
           $(document).foundation();
       </script>
-    {% endblock body_javascript_inner %}
+    {% endblock body_javascript_setup %}
 
   {% endblock body_javascript %}
 
