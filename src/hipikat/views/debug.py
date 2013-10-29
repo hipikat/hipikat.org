@@ -6,25 +6,30 @@ from django.views.generic import TemplateView
 def blank(request):
     return render(request, "layouts/blank.html")
 
-class PageTemplateDetailView(TemplateView):
-    def get_context_data(self, **kwargs):
-        #import pdb; pdb.set_trace()
-        return super(TemplateView, self).get_template_names()
-page_template_detail = PageTemplateDetailView.as_view()
+
+class DebugTemplateDetailView(TemplateView):
+    """
+    Render a template in 'debug/<template_name>.html'.
+    """
+    def get(self, request, *args, **kwargs):
+        self.template_name = kwargs['template_name']
+        return super(DebugTemplateDetailView, self).get(request, *args, **kwargs)
+
+    def get_template_names(self):
+        return ['debug/{}.html'.format(self.template_name)]
+
+debug_template_detail = DebugTemplateDetailView.as_view()
 
 
-class PageTemplateListView(TemplateView):
+class DebugTemplateListView(TemplateView):
+    """
+    List HTML files under each directory in ``settings.TEMPLATE_DIRS``,
+    with links to the named URL ``debug_template_detail``, using the
+    filename (sans '.html' extension) as the ``template_name`` keyword.
+    TODO: Implement, once you've got a basic template to put it in :P
+    """
     def get_context_data(self, **kwargs):
         kwargs['templates'] = TemplateFiles()
-        return super(PageTemplateListView, self).get_context_data(kwargs)
-page_template_list = PageTemplateListView.as_view()
+        return super(DebugTemplateListView, self).get_context_data(kwargs)
 
-
-def blog_layout(request):
-    return render(request, "dev/blog-layout.html")
-
-
-def scratch(request):
-    return render(request, "debug/scratch.html")
-
-
+debug_template_list = DebugTemplateListView.as_view()

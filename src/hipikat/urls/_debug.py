@@ -1,14 +1,17 @@
+# coding=utf-8
 
 from django.conf.urls import patterns, url
 
 
-
-
 urlpatterns = patterns(
     'hipikat.views.debug',
-    url(r"^scratch/$", 'scratch', name="debug-scratch"),
-    url(r"^blank/$", 'blank', name="blank"),
-    url(r"^blog-layout/$", 'blog_layout', name="blog_layout"),
-    url(r"^templates/$", 'page_template_list', name="page_template_list"),
-    url(r"^templates/(?P<template_name>.+)$", 'page_template_detail', name="list_page_templates"),
+
+    # A safe way to get a page with not much on it to render; useful when you've
+    # broken your base template and you just need some debug-toolbar output.
+    url(r"^debug/blank/$", 'blank', name="blank"),
+
+    # List templates under [templates/]debug/, and render them naïvely
+    #url(r"^debug/templates/$", 'debug_template_list', name="debug_template_list"),
+    url(r"^debug/templates/(?P<template_name>.+)$",
+        'debug_template_detail', name="debug_template_detail"),
 )

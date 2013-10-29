@@ -212,8 +212,10 @@ class Core(Base):
 class Development(Debug):
     """
     Settings to simplify development. TODO: Split into 'local' and 'online'?
+    TODO: Document how individual developers should subclass this and each use
+    their own, in their own development environments.
     """
-    _DEBUG_TOOLBAR_ENABLED = False
+    _DEBUG_TOOLBAR_ENABLED = True
 
 
 class Production(Base):

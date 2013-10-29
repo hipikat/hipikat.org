@@ -48,7 +48,7 @@
 
   {# Head JavaScript blocks (which should be kept to a minimum...) #}
   {% block head_javascripts %}
-    <script src="{% static 'lib/foundation/modernizr.js' %}"></script>
+    <script src="{% static 'zurb/vendor/custom.modernizr.js' %}"></script>
   {% endblock head_javascripts %}
 
   {% block head_inner_last %}{% endblock %}
@@ -96,7 +96,7 @@
     {% endblock %}
 
     {% block body_javascript_layout %}
-      <script src="{% static 'lib/foundation/foundation.js' %}"></script>
+      <script src="{% static 'zurb/foundation/foundation.js' %}"></script>
     {% endblock %}
 
     {% block body_javascript_setup %}
