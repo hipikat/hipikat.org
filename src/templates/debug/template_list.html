@@ -1,0 +1,26 @@
+{% extends 'layouts/plain.html' %}
+
+{% block page_content %}
+  <h1>Debug views for templates</h1>
+
+  <h2>Templates filtered according to patterns</h2>
+  <h3>include_patterns</h3>
+    <ul>{% for pattern in include_patterns %}
+      <li>{{ pattern }}</li>
+    {% endfor %}</ul>
+  <h3>include_patterns</h3>
+    <ul>{% for pattern in exclude_patterns %}
+      <li>{{ pattern }}</li>
+    {% endfor %}</ul>
+
+  <h2>TEMPLATE_DIRS</h2>
+  {% for template_dir, template_names in template_dirs_names.items %}
+    <h3>{{ template_dir }}</h3>
+    <ul>
+    {% for template_name in template_names %}
+      <li><a href="{% url 'debug_template_detail' template_name %}">{{ template_name }}</a></li>
+    {% endfor %}
+    <ul>
+  {% endfor %}
+
+{% endblock %}

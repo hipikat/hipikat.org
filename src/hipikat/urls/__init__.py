@@ -31,7 +31,9 @@ admin_urlpatterns = patterns(
 # - Django admin and admin docs
 # - Debug urlpatterns (if DEBUG is True)
 global_urlpatterns = admin_urlpatterns
-if settings.DEBUG_URLPATTERNS_ENABLED:
-    from ._debug import urlpatterns as debug_patterns
-    global_urlpatterns += debug_patterns
+
+# Add debugging paths after http://example.com/:D/ on all domains
+if settings._DEBUG_URLPATTERNS_ENABLED:
+    from . import _debug as debug_urls
+    global_urlpatterns += patterns('', url(r'^:D/', include(debug_urls)))
 

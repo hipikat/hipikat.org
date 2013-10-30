@@ -7,6 +7,7 @@ CONTEXT_SETTINGS_VARIABLES = (
     'PROJECT_MODULE',
 )
 
+
 def context_processor(request):
     #project_context = {}
     #for setting_name in CONTEXT_SETTINGS_VARIABLES:

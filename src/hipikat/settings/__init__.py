@@ -14,6 +14,9 @@ class LocalSiteSettings(object):
     """
     TODO: Abstract configurable local site settings into a 'local settings model'(?)
     """
+    SITE_CONTEXT_SETTINGS_VARIABLES = (
+        'PROJECT_MODULE',
+    )
     SITE_RECENT_POST_COUNT = 30
 
 
@@ -131,17 +134,17 @@ class Base(
         'django.contrib.sites',
     ]
 
-    def setup(cnf):
+    def setup(self):
         """Configure settings which require initialised base classes/mixins."""
-        super(Base, cnf).setup()
+        super(Base, self).setup()
 
         ### Debugging, testing, development
-        cnf.setdefault('DEBUG_URLPATTERNS_ENABLED', cnf.DEBUG)
+        self.setdefault('_DEBUG_URLPATTERNS_ENABLED', self.DEBUG)
 
         ### Static files
-        cnf.STATICFILES_DIRS = [
-            path.join(cnf.SRC_DIR, 'static'),
-            ('zurb', path.join(cnf.LIB_DIR, 'zurb-foundation', 'js')),
+        self.STATICFILES_DIRS = [
+            path.join(self.SRC_DIR, 'static'),
+            ('zurb', path.join(self.LIB_DIR, 'zurb-foundation', 'js')),
         ]
 
     ### Third-party apps
@@ -167,32 +170,32 @@ class Debug(Base):
     }
     TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
 
-    def setup(cnf):
-        super(Debug, cnf).setup()
+    def setup(self):
+        super(Debug, self).setup()
 
         # If tests are being run (added by NormaliseSettings)
-        if cnf.TESTING:
+        if self.TESTING:
             # Use an sqlite database while testing to violently increase test speed
-            cnf.DATABASES['default'] = {
+            self.DATABASES['default'] = {
                 'engine': 'sqlite3',
-                'name': path.join(cnf.DB_DIR, 'test-run.db'),
+                'name': path.join(self.DB_DIR, 'test-run.db'),
             }
 
         # Enable Django Debug Toolbar
-        if cnf._DEBUG_TOOLBAR_ENABLED:
-            cnf.MIDDLEWARE_CLASSES = tuple(chain(
-                list(cnf.MIDDLEWARE_CLASSES),
+        if self._DEBUG_TOOLBAR_ENABLED:
+            self.MIDDLEWARE_CLASSES = tuple(chain(
+                list(self.MIDDLEWARE_CLASSES),
                 ['debug_toolbar.middleware.DebugToolbarMiddleware']))
-            cnf.INSTALLED_APPS = list(chain(
-                cnf.INSTALLED_APPS,
+            self.INSTALLED_APPS = list(chain(
+                self.INSTALLED_APPS,
                 ['debug_toolbar']
             ))
 
         # Request pipeline
-        cnf.MIDDLEWARE_CLASSES = tuple(chain([
-            cnf.PROJECT_MODULE + '.middleware.debug.DebugOuterMiddleware',
-        ], cnf.MIDDLEWARE_CLASSES, [
-            cnf.PROJECT_MODULE + '.middleware.debug.DebugInnerMiddleware',
+        self.MIDDLEWARE_CLASSES = tuple(chain([
+            self.PROJECT_MODULE + '.middleware.debug.DebugOuterMiddleware',
+        ], self.MIDDLEWARE_CLASSES, [
+            self.PROJECT_MODULE + '.middleware.debug.DebugInnerMiddleware',
         ]))
 
 
@@ -204,8 +207,8 @@ class Core(Base):
     to have already been created. (I'm looking at you, django-fluent family.)
     """
     #INSTALLED_APPS = ['south'] + Base.installed_django_contrib_apps
-    def setup(cnf):
-        cnf.INSTALLED_APPS = [app for app in cnf.INSTALLED_APPS
+    def setup(self):
+        self.INSTALLED_APPS = [app for app in self.INSTALLED_APPS
                               if app.startswith('django.') or app == 'south']
 
 
@@ -216,6 +219,7 @@ class Development(Debug):
     their own, in their own development environments.
     """
     _DEBUG_TOOLBAR_ENABLED = True
+    #_DEBUG_URLPATTERNS_ENABLED = True      # Defaults to DEBUG
 
 
 class Production(Base):
