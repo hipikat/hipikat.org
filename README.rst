@@ -1,11 +1,13 @@
 Hipikat.org
 ===========
 
+**This site is still under development and not yet live. :)**
+
 Source code for Adam Wright's personal website at http:/hipikat.org/. I
 put this online:
 
-* As a portfolio; everything is my own work (except near commented attributions)
-* So I can point to concepts I'm explaining; as examples for those like me
+* As a portfolio; everything is my own work (except where stated otherwise)
+* So I can point to concepts I'm explaining, and as examples for those like me
 * The public eye makes me accountable
 * The public eye keeps private data out of the repository :)
 * For those cute little green dots on my GitHub 'Your Contributions' panel.
@@ -13,7 +15,7 @@ put this online:
 Particularly, the code here shows how an integration of the following
 'full stack' of web technologies can be drawn together:
 
-* `Zepto` - The aerogel-weight jQuery-compatible JavaScript library
+* `Zepto`_ - The aerogel-weight jQuery-compatible JavaScript library
 * `Zurb Foundation 4`_ - A front-end, responsive framework
     * Sass_ - Syntactially awesome style sheets
 * Django_ - A Python web framework open source Python modules
@@ -37,7 +39,7 @@ As well as open source packages I've created:
 .. _django-slater: https://github.com/hipikat/django-slater
 
 Other tools involved in the creation of the site include PostgreSQL_,
-Git_, Vim_ an and 11-inch, Mid 2011 MacBook Air.
+Git_, Vim_, and and 11-inch, Mid 2011 MacBook Air.
 
 .. _PostgreSQL: http://www.postgresql.org
 .. _Git: http://git-scm.com

@@ -14,9 +14,6 @@ class LocalSiteSettings(object):
     """
     TODO: Abstract configurable local site settings into a 'local settings model'(?)
     """
-    SITE_CONTEXT_SETTINGS_VARIABLES = (
-        'PROJECT_MODULE',
-    )
     SITE_RECENT_POST_COUNT = 30
 
 
@@ -40,6 +37,11 @@ class Base(
     PROJECT_MODULE = 'hipikat'
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
     TIME_ZONE = 'Australia/Perth'
+
+    ### Private project settings
+    _CONTEXT_SETTINGS_VARIABLES = [
+        'PROJECT_MODULE',
+    ]
 
     ### Security
     DEBUG = False
