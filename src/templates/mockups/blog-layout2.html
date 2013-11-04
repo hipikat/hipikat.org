@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head_title_site %}Adam Wright's blog{% endblock %}
+
+{% block body_element_open %}<body class="blog">{% endblock %}
+
+{% block site_title %}
+  <!--<h1><span class="nowrap">blog.</span><span class="nowrap">hipikat</span></h1>-->
+  <h1>Hipikat's blog</h1>
+  <p><span class="nowrap">by</span> <span class="nowrap">Adam Wright</span></p>
+{% endblock %}
+
+{% block body_content %}
+  {% for entry in entries %}
+    {% include 'rows/blog-entry-summary.html' %}
+  {% endfor %}
+{% endblock body_content %}
