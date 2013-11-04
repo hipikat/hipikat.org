@@ -44,3 +44,6 @@ Git_, Vim_, and and 11-inch, Mid 2011 MacBook Air.
 .. _PostgreSQL: http://www.postgresql.org
 .. _Git: http://git-scm.com
 .. _Vim: http://www.vim.org
+
+TODO: Get deployment working with Salt Stack? Maybe with Vagrant?
+More tests.

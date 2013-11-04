@@ -176,11 +176,11 @@ class Debug(Base):
         super(Debug, self).setup()
 
         # If tests are being run (added by NormaliseSettings)
-        if self.TESTING:
+        if self.TESTING and False:
             # Use an sqlite database while testing to violently increase test speed
             self.DATABASES['default'] = {
-                'engine': 'sqlite3',
-                'name': path.join(self.DB_DIR, 'test-run.db'),
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': path.join(self.DB_DIR, 'test-run.db'),
             }
 
         # Enable Django Debug Toolbar

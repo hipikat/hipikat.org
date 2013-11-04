@@ -5,24 +5,25 @@
 <!--[if IE 8]> <html class="lt-ie9 no-js" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <!-- Conditional <html> classes following Paul Irish's recommendations as of 2012-01-17 -->
-
-{# <head> #}
 {% block head_block %}<head>
 
   {% block head_inner_first %}{% endblock %}
 
     {# Page title #}
-    {% spaceless %}<title>{% block head_title_inner %}{% if page.title %}{{ page.title }} •
-        {% endif %}Hipikat.org{% endblock %}</title>{% endspaceless %}
+    {% spaceless %}<title>{% block head_title_inner %}
+        {% block head_title_page %}
+          {% if head_title_page %}{{ head_title_page }}
+          {% elif head_title %}{{ head_title }}{% endif %}
+        {% endblock %}
+          •
+        {% block head_title_site %}Hipikat.org{% endblock %}
+    {% endblock %}</title>{% endspaceless %}
 
   {% block head_meta %}
     {# Default meta elements #}
     {% block head_meta_charset %}<meta charset="utf-8" />{% endblock %}
     {% block head_meta_viewport %}
              <meta name="viewport" content="width=device-width" />{% endblock %}
-
-    {# Metadata provided by apps (e.g. django-fluent-blogs) #}
-    {% block head_meta_apps %}{% endblock %}
   {% endblock head_meta %}
 
   {% block head_style %}
@@ -72,7 +73,10 @@
         <div class="large-8 columns right" style="">
           {% block menu_top_level %} 
             <div class="row">
+              <div class="columns">
                 {#% render_menu %#}
+                TODO: block menu_top_level
+              </div>
             </div>
           {% endblock menu_top_level %}
         </div>
