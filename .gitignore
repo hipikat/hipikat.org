@@ -1,8 +1,7 @@
-apps
 docs/_build
+lib/
+!lib/zurb-foundation/
+!lib/compass/
 src/static/stylesheets/hipikat.css
 var/db
 var/env/SECRET_KEY
-
-lib/django-fluent-*
-lib/django-parler
