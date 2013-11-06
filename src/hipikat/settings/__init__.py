@@ -81,7 +81,7 @@ class Base(
 
     # django-hosts
     ROOT_HOSTCONF = PROJECT_MODULE + '.hosts'
-    DEFAULT_HOST = 'main'
+    DEFAULT_HOST = 'main_site'
 
     ### Installed apps
     INSTALLED_APPS = [
@@ -103,6 +103,7 @@ class Base(
         # django-fluent-blogs
         'fluent_blogs',
         'fluent_blogs.pagetypes.blogpage',
+        'parler',
 
         # django-fluent-contents: A collection of apps to build an end-user CMS for Django admin.
         'fluent_contents',
@@ -225,6 +226,10 @@ class Development(Debug):
 
 
 class Production(Base):
+    pass
+
+
+class Staging(Production):
     pass
 
 

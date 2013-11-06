@@ -1,5 +1,7 @@
-{% load fluent_pages_tags %}
 {% load static %}
+{% load fluent_pages_tags %}
+{# load hosts #}
+{% load appurl_tags %}
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7 no-js" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8 no-js" lang="en"> <![endif]-->
 <!--[if IE 8]> <html class="lt-ie9 no-js" lang="en"> <![endif]-->
@@ -28,11 +30,12 @@
 
   {% block head_style %}
 
-    {# Site CSS (fonts, Bootstrap-like template base styles, etc. #}
+    <!-- Site CSS (fonts, Bootstrap-like template base styles, etc. -->
     {% block style_site %}{% for href in css_site_hrefs %}
         <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700">
 
-    {# Project-level CSS (i.e. this project's customisations, overriding framework bases) #}
+    <!-- Project-level CSS (i.e. this project's customisations, overriding framework bases) -->
     {% block style_project %}{% spaceless %}<link rel="stylesheet" type="text/css"
       {% with "stylesheets/"|add:PROJECT_MODULE|add:".css" as site_css_href %}
         href="{% static site_css_href  %}" />{% endwith %}{% endspaceless %}{% endblock %}
@@ -66,8 +69,10 @@
         {#  #}
         <div class="large-3 columns site-title">
           {% block site_title %}{% spaceless %}
-            <h1>Hipikat.org</h1>
-            {% block site_title_tag %}<p style="display: none;">by Adam Wright</p>{% endblock %}
+            <h1>hipikat.org</h1>
+            {% block site_title_tag %}<p>
+            is Adam Wright's <span class="nowrap">very small website</span>
+            </p>{% endblock %}
           {% endspaceless %}{% endblock %}
         </div>
         <div class="large-8 columns right" style="">
@@ -75,7 +80,11 @@
             <div class="row">
               <div class="columns">
                 {#% render_menu %#}
-                TODO: block menu_top_level
+                <ul style="display: inline; list-style-type: none;">
+                  <li><a href="{# url 'entry_archive_index' #}">Blog</a></li>
+                  <li><a href="{# host_url ... on main_site #}">About</a></li>
+                  <li><a href="">Colophon</a></li>
+                </ul>
               </div>
             </div>
           {% endblock menu_top_level %}

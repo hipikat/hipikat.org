@@ -6,10 +6,11 @@ Hipikat.org
 Source code for Adam Wright's personal website at http:/hipikat.org/. I
 put this online:
 
-* As a portfolio; everything is my own work (except where stated otherwise)
+* As a portfolio; everything here is my own work (except where stated otherwise)
 * So I can point to concepts I'm explaining, and as examples for those like me
 * The public eye makes me accountable
 * The public eye keeps private data out of the repository :)
+* Version control makes repositories journals of personal development for developers
 * For those cute little green dots on my GitHub 'Your Contributions' panel.
 
 Particularly, the code here shows how an integration of the following

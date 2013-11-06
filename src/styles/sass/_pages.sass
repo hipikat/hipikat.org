@@ -7,11 +7,8 @@
         padding-right: 0.5em
     .meta
         p
+            +small-rhythmic
             display: inline
-            $meta-p-rhythm: rhythm(1, $small-font-size)
-            $meta-p-offset: 11 / 12
-            +adjust-font-size-to($small-font-size)
-            margin: 0
             //padding: ($meta-p-rhythm * (1-$meta-p-offset)) 0 ($meta-p-rhythm * $meta-p-offset) 0;
     @media #{$small}
         .meta
