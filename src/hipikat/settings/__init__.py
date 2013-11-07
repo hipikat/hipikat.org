@@ -68,6 +68,7 @@ class Base(
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        #PROJECT_MODULE + '.style.CleanHTMLMiddleware',
     ]
     TEMPLATE_CONTEXT_PROCESSORS = [
         'django.contrib.auth.context_processors.auth',
@@ -176,7 +177,6 @@ class Debug(Base):
         'INTERCEPT_REDIRECTS': False,
     }
     TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
-    _LOCAL_SOURCES = True
 
     def setup(self):
         super(Debug, self).setup()
@@ -226,6 +226,7 @@ class Development(Debug):
     their own, in their own development environments.
     """
     _DEBUG_TOOLBAR_ENABLED = True
+    _LOCAL_SOURCES = True
 
 
 class Production(Base):

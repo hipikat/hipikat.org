@@ -29,15 +29,20 @@
   {% block head_style %}
 
     <!-- Site CSS (fonts, Bootstrap-like template base styles, etc. -->
+    {% comment %}
     {% block style_site %}{% for href in css_site_hrefs %}
         <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
-        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700">
+    {% endcomment %}
+    {% for style in resources.styles %}
+        <link rel="stylesheet" type="text/css" href="{{ style.href }}">
+    {% endfor %}
 
     <!-- Project-level CSS (i.e. this project's customisations, overriding framework bases) -->
     {% block style_project %}{% spaceless %}<link rel="stylesheet" type="text/css"
-      {% with "stylesheets/"|add:PROJECT_MODULE|add:".css" as site_css_href %}
-        href="{% static site_css_href  %}" />{% endwith %}{% endspaceless %}{% endblock %}
+      {% with "stylesheets/"|add:PROJECT_MODULE|add:".css" as site_css %}
+        href="{% static site_css  %}" />{% endwith %}{% endspaceless %}{% endblock %}
 
+    {% comment %}
     {# Page-type CSS (for e.g. blog pages, error pages, galleries, app-specific, etc.) #}
     {% block style_page_type %}{% for href in css_page_hrefs %}
         <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
@@ -45,6 +50,7 @@
     {# Page-specific CSS (typically for style overrides by a view, named url or individual page) #}
     {% block style_overrides %}{% for href in css_override_hrefs %}
         <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
+    {% endcomment %}
 
   {% endblock head_style %}
 
@@ -101,8 +107,8 @@
   {# Late-loaded JavaScript #}
   {% block body_javascript %}
 
+    {# debug_except #}
     {% for script in resources.javascripts.body %}
-      {{ debug_except }}
       {% if script.linked %}
         <script type="text/javascript" src="{{ script.src }}"></script>
       {% else %}
