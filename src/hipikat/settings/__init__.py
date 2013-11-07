@@ -39,9 +39,12 @@ class Base(
     TIME_ZONE = 'Australia/Perth'
 
     ### Private project settings
+    # Settings variables injected into context
     _CONTEXT_SETTINGS_VARIABLES = [
         'PROJECT_MODULE',
     ]
+    # Prevent linking to javascripts (etc.) in CDNs, for offline development
+    _LOCAL_SOURCES = False
 
     ### Security
     DEBUG = False
@@ -57,6 +60,7 @@ class Base(
 
     ### Request pipeline
     MIDDLEWARE_CLASSES = [
+        PROJECT_MODULE + '.style.ResourceRegistryMiddleware',
         'django_hosts.middleware.HostsMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,7 +79,6 @@ class Base(
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
         PROJECT_MODULE + '.context_processor',
-        PROJECT_MODULE + '.styles.context_processor',
     ]
     ROOT_URLCONF = PROJECT_MODULE + '.urls'
 
@@ -86,55 +89,54 @@ class Base(
     ### Installed apps
     INSTALLED_APPS = [
         PROJECT_MODULE,          # This project
+
         'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
 
         'south',                # South: Database-agnostic migrations for Django applications
         'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
         'django_hosts',         # django-hosts: Routes to urlconfs based on the requested domain
 
-        'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
+        'mptt',
+
+        'feincms', 'feincms.module.page', 'feincms.module.medialibrary',
+
+        #'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
 
         # django-fluent-pages: A polymorphic-pages-in-a-tree structure.
-        'fluent_pages',
-        'fluent_pages.pagetypes.flatpage',          # requires django-wysiwyg
-        'fluent_pages.pagetypes.fluentpage',        # requires django-fluent-contents(?)
-        'fluent_pages.pagetypes.redirectnode',      # requires django-any-urlfield
+        #'fluent_pages',
+        #'fluent_pages.pagetypes.flatpage',          # requires django-wysiwyg
+        #'fluent_pages.pagetypes.fluentpage',        # requires django-fluent-contents(?)
+        #'fluent_pages.pagetypes.redirectnode',      # requires django-any-urlfield
 
         # django-fluent-blogs
-        'fluent_blogs',
-        'fluent_blogs.pagetypes.blogpage',
-        'parler',
+        #'fluent_blogs',
+        #'fluent_blogs.pagetypes.blogpage',
+        #'parler',
 
         # django-fluent-contents: A collection of apps to build an end-user CMS for Django admin.
-        'fluent_contents',
-        'fluent_contents.plugins.text',                # requires django-wysiwyg
-        'fluent_contents.plugins.code',                # requires pygments
-        'fluent_contents.plugins.gist',
-        'fluent_contents.plugins.googledocsviewer',
-        'fluent_contents.plugins.iframe',
-        'fluent_contents.plugins.markup',   # this was commented out? breaks something?
-        'fluent_contents.plugins.rawhtml',
+        #'fluent_contents',
+        #'fluent_contents.plugins.text',                # requires django-wysiwyg
+        #'fluent_contents.plugins.code',                # requires pygments
+        #'fluent_contents.plugins.gist',
+        #'fluent_contents.plugins.googledocsviewer',
+        #'fluent_contents.plugins.iframe',
+        #'fluent_contents.plugins.markup',   # this was commented out? breaks something?
+        #'fluent_contents.plugins.rawhtml',
 
         # Required by django-fluent apps
-        'mptt',
-        'polymorphic',
-        'polymorphic_tree',
-        'categories',
-        'categories.editor',
-        'taggit',
-        'taggit_autocomplete_modified',
-        'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
-        'any_urlfield',         # django-any-urlfield: URL selector for external URLs and models
+        #'polymorphic',
+        #'polymorphic_tree',
+        #'categories',
+        #'categories.editor',
+        #'taggit',
+        #'taggit_autocomplete_modified',
+        #'django_wysiwyg',       # django-wysiwyg: Converts HTML textareas into rich HTML editors
+        #'any_urlfield',         # django-any-urlfield: URL selector for external URLs and models
 
-        'django.contrib.admin',
-        'django.contrib.admindocs',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.humanize',
-        'django.contrib.messages',
-        'django.contrib.sessions',
-        'django.contrib.staticfiles',
-        'django.contrib.sites',
+        # Django contrib apps
+        'django.contrib.admin', 'django.contrib.admindocs', 'django.contrib.auth',
+        'django.contrib.contenttypes', 'django.contrib.humanize', 'django.contrib.messages',
+        'django.contrib.sessions', 'django.contrib.staticfiles', 'django.contrib.sites',
     ]
 
     def setup(self):
@@ -147,12 +149,14 @@ class Base(
         ### Static files
         self.STATICFILES_DIRS = [
             path.join(self.SRC_DIR, 'static'),
+            ('tinymce', path.join(self.LIB_DIR, 'tinymce-4.0.10', 'js', 'tinymce')),
+            ('zepto', path.join(self.LIB_DIR, 'zepto-1.0')),
             ('zurb', path.join(self.LIB_DIR, 'zurb-foundation', 'js')),
         ]
 
     ### Third-party apps
     # Fluent apps
-    FLUENT_MARKUP_LANGUAGE = 'reStructuredText'     # Can also be markdown or textile
+    #FLUENT_MARKUP_LANGUAGE = 'reStructuredText'     # Can also be markdown or textile
 
     # Miscellaneous...
     DJANGO_WYSIWYG_FLAVOR = "yui_advanced"
@@ -172,6 +176,7 @@ class Debug(Base):
         'INTERCEPT_REDIRECTS': False,
     }
     TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
+    _LOCAL_SOURCES = True
 
     def setup(self):
         super(Debug, self).setup()
@@ -207,9 +212,8 @@ class Core(Base):
     Settings which reduce ``INSTALLED_APPS`` to a core set of apps, used for
     inital ``manage.py syncdb`` calls on blank databases, because sometimes
     third-party apps require certain tables (usually related to content types)
-    to have already been created. (I'm looking at you, django-fluent family.)
+    to have already been created.
     """
-    #INSTALLED_APPS = ['south'] + Base.installed_django_contrib_apps
     def setup(self):
         self.INSTALLED_APPS = [app for app in self.INSTALLED_APPS
                               if app.startswith('django.') or app == 'south']
@@ -222,7 +226,6 @@ class Development(Debug):
     their own, in their own development environments.
     """
     _DEBUG_TOOLBAR_ENABLED = True
-    #_DEBUG_URLPATTERNS_ENABLED = True      # Defaults to DEBUG
 
 
 class Production(Base):

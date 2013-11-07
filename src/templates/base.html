@@ -1,7 +1,5 @@
 {% load static %}
-{% load fluent_pages_tags %}
 {# load hosts #}
-{% load appurl_tags %}
 <!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7 no-js" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="lt-ie9 lt-ie8 no-js" lang="en"> <![endif]-->
 <!--[if IE 8]> <html class="lt-ie9 no-js" lang="en"> <![endif]-->
@@ -97,26 +95,38 @@
 
   {# Page footer #}
   {% block body_footer %}
+  i am the footer
   {% endblock body_footer %}
 
   {# Late-loaded JavaScript #}
   {% block body_javascript %}
 
+    {% for script in resources.javascripts.body %}
+      {{ debug_except }}
+      {% if script.linked %}
+        <script type="text/javascript" src="{{ script.src }}"></script>
+      {% else %}
+        <script type="text/javascript">{{ script.code }}</script>
+      {% endif %}
+    {% endfor %}
+
+  {% comment %}
     {# Lowest-level JavaScript libraries; replace with jQuery or call super and Backbone, etc. #}
-    {% block body_javascript_stack %}
+    {# block body_javascript_stack #}
       <script type="text/javascript"
               src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.js"></script>
-    {% endblock %}
+    {# endblock #}
 
-    {% block body_javascript_layout %}
+    {# block body_javascript_layout #}
       <script src="{% static 'zurb/foundation/foundation.js' %}"></script>
-    {% endblock %}
+    {# endblock #}
+  {% endcomment %}
 
-    {% block body_javascript_setup %}
+    {# block body_javascript_setup #}
       <script>
           $(document).foundation();
       </script>
-    {% endblock body_javascript_setup %}
+    {# endblock body_javascript_setup #}
 
   {% endblock body_javascript %}
 

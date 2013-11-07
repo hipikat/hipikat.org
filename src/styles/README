@@ -1,2 +1,8 @@
-Compile CSS and watch for changes with
+# Note: Ensure the zurb-foundation and compass submodules in lib/ are
+# checked out to the same versions listed in the Gemfile.
+
+# On a fresh checkout of the repo:
+$ bundle install
+
+# Compile CSS and watch for changes:
 $ bundle exec compass watch

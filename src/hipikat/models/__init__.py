@@ -1,5 +1,3 @@
 
-__all__ = []
-
-from .posts import Post, PostManager
-__all__ = ['Post', 'PostManager']
+# Register the feincms Page model and its extensions
+import fein

@@ -15,7 +15,7 @@ urlpatterns = global_urlpatterns + patterns(
     #url(r'', include('fluent_pages.urls')),
 
     # Front page
-    url(r'^$', 'main_landing_view', name="front_page"),
+    url(r'^$', 'front_page', name="front_page"),
 
-    url(r'', include('fluent_pages.urls')),
+    #url(r'', include('fluent_pages.urls')),
 )
