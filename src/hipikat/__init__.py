@@ -19,10 +19,13 @@ def context_processor(request):
     to the entire project, or required by all templates.
     """
     context = context_from_settings()
+    # Accessor for JavaScript and style sheet resources
     context['resources'] = resources(request)
+
     if settings.DEBUG:
+        # Rendering instantly raises an exception; useful with runserver_plus
         from .utils import raise_exception
-        context['debug_except'] = raise_exception
+        context['raise_exception'] = raise_exception
     return context
 
 
@@ -33,5 +36,3 @@ def context_from_settings():
     """
     return {setting_name: getattr(settings, setting_name)
             for setting_name in settings._CONTEXT_SETTINGS_VARIABLES}
-
-

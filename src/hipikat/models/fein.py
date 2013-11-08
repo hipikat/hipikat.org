@@ -19,11 +19,10 @@ Page.register_extensions(
 )
 
 Page.register_templates({
-    'title': 'Base template',
-    'path': 'base.html',
+    'title': 'Standard page',
+    'path': 'layouts/standard.html',
     'regions': (
         ('main', 'Main content area'),
-        ('sidebar', 'Sidebar', 'inherited'),
     ),
 })
 

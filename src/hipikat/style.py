@@ -1,78 +1,160 @@
 # coding=utf-8
 from django.conf import settings
-from django.contrib.staticfiles.storage import staticfiles_storage
 
 
+MINIFY_RESOURCES = settings._MINIFY_RESOURCES
+STATIC_URL = settings.STATIC_URL
 RESOURCE_REGISTRY_NAME = settings.PROJECT_MODULE + '_resource_registry'
 
 
-javascript_sources = {
-    'zepto': '//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js',
-    'tinymce': '//cdnjs.cloudflare.com/ajax/libs/tinymce/3.5.8/tiny_mce.js',
-    'foundation': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation.min.js',
-}
-if settings._LOCAL_SOURCES:
-    static_url = staticfiles_storage.url
-    javascript_sources.update({
-       'zepto': static_url('zepto/' + 'zepto.min.js' if settings.DEBUG else 'zepto.js'),
-       'tinymce': static_url('tinymce/tinymce.min.js'),
-       'foundation': static_url('zurb/foundation/foundation.js'),
-    })
-
-style_sources = {
-    'roboto': 'http://fonts.googleapis.com/css?family=Roboto+Condensed'
-    ':400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700',
-}
-if settings._LOCAL_SOURCES:
-    style_sources.update({
-        'roboto': static_url('fonts/roboto.css'),
-    })
+def _min_str(minify=None):
+    if minify is not None:
+        return '.min' if minify else ''
+    else:
+        return '.min' if MINIFY_RESOURCES else ''
 
 
-class ResourceRegistryMiddleware(object):
+def javascripts(minify=None, local=False):
     """
-    Attach a ResourceRegistry object to the request, since the required
-    resources are specific to a request...
+    Return a dict of keys (short names) for JavaScript libraries and their
+    URLs. CDN-delivered sources are returned, rather than local copies,
+    if ``local`` is ``False``. Minified versions are returned (if possible)
+    if ``minify`` is ``True``. TODO: Version switching? django-pipeline instead?
     """
-    def process_request(self, request):
-        setattr(request, RESOURCE_REGISTRY_NAME, ResourceRegistry())
+    dotmin = _min_str(minify)
+    CDNJS_LIBS = '//cdnjs.cloudflare.com/ajax/libs/'
+    cdn_sources = {
+        'foundation': '{}foundation/4.3.2/js/foundation{}.js'.format(CDNJS_LIBS, dotmin),
+        'jquery': '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery{}.js'.format(dotmin),
+        'tinymce': '{}tinymce/3.5.8/tiny_mce.js'.format(CDNJS_LIBS),
+        'zepto': '{}zepto/1.0/zepto{}.js'.format(CDNJS_LIBS, dotmin),
+    }
+    local_sources = {
+        'foundation': STATIC_URL + 'zurb/foundation/foundation.js',
+        'jquery': STATIC_URL + 'jquery/jquery-1.10.2{}.js'.format(dotmin),
+        'tinymce': STATIC_URL + 'tinymce/tinymce.min.js',        # TODO: Find un-minified version
+        'zepto': STATIC_URL + 'zepto/zepto{}.js'.format(dotmin),
+    }
+    # Make sure we include every listed library, even if a local/remote
+    # source isn't available as requested
+    sources, alt_sources = (local_sources, cdn_sources) if local else (cdn_sources, local_sources)
+    for missing in set(alt_sources) - set(sources):
+        sources[missing] = alt_sources[missing]
+    return sources
 
 
+def stylesheets(minify=None, local=False):
+    """
+    Return a dict of keys (short names) for stylesheets and their URLs.
+    CDN-delivered sources are returned, rather than local copies,
+    if ``local`` is ``False``. Minified versions are returned (if possible)
+    if ``minify`` is ``True``. TODO: Version switching? django-pipeline instead?
+    """
+    dotmin = _min_str(minify)
+    cdn_sources = {
+        'font-awesome': '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css',
+        'roboto': 'http://fonts.googleapis.com/css?family=Roboto+Condensed'
+        ':400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700',
+    }
+    local_sources = {
+        'font-awesome': STATIC_URL + 'font-awesome/css/font-awesome{}.css'.format(dotmin)
+        'roboto': STATIC_URL + 'fonts/roboto.css',
+    }
+    # Make sure we include every listed library, even if a local/remote
+    # source isn't available as requested
+    sources, alt_sources = (local_sources, cdn_sources) if local else (cdn_sources, local_sources)
+    for missing in set(alt_sources) - set(sources):
+        sources[missing] = alt_sources[missing]
+    return sources
+
+
+### The resource registry is basically an object attached to the request TODOLipsum
 class JavaScriptRequirements(object):
     """
     This is still mostly a stub for future plans, but it seems like a cleanish
     approach to switching between locally hosted and CDN-delivered static files.
-
+    An object of this class gets attached to the 'resources' object templates
+    see as 'javascript', so {{ resources.javascripts.body }} is a list of
+    ``JavaScriptResource`` objects.
     TODO: code anywhere before the template queries for javascripts should be
     able to register its requirement with hipikat.style.require_javascript('foo')
-
-    TODO: Programmatically drop Zepto when jQuery is required?
+    TODO: Programmatically drop Zepto when jQuery is required? (and so on?)
     """
+    def head(self):
+        """
+        Return a list of JavaScript sources to be included in the page <head>.
+        """
+        return []   # AS IT SHOULD BE! (Apparently.)
+
     def body(self):
-        sources = (JavaScriptResource(script[1])
-                   for script in javascript_sources.items()
-                   if script[0] in ('zepto', 'foundation'))
+        """
+        Return a list of JavaScript sources to be included before the closing
+        </body> tag of a page.
+        TODO: Base sets of required resources should be template-defined…
+        """
+        sources = [JavaScriptResource(script[1])
+                   for script in javascripts().items()
+                   if script[0] in ('zepto', 'foundation')]
         return sources
 
 
 class JavaScriptResource(object):
+    """
+    Representation of a JavaScript file or chunk of code. Must have a
+    ``src`` attribute if ``linked is True``, or ``code`` if it is
+    ``False``. ``linked is not inline``. TODO: Most of it.
+    """
     linked = True       # TODO: handle inline scripts
+
     def __init__(self, src, *args, **kwargs):
         self.src = src
 
+    def inline(self):
+        return not self.linked
+
 
 class StyleResource(object):
+    """
+    Representation of a stylesheet file or definition. Must have a
+    ``href`` attribute if ``linked is True``, or ``code`` if it is
+    ``False``. ``linked is not inline``. TODO: Most of it.
+    """
+    linked = True
+
     def __init__(self, href, *args, **kwargs):
         self.href = href
 
+    def inline(self):
+        return not self.linked
+
 
 class ResourceRegistry(object):
+    """
+    A registry of resources required by a page, typically intended to be
+    accessed by a template. Contains two lists of resource objects with
+    the names ``javascripts`` and ``styles``.
+    """
     javascripts = JavaScriptRequirements()
-    styles = [StyleResource(style[1]) for style in style_sources.items()]
+    stylesheets = [StyleResource(style[1]) for style in stylesheets().items()]
 
 
 def resources(request):
+    """
+    Return the resource registry attached to a request, or create and
+    attach a new one, and return that, if none exists.
+    """
+    if not hasattr(request, RESOURCE_REGISTRY_NAME):
+        setattr(request, RESOURCE_REGISTRY_NAME, ResourceRegistry())
     return getattr(request, RESOURCE_REGISTRY_NAME)
+
+
+#class ResourceRegistryMiddleware(object):
+#    """
+#    Attach a ResourceRegistry object to the request, since the required
+#    resources are specific to a request...
+#    """
+#    def process_request(self, request):
+#        setattr(request, RESOURCE_REGISTRY_NAME, ResourceRegistry())
 
 
 #class CleanHTMLMiddleware(object):

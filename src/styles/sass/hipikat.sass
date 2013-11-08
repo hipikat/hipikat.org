@@ -87,9 +87,9 @@ $prev-breakpoint: $small-screen - 1
 //.row
 //    border-top: 1px solid green
 //    border-bottom: 1px solid green
-.columns
-    border: 1px solid orange
-    margin-top: -2px
+//.columns
+//    border: 1px solid orange
+//    margin-top: -2px
 
 // Typography
 @mixin small-rhythmic
@@ -168,35 +168,58 @@ p
         +adjust-font-size-to($base-font-size)
         +margin-trailer(1, $base-font-size)
 
+
+$link-color: #1289B8
+$dark-link-color: #076083
+
+a
+    color: $link-color
+    i.fa
+        color: $dark-link-color
+
 // Page header
 .head
+    .menu
+        ul
+            margin: 0
+            padding: 0
+            list-style-type: none
+        li
+            display: inline-block
+            width: 20%
     .site-title
         margin-top: 0.125em
         h1, p
+            font-family: "Roboto Slab", sans-serif
             +small-rhythmic
             display: inline
             //@media #{$small}
             //    display: block
         h1
             //margin: 0
-            font-family: "Roboto", sans-serif
+            //font-family: "Roboto", sans-serif
             font-weight: 400
             //letter-spacing: 0.025em
             //font-size: $base-font-size * (1 + 1/3)
             //line-height: $base-font-size * (1 + 1/3)
             //font-size: $base-font-size
+            a
+                //color: $dark-link-color
+                text-decoration: none
+            a:hover
+                text-decoration: underline
         @media #{$small}
             text-align: right
             //h1
                 //font-size: $base-font-size * (1 + 2/3)
                 //font-size: $base-font-size
-body.blog
-    .head .site-title
-        //h1
-        //    font-size: $base-font-size * (1 + 3/12)
-        p
-            //margin-right: 0.35em
-            margin-top: 0.3em
+//body.blog
+//    .head .site-title
+//        //h1
+//        //    font-size: $base-font-size * (1 + 3/12)
+//        p
+//            //margin-right: 0.35em
+//            margin-top: 0.3em
 
 
 // Main page body
@@ -205,6 +228,9 @@ body.blog
         +adjust-font-size-to($small-font-size)
 
 // Page footer
-//.foot
+.foot
+    margin-top: 5em
+    font-size: $small-font-size
+    font-family: "Roboto Slab", sans-serif
 
 @import pages

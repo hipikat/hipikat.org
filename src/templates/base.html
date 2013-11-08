@@ -15,7 +15,7 @@
           {% if head_title_page %}{{ head_title_page }}
           {% elif head_title %}{{ head_title }}{% endif %}
         {% endblock %}
-          •
+        {% block head_title_separator %} • {% endblock %}
         {% block head_title_site %}Hipikat.org{% endblock %}
     {% endblock %}</title>{% endspaceless %}
 
@@ -23,7 +23,7 @@
     {# Default meta elements #}
     {% block head_meta_charset %}<meta charset="utf-8" />{% endblock %}
     {% block head_meta_viewport %}
-             <meta name="viewport" content="width=device-width" />{% endblock %}
+        <meta name="viewport" content="width=device-width" />{% endblock %}
   {% endblock head_meta %}
 
   {% block head_style %}
@@ -33,7 +33,7 @@
     {% block style_site %}{% for href in css_site_hrefs %}
         <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
     {% endcomment %}
-    {% for style in resources.styles %}
+    {% for style in resources.stylesheets %}
         <link rel="stylesheet" type="text/css" href="{{ style.href }}">
     {% endfor %}
 
@@ -73,22 +73,23 @@
         {#  #}
         <div class="large-3 columns site-title">
           {% block site_title %}{% spaceless %}
-            <h1>hipikat.org</h1>
+            <h1><a href="http://hipikat.org/">Hipikat.org</a></h1>
             {% block site_title_tag %}<p>
-            is Adam Wright's <span class="nowrap">very small website</span>
+            is <span class="nowrap">Adam Wright's</span>
+            very <span class="nowrap">small website</span>
             </p>{% endblock %}
           {% endspaceless %}{% endblock %}
         </div>
-        <div class="large-8 columns right" style="">
+        <div class="large-8 columns right">
           {% block menu_top_level %} 
-            <div class="row">
+            <div class="row menu">
               <div class="columns">
                 {#% render_menu %#}
-                <ul style="display: inline; list-style-type: none;">
+                <!--<ul>
                   <li><a href="{# url 'entry_archive_index' #}">Blog</a></li>
                   <li><a href="{# host_url ... on main_site #}">About</a></li>
                   <li><a href="">Colophon</a></li>
-                </ul>
+                </ul>-->
               </div>
             </div>
           {% endblock menu_top_level %}
@@ -101,7 +102,11 @@
 
   {# Page footer #}
   {% block body_footer %}
-  i am the footer
+  <div class="row foot">
+    <div class="small-6 push-4 columns">
+      Copyright &copy; 2013 Adam Wright
+    </div>
+  </div>
   {% endblock body_footer %}
 
   {# Late-loaded JavaScript #}

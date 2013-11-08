@@ -1,4 +1,34 @@
 
+.epic-hello
+    border-top: 1px solid #cccccc
+    border-bottom: 1px solid #cccccc
+    color: black
+    padding: 2em 0
+    .lead-in
+        font-size: 160%
+        font-weight: 300
+    @media #{$small}
+        margin: 0.6em $column-gutter/2 0
+        
+
+.vanity-links
+    h2
+        font-size: $small-font-size
+    ul
+        list-style-type: none
+    a
+        text-decoration: none
+    a:hover
+        text-decoration: underline
+    i
+        width: 1.2em
+    .email
+        +margin-leader(1, $base-font-size)
+        .alt
+            font-size: $small-font-size
+            font-family: "Roboto Slab", sans-serif
+    @media #{$small}
+        text-align: right
 
 .blog-summary,
 .blog-detail,
