@@ -24,6 +24,13 @@ Page.register_templates({
     'regions': (
         ('main', 'Main content area'),
     ),
+}, {
+    'title': 'Front page',
+    'path': 'layouts/front_page.html',
+    'regions': (
+        ('vanity-links', 'Vanity links'),
+        ('epic-hello', 'Epic hello'),
+    ),
 })
 
 Page.create_content_type(RichTextContent)

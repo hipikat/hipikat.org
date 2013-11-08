@@ -2,7 +2,6 @@
 from django.conf import settings
 
 
-MINIFY_RESOURCES = settings._MINIFY_RESOURCES
 STATIC_URL = settings.STATIC_URL
 RESOURCE_REGISTRY_NAME = settings.PROJECT_MODULE + '_resource_registry'
 
@@ -11,7 +10,7 @@ def _min_str(minify=None):
     if minify is not None:
         return '.min' if minify else ''
     else:
-        return '.min' if MINIFY_RESOURCES else ''
+        return '.min' if settings._MINIFY_RESOURCES else ''
 
 
 def javascripts(minify=None, local=False):
@@ -57,7 +56,7 @@ def stylesheets(minify=None, local=False):
         ':400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700',
     }
     local_sources = {
-        'font-awesome': STATIC_URL + 'font-awesome/css/font-awesome{}.css'.format(dotmin)
+        'font-awesome': STATIC_URL + 'font-awesome/css/font-awesome{}.css'.format(dotmin),
         'roboto': STATIC_URL + 'fonts/roboto.css',
     }
     # Make sure we include every listed library, even if a local/remote
@@ -148,6 +147,7 @@ def resources(request):
     return getattr(request, RESOURCE_REGISTRY_NAME)
 
 
+# TODO: Deprecate? resources(request) does just as much...
 #class ResourceRegistryMiddleware(object):
 #    """
 #    Attach a ResourceRegistry object to the request, since the required
@@ -157,6 +157,8 @@ def resources(request):
 #        setattr(request, RESOURCE_REGISTRY_NAME, ResourceRegistry())
 
 
+# TODO: Either make your HTML really pretty, or abandon this completely.
+# The advantage could be auto-detection of invalid markup... Mmmm...
 #class CleanHTMLMiddleware(object):
 #    def process_response(self, request, response):
 #        content = response.content.split()

@@ -18,12 +18,14 @@ def context_processor(request):
     Project-level context processor; add template context variables relating
     to the entire project, or required by all templates.
     """
+    context = {}
+    # Settings variables we let templates in on directly 
     context = context_from_settings()
-    # Accessor for JavaScript and style sheet resources
+    # Accessor for JavaScript and stylesheet resources
     context['resources'] = resources(request)
-
+    # Here be dragons
     if settings.DEBUG:
-        # Rendering instantly raises an exception; useful with runserver_plus
+        # Rendering {{ raise_exception }} does just that. (Useful with runserver_plus.)
         from .utils import raise_exception
         context['raise_exception'] = raise_exception
     return context
@@ -31,8 +33,8 @@ def context_processor(request):
 
 def context_from_settings():
     """
-    Return a list of 2-tuples of setting names and their values, for the
-    settings listed in ``settings._CONTEXT_SETTINGS_VARIABLES``.
+    Return a dict containing the settings variables listed in
+    ``settings._CONTEXT_SETTINGS_VARIABLES``.
     """
     return {setting_name: getattr(settings, setting_name)
             for setting_name in settings._CONTEXT_SETTINGS_VARIABLES}

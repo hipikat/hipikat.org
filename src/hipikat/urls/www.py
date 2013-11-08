@@ -8,14 +8,18 @@ from . import global_urlpatterns
 urlpatterns = global_urlpatterns + patterns(
     'hipikat.views',
 
+    # Front page
+    url(r'^$', 'front_page', name="front_page"),
+
+    # Let feinCMS do the work, so humans have time to relax
+    url(r'', include('feincms.urls')),
+
     # Blog
     #url(r'^blog/', include('fluent_blogs.urls')),
 
     # Fluent pages
     #url(r'', include('fluent_pages.urls')),
 
-    # Front page
-    url(r'^$', 'front_page', name="front_page"),
 
     #url(r'', include('fluent_pages.urls')),
 )
