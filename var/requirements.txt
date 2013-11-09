@@ -1,4 +1,4 @@
--e git+git@github.com:django/django.git@84b9ab7c1d0dd2567a060e148ad630c7aa0103ee#egg=Django-origin/stable/1.6.x
+-e git+git@github.com:django/django.git@2e881f15b8095b99743f6354f84e4d2333029b4d#egg=Django-origin/stable/1.5.x
 FeinCMS==1.7.6
 Jinja2==2.7.1
 MarkupSafe==0.18
@@ -13,13 +13,14 @@ django-hosts==0.6
 django-model-utils==1.5.0
 django-mptt==0.6.0
 docutils==0.11
+feincms-elephantblog==0.3.1
 psycopg2==2.5.1
 selenium==2.37.2
 six==1.4.1
 sqlparse==0.1.10
 wsgiref==0.1.2
 
-# Installed as dependencies
+# Installed as dependencies of other packages...
 # Jinja2==2.7.1
 # MarkupSafe==0.18
 # Pygments==1.6

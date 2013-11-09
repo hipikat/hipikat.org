@@ -1,0 +1,45 @@
+{% extends "elephantblog/_base.html" %}
+{% load feincms_tags i18n %}
+
+{% block head_title_page %}{% include 'elephantblog/_archive_title.html' %}{% endblock %}
+
+{% block body_tag_class %}{{ block.super }} archive{% endblock %}
+
+{% block content %}
+
+  <div class="row page title">
+    <div class="large-11 push-1 columns">
+      <h1>{% include 'elephantblog/_archive_title.html' %}</h1>
+    </div>
+  </div>
+
+  {% for entry in object_list %}
+    {% include "rows/blog-post.html" %}
+  {% endfor %}
+
+  {% if page_obj.has_previous or page_obj.has_next %}
+  <div class="row page pagination">
+    <div class="large-9 push-3 columns">
+
+      Pages:
+      {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+      {% endif %}
+  
+      {% for p in page_obj.page_range|default_if_none:page_obj.paginator.page_range %}
+          {% if not p %}&hellip;
+          {% else %}
+              <a {% if p == page_obj.number and not page_obj.show_all_objects %}class="mark"{% endif %} href="?page={{ p }}">{{ p }}</a>
+          {% endif %}
+      {% endfor %}
+  
+      {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+      {% endif %}
+
+    </div>
+  </div>
+  {% endif %}
+
+
+{% endblock content %}

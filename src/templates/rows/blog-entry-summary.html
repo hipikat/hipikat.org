@@ -1,8 +1,9 @@
-<div class="row page blog-summary">
+
+<div class="row page blog-entry">
     <div class="large-9 push-3 columns">
         <div class="row">
             <div class="small-12 columns title">
-                <h1>{{ entry.title }}</h1>
+                <h1>{% block entry_title %}{% endblock %}</h1>
             </div>
             <div class="small-12 large-8 columns content">
                 <p>{{ entry.summary }}</p>

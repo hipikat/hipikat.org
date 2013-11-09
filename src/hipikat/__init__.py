@@ -13,7 +13,7 @@ from django.conf import settings
 from .style import resources
 
 
-def context_processor(request):
+def project_context_processor(request):
     """
     Project-level context processor; add template context variables relating
     to the entire project, or required by all templates.

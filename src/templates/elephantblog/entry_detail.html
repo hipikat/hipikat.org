@@ -1,0 +1,10 @@
+{% extends "elephantblog/_base.html" %}
+{% load feincms_tags i18n %}
+
+{% block head_title_page %}{{ entry }}{% endblock %}
+
+{% block body_tag_class %}{{ block.super }} post{% endblock %}
+
+{% block content %}
+    {% include "rows/blog-post.html" %}
+{% endblock %}

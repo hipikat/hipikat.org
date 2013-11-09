@@ -63,7 +63,7 @@
 
 </head>{% endblock head_block %}
 {% block body_block %}
-  {% block body_element_open %}<body>{% endblock %}
+<body class="{% block body_tag_class %}{% endblock %}" {% block body_tag_attrs %}{% endblock %}>
 
   {% block body_inner_first %}{% endblock %}
 

@@ -10,6 +10,29 @@ from cinch.mixins import FHSDirsMixin
 from .logging import FileLoggingMixin
 
 
+def elephantblog_entry_url_app(self):
+    #from django_hosts.reverse import reverse_full 
+    #return reverse_full(
+    #)
+    from feincms.content.application.models import app_reverse
+    #import pdb; pdb.set_trace()
+    print("***** SUUUUP")
+    rev = app_reverse('elephantblog_entry_detail', 'elephantblog.urls', kwargs={
+        'year': self.published_on.strftime('%Y'),
+        'month': self.published_on.strftime('%m'),
+        'day': self.published_on.strftime('%d'),
+        'slug': self.slug,
+    })
+    print("***** SUUUUPdown" + str(rev))
+    return rev
+
+def elephantblog_categorytranslation_url_app(self):
+    from feincms.content.application.models import app_reverse
+    return app_reverse('elephantblog_category_detail', 'elephantblog.urls', kwargs={
+        'slug': self.slug,
+        })
+
+
 class LocalSiteSettings(object):
     """
     TODO: Abstract configurable local site settings into a 'local settings model'(?)
@@ -37,6 +60,11 @@ class Base(
     PROJECT_MODULE = 'hipikat'
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
     TIME_ZONE = 'Australia/Perth'
+
+    #ABSOLUTE_URL_OVERRIDES = {
+    #    'elephantblog.entry': elephantblog_entry_url_app,
+    #    'elephantblog.categorytranslation': elephantblog_categorytranslation_url_app,
+    #}
 
     ### Private project settings
     # Settings variables injected into context
@@ -81,9 +109,10 @@ class Base(
         'django.core.context_processors.tz',
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
-        PROJECT_MODULE + '.context_processor',
+        'feincms.context_processors.add_page_if_missing',
+        PROJECT_MODULE + '.project_context_processor',
     ]
-    ROOT_URLCONF = PROJECT_MODULE + '.urls'
+    ROOT_URLCONF = PROJECT_MODULE + '.urls.www'
 
     # django-hosts
     ROOT_HOSTCONF = PROJECT_MODULE + '.hosts'
@@ -101,6 +130,7 @@ class Base(
         'mptt',                 # django-mptt: Modified pre-order traversal trees
 
         'feincms', 'feincms.module.page', 'feincms.module.medialibrary',
+        'elephantblog',
 
         #'crispy_forms',         # django-crispy-forms: Forms have never been this crispy
 

@@ -5,7 +5,13 @@ from django.conf.urls import patterns, include, url
 from . import global_urlpatterns
 
 
-urlpatterns = global_urlpatterns + patterns(
+urlpatterns = global_urlpatterns
+
+urlpatterns += patterns('',
+    url(r'^blog/', include('elephantblog.urls')),
+)
+
+urlpatterns += global_urlpatterns + patterns(
     'hipikat.views',
 
     # Front page
