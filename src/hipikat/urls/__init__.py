@@ -6,34 +6,52 @@ of the sub-modules, based on the requested domain.
 
 from django.conf import settings
 from django.conf.urls import include, patterns, url
+from django.core.urlresolvers import reverse_lazy
 from django.contrib import admin
+from django_hosts.reverse import reverse_full
+try:
+    from django.utils import timezone
+    now = timezone.now
+except ImportError:
+    timezone = None
+    from datetime import datetime
+    now = datetime.now
 
 
-__all__ = ['urlpatterns']
+# If this gets hit, it means django-hosts isn't working as expected
+urlpatterns = patterns('hipikat.views.common', url(r'.*', 'NotConfiguredView'))
 
-
-# Should never be hit; see module docstring
-urlpatterns = patterns(
-    'hipikat.views.common',
-    url('^', 'NotConfiguredView'),
-)
 
 # Django admin interface and admin docs
 admin.autodiscover()
 admin_urlpatterns = patterns(
-    '', 
+    '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 )
-
-# Sub-modules should extend their urlpatterns with global_urlpatterns
-# global_urlpatterns currently comprises:
-# - Django admin and admin docs
-# - Debug urlpatterns (if DEBUG is True)
-global_urlpatterns = admin_urlpatterns
-
-# Add debugging paths after http://example.com/:D/ on all domains
+# Enable views to aid debugging and development
 if settings._DEBUG_URLPATTERNS_ENABLED:
     from . import _debug as debug_urls
-    global_urlpatterns += patterns('', url(r'^:D/', include(debug_urls)))
+    debug_urlpatterns = patterns('', url(r'^:D/', include(debug_urls)))
 
+# Sub-modules should extend their urlpatterns with global_urlpatterns
+global_urlpatterns = admin_urlpatterns + debug_urlpatterns
+
+
+### URL resolution overrides
+def get_elephantblog_url(entry):
+    # We use naive date using UTC for conversion for permalink
+    if getattr(settings, 'USE_TZ', False):
+        pub_date = timezone.make_naive(entry.published_on, timezone.utc)
+    else:
+        pub_date = entry.published_on
+    return reverse_full(
+        host='blog' if entry.is_featured else 'main_site',
+        view='elephantblog_entry_detail',
+        view_kwargs={
+            'year': pub_date.strftime('%Y'),
+            'month': pub_date.strftime('%m'),
+            'day': pub_date.strftime('%d'),
+            'slug': entry.slug,
+        }
+    )

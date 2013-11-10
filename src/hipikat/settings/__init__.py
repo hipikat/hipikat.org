@@ -10,34 +10,19 @@ from cinch.mixins import FHSDirsMixin
 from .logging import FileLoggingMixin
 
 
-def elephantblog_entry_url_app(self):
-    #from django_hosts.reverse import reverse_full 
-    #return reverse_full(
-    #)
-    from feincms.content.application.models import app_reverse
-    #import pdb; pdb.set_trace()
-    print("***** SUUUUP")
-    rev = app_reverse('elephantblog_entry_detail', 'elephantblog.urls', kwargs={
-        'year': self.published_on.strftime('%Y'),
-        'month': self.published_on.strftime('%m'),
-        'day': self.published_on.strftime('%d'),
-        'slug': self.slug,
-    })
-    print("***** SUUUUPdown" + str(rev))
-    return rev
-
-def elephantblog_categorytranslation_url_app(self):
-    from feincms.content.application.models import app_reverse
-    return app_reverse('elephantblog_category_detail', 'elephantblog.urls', kwargs={
-        'slug': self.slug,
-        })
+def get_elephantblog_url(entry):
+    """
+    We can't import antyhing from the urls module before settings are loaded,
+    and ABSOLUTE_URL_OVERRIDES doesn't take dotted-string arguments in place
+    of callables, and this URL resolution function belongs in hipikat.urls,
+    so this function is basically a lazy pass-through for blog URL resolution.
+    """
+    from hipikat.urls import get_elephantblog_url
+    return get_elephantblog_url(entry)
 
 
 class LocalSiteSettings(object):
-    """
-    TODO: Abstract configurable local site settings into a 'local settings model'(?)
-    """
-    SITE_RECENT_POST_COUNT = 30
+    """Settings specific to this site."""
 
 
 class Base(
@@ -61,22 +46,15 @@ class Base(
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
     TIME_ZONE = 'Australia/Perth'
 
-    #ABSOLUTE_URL_OVERRIDES = {
-    #    'elephantblog.entry': elephantblog_entry_url_app,
-    #    'elephantblog.categorytranslation': elephantblog_categorytranslation_url_app,
-    #}
 
     ### Private project settings
     # Settings variables injected into context
     _CONTEXT_SETTINGS_VARIABLES = [
         'PROJECT_MODULE',
     ]
-    # Prevent linking to javascripts (etc.) in CDNs, for offline development
-    _LOCAL_SOURCES = False
 
     ### Debug
     DEBUG = False
-    _DEBUG_TOOLBAR_ENABLED = False
     _MINIFY_RESOURCES = True
 
     ### Data stores
@@ -93,6 +71,7 @@ class Base(
         #PROJECT_MODULE + '.style.ResourceRegistryMiddleware',
         'django_hosts.middleware.HostsMiddleware',
         'django.middleware.common.CommonMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -112,16 +91,20 @@ class Base(
         'feincms.context_processors.add_page_if_missing',
         PROJECT_MODULE + '.project_context_processor',
     ]
-    ROOT_URLCONF = PROJECT_MODULE + '.urls.www'
+    ABSOLUTE_URL_OVERRIDES = {
+        'elephantblog.entry': get_elephantblog_url,
+        #TODO: 'elephantblog.categorytranslation': elephantblog_categorytranslation_url_app,
+    }
+    ROOT_URLCONF = PROJECT_MODULE + '.urls'
 
     # django-hosts
+    PARENT_HOST = ALLOWED_HOSTS[0] if ALLOWED_HOSTS[0][0] != '.' else ALLOWED_HOSTS[0][1:]
     ROOT_HOSTCONF = PROJECT_MODULE + '.hosts'
     DEFAULT_HOST = 'main_site'
 
     ### Installed apps
     INSTALLED_APPS = [
         PROJECT_MODULE,          # This project
-
         'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
 
         'south',                # South: Database-agnostic migrations for Django applications
@@ -145,7 +128,19 @@ class Base(
         super(Base, self).setup()
 
         ### Debugging, testing, development
-        self.setdefault('_DEBUG_URLPATTERNS_ENABLED', self.DEBUG)
+        # By default, set to True for debugging, False in production
+        for debug_default in (
+            '_DEBUG_MIDDLEWARE_ENABLED',    # [project].middleware.Debug[Inner|Outer]Middleware
+            '_DEBUG_TOOLBAR_ENABLED',       # django-debug-toolbar
+            '_DEBUG_URLPATTERNS_ENABLED',   # Include [project].urls.debug_urlpatterns
+            '_LOCAL_RESOURCES',             # Prevent linking to external resources
+            ):
+            self.setdefault(debug_default, self.DEBUG)
+        # By default, set to False while debugging, True in production
+        for debug_undefault in (
+            '_MINIFY_RESOURCES',            # Request minified JavaScript/CSS resources
+            ):
+            self.setdefault(debug_undefault, not self.DEBUG)
 
         ### Static files
         self.STATICFILES_DIRS = [
@@ -157,16 +152,11 @@ class Base(
             ('font-awesome', path.join(self.LIB_DIR, 'Font-Awesome')),
         ]
 
+        ### feinCMS
         self.FEINCMS_RICHTEXT_INIT_CONTEXT = {
             'TINYMCE_JS_URL': self.STATIC_URL + 'tinymce/tinymce.min.js',
         }
-
-    ### Third-party apps
-    # Fluent apps
-    #FLUENT_MARKUP_LANGUAGE = 'reStructuredText'     # Can also be markdown or textile
-
-    # Miscellaneous...
-    DJANGO_WYSIWYG_FLAVOR = "yui_advanced"
+        self.FEINCMS_RICHTEXT_INIT_TEMPLATE = 'admin/content/richtext/init_tinymce4.html'
 
 
 class Debug(Base):
@@ -197,7 +187,7 @@ class Debug(Base):
                 'NAME': path.join(self.DB_DIR, 'test-run.db'),
             }
 
-        # Enable Django Debug Toolbar
+        # Enable django-debug-toolbar
         if self._DEBUG_TOOLBAR_ENABLED:
             self.MIDDLEWARE_CLASSES = tuple(chain(
                 list(self.MIDDLEWARE_CLASSES),
@@ -208,11 +198,12 @@ class Debug(Base):
             ))
 
         # Request pipeline
-        self.MIDDLEWARE_CLASSES = tuple(chain([
-            self.PROJECT_MODULE + '.middleware.debug.DebugOuterMiddleware',
-        ], self.MIDDLEWARE_CLASSES, [
-            self.PROJECT_MODULE + '.middleware.debug.DebugInnerMiddleware',
-        ]))
+        if self._DEBUG_MIDDLEWARE_ENABLED:
+            self.MIDDLEWARE_CLASSES = tuple(chain([
+                self.PROJECT_MODULE + '.middleware.DebugOuterMiddleware',
+            ], self.MIDDLEWARE_CLASSES, [
+                self.PROJECT_MODULE + '.middleware.DebugInnerMiddleware',
+            ]))
 
 
 class Core(Base):
@@ -224,7 +215,7 @@ class Core(Base):
     """
     def setup(self):
         self.INSTALLED_APPS = [app for app in self.INSTALLED_APPS
-                              if app.startswith('django.') or app == 'south']
+                               if app.startswith('django.') or app == 'south']
 
 
 class Development(Debug):
@@ -233,8 +224,12 @@ class Development(Debug):
     TODO: Document how individual developers should subclass this and each use
     their own, in their own development environments.
     """
+    _DEBUG_MIDDLEWARE_ENABLED = True
     _DEBUG_TOOLBAR_ENABLED = True
-    _LOCAL_SOURCES = True
+    _LOCAL_RESOURCES = True
+
+    def setup(self):
+        super(Development, self).setup()
 
 
 class Production(Base):

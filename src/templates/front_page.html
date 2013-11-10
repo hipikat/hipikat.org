@@ -3,19 +3,13 @@
 {% block head_title_separator %}{% endblock %}
 
 {% block content %}
-
+  {{ request.urlconf }}
   <div class="row page" style="margin-top: 3em;"">
     <div class="large-7 push-4 columns epic-hello">
       <p>
-        <span class="lead-in">Hello.</span>
+        <span class="lead-in">Helloooo.</span>
         I'm a web developer
         from Perth, <span class="nowrap">Western Australia.</span></p>
-
-        <!--For more context, there's an
-        <a href="about/">about page</a>.-->
-
-        <!--This site is an unruly aggregate of stuff
-        I've shared with the world.-->
 
         <p>I'm building this site to blog about open source software projects
         I'm involved in, and as a home for a couple of packages I'm going to
@@ -30,21 +24,11 @@
         <a href="http://github.com/hipikat/hipikat.org/">see how it's built</a>
         or reuse any of my work.
 
-        I'm using
-        the most excellent <a href="http://www.feincms.org">feinCMS</a>,
-        and the front-end is constructed using <a href="http://foundation.zurb.com">Foundation</a>'s
+        I'm using <a href="http://www.feincms.org">feinCMS</a>,
+        and the front-end is constructed using
+        <a href="http://foundation.zurb.com">Foundation</a>'s
         responsive grid system, with <a href="http://sass-lang.com">Sass</a>
         <span class="nowrap">for style.</span></p>
-        
-
-      <!--
-        I'm a 32-year-old male, who enjoys working with
-        <a href="http://python.org">Python</a> and
-        <a href="http://djangoproject.com">Django</a>.
-        I enjoy <a href="https://en.wikipedia.org/wiki/Go_(game)">go</a>,
-        although I'm only a high single-digit kyu at best. 
-      -->
-
       </p>
     </div>
     <div class="large-3 pull-9 columns vanity-links">
@@ -65,5 +49,4 @@
       </ul>
     </div>
   </div>
-
 {% endblock content %}

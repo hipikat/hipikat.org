@@ -23,7 +23,6 @@ def project_context_processor(request):
     context = context_from_settings()
     # Accessor for JavaScript and stylesheet resources
     context['resources'] = resources(request)
-    # Here be dragons
     if settings.DEBUG:
         # Rendering {{ raise_exception }} does just that. (Useful with runserver_plus.)
         from .utils import raise_exception

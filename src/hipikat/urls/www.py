@@ -8,7 +8,7 @@ from . import global_urlpatterns
 urlpatterns = global_urlpatterns
 
 urlpatterns += patterns('',
-    url(r'^blog/', include('elephantblog.urls')),
+    url(r'^scraps/', include('elephantblog.urls')),
 )
 
 urlpatterns += global_urlpatterns + patterns(

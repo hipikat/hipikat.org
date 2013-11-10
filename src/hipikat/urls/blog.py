@@ -1,7 +1,5 @@
 
 from django.conf.urls import patterns, include, url
-
-
 from . import global_urlpatterns
 
 
@@ -51,3 +49,5 @@ def elephantblog_patterns(list_kwargs={}, detail_kwargs={}):
 # Backwards compatibility: Create a URL patterns object with the default
 # configuration
 urlpatterns = global_urlpatterns + elephantblog_patterns()
+
+#urlpatterns += patterns('hipikat.views.common', url(r'foo', 'not_configured_view'))
