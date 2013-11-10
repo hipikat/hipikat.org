@@ -3,19 +3,38 @@
     border-top: 1px solid #cccccc
     border-bottom: 1px solid #cccccc
     color: black
-    padding: 2em 0
+    padding: 2em 2em
     .lead-in
         font-size: 160%
         font-weight: 300
     @media #{$small}
-        margin: 0.6em $column-gutter/2 0
+        padding: 2em 0
+        margin: 0 $column-gutter/2 2em
         
 
 .vanity-links
+    text-align: right
+    .portrait
+        text-align: center
+        margin: 3em 1em
+        @media #{$small}
+            margin: 0
+        img
+            @media #{$small}
+                width: 100%
+                padding-left: 30%
     h2
         font-size: $small-font-size
     ul
         list-style-type: none
+        li
+            white-space: nowrap
+            display: inline
+            margin-left: 3em
+        @media #{$small}
+            li
+                display: block
+                margin: 0
     a
         text-decoration: none
     a:hover
@@ -23,12 +42,14 @@
     i
         width: 1.2em
     .email
-        +margin-leader(1, $base-font-size)
+        //+margin-leader(0, $base-font-size)
         .alt
             font-size: $small-font-size
             font-family: "Roboto Slab", sans-serif
-    @media #{$small}
-        text-align: right
+            @media #{$small}
+                display: block
+    //@media #{$small}
+    //    text-align: right
 
 .blog-summary,
 .blog-detail,

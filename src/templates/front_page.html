@@ -1,19 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block head_title_separator %}{% endblock %}
 
 {% block content %}
-  {{ request.urlconf }}
   <div class="row page" style="margin-top: 3em;"">
     <div class="large-7 push-4 columns epic-hello">
       <p>
-        <span class="lead-in">Helloooo.</span>
-        I'm a web developer
-        from Perth, <span class="nowrap">Western Australia.</span></p>
+        <span class="lead-in">Hello.</span>
+        I'm a software developer
+        from Perth, <span class="nowrap">Western Australia.</span>
+        I'm interested in
+        <a href="http://en.wikipedia.org/wiki/Free_software">free 
+        software</a> (although I do use a Mac&hellip;) and I've spent most of
+        my life working on <span class="nowrap">the web.</span>
+        </p>
 
-        <p>I'm building this site to blog about open source software projects
+        <!--<p>I'm building this site to blog about open source software projects
         I'm involved in, and as a home for a couple of packages I'm going to
-        release in the very <span class="nowrap">near future. :)</span></p>
+        release in the very <span class="nowrap">near future. :)</span></p>-->
+
+        <!--<p>
+        This is my personal website, and there isn't very much here yet.
+        </p>-->
 
         <p>My interest is mostly in <a href="http://www.python.org">Python</a>,
         mainly working with <a href="https://www.djangoproject.com">Django</a>.
@@ -32,7 +41,8 @@
       </p>
     </div>
     <div class="large-3 pull-9 columns vanity-links">
-      <h2>Roughly in order <span class="nowrap">of use&hellip;</span></h2>
+      <div class="portrait"><img src="{% static "images/adam-wright.jpg"  %}"></div>
+      <!--<h2>Roughly in order <span class="nowrap">of use&hellip;</span></h2>-->
       <ul>
         <li><a href="https://github.com/hipikat">GitHub <i class="fa fa-github"></i></a></li>
         <li><a href="http://twitter.com/hipikat">Twitter <i class="fa fa-twitter"></i></a></li>
@@ -45,7 +55,7 @@
         <li><a href="https://kindle.amazon.com/profile/Hipikat/2511498">Kindle <i class="fa fa-book"></i></a></li>
         <li><a href="http://stackoverflow.com/users/218397">Stack Overflow <i class="fa fa-stack-overflow"></i></a></li>
         <li><a href="http://www.linkedin.com/in/adamjwright">LinkedIn <i class="fa fa-linkedin"></i></a></li>
-        <li class="email"><span class="alt">or, like&hellip;</span><br /><a href="mailto:adam@hipikat.org">adam@hipikat.org <i class="fa fa-envelope"></i></a></li>
+        <li class="email"><span class="alt">or, like&hellip;</span> <a href="mailto:adam@hipikat.org">adam@hipikat.org <i class="fa fa-envelope"></i></a></li>
       </ul>
     </div>
   </div>
