@@ -23,7 +23,7 @@ def get_elephantblog_url(entry):
 
 class LocalSiteSettings(object):
     """Settings specific to this site."""
-
+    _BLOG_INDEX_PREVIEWS = 10
 
 class Base(
         # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR

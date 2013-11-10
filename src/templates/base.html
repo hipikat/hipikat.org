@@ -104,8 +104,8 @@
   {# Page footer #}
   {% block body_footer %}
   <div class="row foot">
-    <div class="small-6 push-4 columns">
-      Copyright &copy; 2013 Adam Wright
+    <div class="{% block footer_cols_class %} small-8 push-3 columns{% endblock %}">
+      <p>Copyright &copy; 2013 Adam Wright</p>
     </div>
   </div>
   {% endblock body_footer %}

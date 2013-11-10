@@ -6,7 +6,6 @@ of the sub-modules, based on the requested domain.
 
 from django.conf import settings
 from django.conf.urls import include, patterns, url
-from django.core.urlresolvers import reverse_lazy
 from django.contrib import admin
 from django_hosts.reverse import reverse_full
 try:
@@ -31,7 +30,7 @@ admin_urlpatterns = patterns(
 )
 # Enable views to aid debugging and development
 if settings._DEBUG_URLPATTERNS_ENABLED:
-    from . import _debug as debug_urls
+    from . import _debug as debug_urls    # <.<
     debug_urlpatterns = patterns('', url(r'^:D/', include(debug_urls)))
 
 # Sub-modules should extend their urlpatterns with global_urlpatterns
@@ -47,7 +46,7 @@ def get_elephantblog_url(entry):
         pub_date = entry.published_on
     return reverse_full(
         host='blog' if entry.is_featured else 'main_site',
-        view='elephantblog_entry_detail',
+        view='blog_entry_detail',
         view_kwargs={
             'year': pub_date.strftime('%Y'),
             'month': pub_date.strftime('%m'),

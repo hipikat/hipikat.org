@@ -19,7 +19,7 @@ def project_context_processor(request):
     to the entire project, or required by all templates.
     """
     context = {}
-    # Settings variables we let templates in on directly 
+    # Settings variables we let templates in on directly
     context = context_from_settings()
     # Accessor for JavaScript and stylesheet resources
     context['resources'] = resources(request)
