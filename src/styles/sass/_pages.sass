@@ -13,7 +13,7 @@
         
 
 .vanity-links
-    text-align: right
+    text-align: center
     .portrait
         text-align: center
         margin: 3em 1em
@@ -26,13 +26,17 @@
     h2
         font-size: $small-font-size
     ul
+        padding-left: 0
         list-style-type: none
         li
             white-space: nowrap
             display: inline
-            margin-left: 3em
+            //margin-left: 3em
+            margin: 0 1.5em
+            line-height: $base-line-height * 2
         @media #{$small}
             li
+                line-height: $base-line-height 
                 display: block
                 margin: 0
     a
@@ -48,8 +52,8 @@
             font-family: "Roboto Slab", sans-serif
             @media #{$small}
                 display: block
-    //@media #{$small}
-    //    text-align: right
+    @media #{$small}
+        text-align: right
 
 .blog-summary,
 .blog-detail,
@@ -67,6 +71,7 @@
             text-align: right
             p
                 display: block
+                white-space: nowrap
             .bullet
                 display: none
 

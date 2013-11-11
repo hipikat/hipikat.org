@@ -5,10 +5,7 @@ from . import global_urlpatterns
 
 
 www_urlpatterns = patterns(
-    'hipikat.views',
-    url(r'^$', 'front_page', name="front_page"),
-    url(r'^scraps/$', 'scraps.index', name="scraps_index"),
-    url(r'^about/$', 'about', name="about"),
-    url(r'', include('feincms.urls')),
+    'hipikat.views.common',
+    url(r'^$', 'not_configured_view', name="broken_landing_page"),
 )
 urlpatterns = global_urlpatterns + www_urlpatterns

@@ -15,7 +15,9 @@
         </div>
         <div class="meta large-3 columns pull-9">
             <p><span class="bullet">&mdash; </span>
-                Posted {{ entry.published_on|date:"SHORT_DATE_FORMAT" }}</p>
+                Posted {{ entry.published_on|date:"Y-m-d" }}</p>
+            <p>at {{ entry.published_on|time:"g:i A" }}</p>
+            <p>(+0800)</p>
             <p>{% for category in entry.fetched_categories %}
                <a href="{{ category.get_absolute_url }}" rel="tag">{{ category }}</a>
                {% if not forloop.last %},{% endif %}

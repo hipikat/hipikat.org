@@ -14,6 +14,8 @@ blog_patterns = patterns(
     'hipikat.views.blog',
     url(r'^feed/$', EntryFeed()),
     url(r'^$', 'index', name='blog_index'),
+    url(r'^(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/(?P<slug>[-\w]+)/$',
+        'entry_detail', name='blog_entry_detail'),
     #url(r'^(?P<year>\d{4})/$',
     #    views.YearArchiveView.as_view(**list_kwargs),
     #    name='elephantblog_entry_archive_year'),

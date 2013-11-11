@@ -45,6 +45,7 @@ class Base(
     PROJECT_MODULE = 'hipikat'
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
     TIME_ZONE = 'Australia/Perth'
+    SHORT_DATE_FORMAT = 'Y-m-d'
 
     ### Private project settings
     # Settings variables injected into context
@@ -94,7 +95,8 @@ class Base(
     # django-hosts
     PARENT_HOST = ALLOWED_HOSTS[0] if ALLOWED_HOSTS[0][0] != '.' else ALLOWED_HOSTS[0][1:]
     ROOT_HOSTCONF = PROJECT_MODULE + '.hosts'
-    DEFAULT_HOST = 'main_site'
+    #DEFAULT_HOST = 'main_site'
+    DEFAULT_HOST = 'not_configured'
 
     def setup(self):
         """Configure settings which require initialised base classes/mixins."""

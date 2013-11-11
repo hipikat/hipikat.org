@@ -1,8 +1,7 @@
 
 from django.conf import settings
 from django.views.generic import TemplateView
-
-#from hipikat.models import Post
+from .common import NotConfiguredView
 
 
 __all__ = ['FrontPageView', 'main_landing_view',]
@@ -29,5 +28,6 @@ class FrontPageView(TemplateView):
         response = super(FrontPageView, self).render_to_response(*args, **kwargs)
         #import pdb; pdb.set_trace()
         return response
-
 front_page = FrontPageView.as_view()
+
+about = NotConfiguredView.as_view()

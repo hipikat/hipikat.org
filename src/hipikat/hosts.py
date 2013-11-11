@@ -12,4 +12,5 @@ host_patterns = patterns(
     'hipikat.urls',
     host(r'www', 'www', name='main_site'),
     host(r'blog', 'blog', name='blog'),
+    host(r'broken', 'broken', name='not_configured'),
 )
