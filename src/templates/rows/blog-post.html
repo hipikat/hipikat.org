@@ -1,12 +1,15 @@
 
-    <div class="row page blog-summary">
+    <div class="row page blog entry">
         <div class="large-9 push-3 columns">
             <div class="row">
                 <div class="small-12 columns title">
-                    <h2><a href="{{ entry.get_absolute_url }}">{{ entry }}</a></h2>
+                    <h1><!--<a href="{{ entry.get_absolute_url }}">-->{{ entry }}<!--</a>--></h1>
                 </div>
                 <div class="small-12 large-8 columns content">
-                    {% if entry.first_richtext %}{{ entry.first_richtext.render }}{% endif %}
+                    {# if entry.first_richtext %}{{ entry.first_richtext.render }}{% endif #}
+                    {% for content in entry.content.main %}
+                      {{ content.render }}
+                    {% endfor %}
                 </div>
                 <div class="small-11 small-offset-1 large-4 large-offset-0 columns note">
                     <!--<p>TODO(footnotes)</p>-->

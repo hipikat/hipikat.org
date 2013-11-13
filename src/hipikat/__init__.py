@@ -10,7 +10,6 @@ the core of the of the site, likely to be used during the processing of
 most requests.
 """
 from django.conf import settings
-from .style import resources
 
 
 def project_context_processor(request):
@@ -18,6 +17,7 @@ def project_context_processor(request):
     Project-level context processor; add template context variables relating
     to the entire project, or required by all templates.
     """
+    from .style import resources
     context = {}
     # Settings variables we let templates in on directly
     context = context_from_settings()

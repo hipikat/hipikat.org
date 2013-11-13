@@ -52,12 +52,14 @@ def stylesheets(minify=None, local=False):
     dotmin = _min_str(minify)
     cdn_sources = {
         'font-awesome': '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css',
-        'roboto': 'http://fonts.googleapis.com/css?family=Roboto+Condensed'
-        ':400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700',
+        #'roboto': 'http://fonts.googleapis.com/css?family=Roboto+Condensed'
+        #':400,700|Roboto:400,400italic,500,700,700italic,300|Roboto+Slab:400,700',
+        #'cloud-typography': 'http://cloud.typography.com/7646652/805902/css/fonts.css',
+        'cloud-typography': '//cloud.typography.com/7646652/805902/css/fonts.css',
     }
     local_sources = {
         'font-awesome': STATIC_URL + 'font-awesome/css/font-awesome{}.css'.format(dotmin),
-        'roboto': STATIC_URL + 'fonts/roboto.css',
+        #'roboto': STATIC_URL + 'fonts/roboto.css',
     }
     # Make sure we include every listed library, even if a local/remote
     # source isn't available as requested
@@ -133,8 +135,9 @@ class ResourceRegistry(object):
     accessed by a template. Contains two lists of resource objects with
     the names ``javascripts`` and ``styles``.
     """
-    javascripts = JavaScriptRequirements()
-    stylesheets = [StyleResource(style[1]) for style in stylesheets().items()]
+    def __init__(self, *args, **kwargs):
+        self.javascripts = JavaScriptRequirements()
+        self.stylesheets = [StyleResource(style[1]) for style in stylesheets().items()]
 
 
 def resources(request):

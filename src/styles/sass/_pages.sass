@@ -57,7 +57,8 @@
 
 .blog-summary,
 .blog-detail,
-.blog-entry
+.blog-entry,
+.blog.entry
     h1
         padding-right: 0.5em
     .meta
@@ -74,6 +75,12 @@
                 white-space: nowrap
             .bullet
                 display: none
+
+body.blog.post
+    .row.blog.entry
+        // TODO: Fix up...
+        //margin-top: 2em
+        +margin-leader(2, $base-font-size)
 
 .blog
     .pagination

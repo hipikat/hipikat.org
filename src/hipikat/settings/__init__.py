@@ -25,6 +25,7 @@ class LocalSiteSettings(object):
     """Settings specific to this site."""
     _BLOG_INDEX_PREVIEWS = 10
 
+
 class Base(
         # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR
         FHSDirsMixin,
@@ -224,6 +225,10 @@ class Development(Debug):
     their own, in their own development environments.
     """
     _LOCAL_RESOURCES = True
+
+    def setup(self):
+        super(Development, self).setup()
+        #self.ALLOWED_HOSTS = ['evilspa.dyndns.org'] + list(self.ALLOWED_HOSTS)
 
 
 class Production(Base):

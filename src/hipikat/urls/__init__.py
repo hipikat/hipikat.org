@@ -39,7 +39,6 @@ global_urlpatterns = admin_urlpatterns + debug_urlpatterns
 
 ### URL resolution overrides
 def get_elephantblog_url(entry):
-    print("* "*10 + str(entry) + str(timezone.utc))
     # We use naive date using UTC for conversion for permalink
     if getattr(settings, 'USE_TZ', False):
         pub_date = timezone.make_naive(entry.published_on, timezone.utc)
