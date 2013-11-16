@@ -14,7 +14,7 @@
   </div>
 
   {% for entry in object_list %}
-    {% include "rows/blog-post.html" %}
+    {% include "rows/blog-post-summary.html" %}
   {% endfor %}
 
   {% if page_obj.has_previous or page_obj.has_next %}

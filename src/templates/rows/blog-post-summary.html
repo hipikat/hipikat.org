@@ -1,0 +1,14 @@
+{% extends 'rows/blog-post.html' %}
+
+{% block entry_content_inner %}
+  {{ entry.excerpt }}
+  <div class="read-more-link">
+    <a href="{{ entry.get_absolute_url }}">read more&hellip;</a>
+  </div>
+{% endblock %}
+
+{# block sidenote_class %}{{ block.super }}" style=""{% endblock #}
+
+{% block sidenote_inner %}
+  {# raise_exception #}
+{% endblock %}

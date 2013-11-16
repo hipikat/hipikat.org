@@ -55,13 +55,30 @@
     @media #{$small}
         text-align: right
 
+body.blog.archive
+    .row.blog.entry
+        // TODO: Create function demote-heading-levels (or something)
+        h1
+            +h2-style
+        h2
+            +h3-style
+        h3
+            +h4-style
+        h4
+            +h5-style
+
 .blog-summary,
 .blog-detail,
 .blog-entry,
-.blog.entry
+.blog.entry,
+body.blog.post
+    .sidenote
+        font-family: $high-font-family
+        +medium-rhythmic
     h1
         padding-right: 0.5em
     .meta
+        font-family: $high-font-family, sans-serif
         p
             +small-rhythmic
             display: inline
@@ -75,6 +92,10 @@
                 white-space: nowrap
             .bullet
                 display: none
+    div.read-more-link
+        font-family: $high-font-family, sans-serif
+        text-align: right
+        margin-right: 12%
 
 body.blog.post
     .row.blog.entry

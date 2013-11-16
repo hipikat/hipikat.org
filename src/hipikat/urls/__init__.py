@@ -23,6 +23,10 @@ urlpatterns = patterns('hipikat.views.common', url(r'.*', 'NotConfiguredView'))
 
 # Django admin interface and admin docs
 admin.autodiscover()
+
+#from hipikat.models import Writing, WritingAdmin
+#admin.site.register(Writing, WritingAdmin)
+
 admin_urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),

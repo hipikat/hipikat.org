@@ -11,6 +11,9 @@
 // Use Foundation's customised normalize sheets
 @import normalize
 
+// Toggle debug-mode
+$debug: false !default
+
 /* Zurb Foundation's global settings file is a big-ass list of
  * commented-out defaults - set any we customise here for readability
  * and keep the settings mixin file on hand as a reference.
@@ -28,10 +31,10 @@ $column-gutter: em-calc(36)
 // Typography variables
 $body-font-family: 'Chronicle Text G1 A', 'Chronicle Text G1 B'
 $high-font-family: 'Verlag A', 'Verlag B'
-$low-font-family: 'Verlag Cond A', 'Verlag Cond B'
+$low-font-family: 'Gotham Rounded SSm A', 'Gotham Rounded SSm B'
 
 $body-text-color: #404040
-$body-background-color: #f1f1f1
+$body-background-color: #f1f5f3
 $h1-font-size: $base-font-size * (2 + 1/3)
 $h2-font-size: $base-font-size * (2)
 $h3-font-size: $base-font-size * (1 + 2/3)
@@ -88,14 +91,26 @@ $prev-breakpoint: $small-screen - 1
     $body-padding: floor(($prev-breakpoint - $small-screen) / 2) * $prev-breakpoint / $max-breakpoint
 
 // Debug grid system
-//.row
-//    border-top: 1px solid green
-//    border-bottom: 1px solid green
-//.columns
-//    border: 1px solid orange
-//    margin-top: -2px
+@if $debug
+    //.row
+    //    border-top: 1px solid green
+    //    border-bottom: 1px solid green
+    .columns
+        border: 1px solid orange
+        margin-top: -2px
+
+ul
+    margin-top: 0
+    list-style-type: none
+    padding-left: 0
 
 // Typography
+@mixin medium-rhythmic
+    $meta-p-rhythm: rhythm(1, $base-font-size)
+    $meta-p-offset: 11/12
+    +adjust-font-size-to($base-font-size)
+    margin: 0
+
 @mixin small-rhythmic
     $meta-p-rhythm: rhythm(1, $small-font-size)
     $meta-p-offset: 11 / 12
@@ -110,7 +125,8 @@ body
     font-style: normal
     line-height: $base-line-height
     // Debug vertical rhythm
-    //@include debug-vertical-alignment
+    @if $debug
+        @include debug-vertical-alignment
 
 .invisible
     color: $body-background-color
@@ -125,14 +141,20 @@ body
     +adjust-font-size-to($reduced-font-size)
     line-height: $reduced-font-size * (1 + $mobile-heading-leading)
 
-h1
+p, h1, h2, h3, h4, h5, h6, li, dd, dt
+    cursor: text
+
+@mixin h1-style
     color: #202020
     font-family: $high-font-family, sans-serif
     font-weight: 800
     +adjust-mobile-heading($h1-font-size)
     @media #{$small}
         +font-with-margins($h1-font-size, 0.625, 2)
-h2
+h1
+    +h1-style
+
+@mixin h2-style
     color: #303030
     font-family: $high-font-family, sans-serif
     font-weight: 700
@@ -140,14 +162,20 @@ h2
     +adjust-mobile-heading($h2-font-size)
     @media #{$small}
         +font-with-margins($h2-font-size, 0.65, 2)
-h3
+h2
+    +h2-style
+
+@mixin h3-style
     font-weight: 400
     font-family: $high-font-family, sans-serif
     //letter-spacing: 0.375px
     +adjust-mobile-heading($h3-font-size)
     @media #{$small}
         +font-with-margins($h3-font-size, 0.7, 2)
-h4
+h3
+    +h3-style
+
+@mixin h4-style
     font-family: $high-font-family, sans-serif
     +font-with-margins($h4-font-size, 0.7, 2)
     font-weight: 400
@@ -155,7 +183,10 @@ h4
     @media #{$small}
         +font-with-margins($h4-font-size, 0.7, 2)
         font-weight: normal
-h5, h6
+h4
+    +h4-style
+
+@mixin h5-style
     font-family: $low-font-family, sans-serif
     +font-with-margins($h5-font-size, 0.7, 2)
     font-weight: 400
@@ -168,13 +199,18 @@ h5, h6
         margin-top: 0
         +margin-trailer(1, $base-font-size)
         font-weight: normal
-p
+h5, h6
+    +h5-style
+
+@mixin p-style
     +adjust-font-size-to($mobile-font-size)
     margin: 0
     +margin-trailer(1, $mobile-font-size)
     @media #{$small}
         +adjust-font-size-to($base-font-size)
         +margin-trailer(1, $base-font-size)
+p
+    +p-style
 
 
 $link-color: #1289B8

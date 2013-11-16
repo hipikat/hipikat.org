@@ -39,13 +39,16 @@ class Base(
         CinchSettings):
 
     ### Project metadata
-    ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
-    ALLOWED_HOSTS = ['.hipikat.org']
-    BASE_DIR = dirname(dirname(dirname(dirname(__file__))))     # [repo]/src/[proj]/settings/[me]
-    LANGUAGE_CODE = 'en-au'
+    from project_settings import (
+        ADMINS,
+        ALLOWED_HOSTS,
+        BASE_DIR,
+        LANGUAGE_CODE,
+        TIME_ZONE,
+    )
+    ADMINS = tuple((admin['full_name'], admin['email']) for admin in ADMINS)
     PROJECT_MODULE = 'hipikat'
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
-    TIME_ZONE = 'Australia/Perth'
     SHORT_DATE_FORMAT = 'Y-m-d'
 
     ### Private project settings
@@ -156,6 +159,11 @@ class Base(
     ABSOLUTE_URL_OVERRIDES = {
         'elephantblog.entry': get_elephantblog_url,
         #'elephantblog.categorytranslation': elephantblog_categorytranslation_url,      # TODO
+    }
+    SOUTH_MIGRATION_MODULES = {
+        'page': PROJECT_MODULE + '.migrate_apps.page',
+        'elephantblog': PROJECT_MODULE + '.migrate_apps.elephantblog',
+        'medialibrary': PROJECT_MODULE + '.migrate_apps.medialibrary',
     }
 
 

@@ -1,18 +1,29 @@
 
+{% block blog_post %}
     <div class="row page blog entry">
         <div class="large-9 push-3 columns">
             <div class="row">
                 <div class="small-12 columns title">
-                    <h1><!--<a href="{{ entry.get_absolute_url }}">-->{{ entry }}<!--</a>--></h1>
+                    <h1><a href="{{ entry.get_absolute_url }}">{{ entry }}</a></h1>
                 </div>
                 <div class="small-12 large-8 columns content">
+                  {% block entry_content_inner %}
                     {# if entry.first_richtext %}{{ entry.first_richtext.render }}{% endif #}
                     {% for content in entry.content.main %}
                       {{ content.render }}
                     {% endfor %}
+                  {% endblock %}
                 </div>
                 <div class="small-11 small-offset-1 large-4 large-offset-0 columns note">
-                    <!--<p>TODO(footnotes)</p>-->
+                    <ul class="{% block sidenote_class %}sidenote{% endblock %}"><li>
+                      {% block sidenote_inner %}
+                        <!--Hello I am a typical sidenote.
+                    I'm rendered in a condensed font to save on space, but
+                    I'm sitll the $body-font-size, so I'm quite legible.-->
+                        The time has come, the walrus said, to speak of many things.
+                        Of shoes and ships and sealing wax… of cabbages and kings.
+                      {% endblock %}
+                </li></ul>
                 </div>
             </div>
         </div>
@@ -27,4 +38,4 @@
                {% endfor %}</p>
         </div>
     </div>
-
+{% endblock %}

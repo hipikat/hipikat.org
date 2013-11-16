@@ -1,13 +1,19 @@
 
+import os
 from fabric.api import *
 from fabtools import require
 import fabtools
 
+# Project settings
+from project_settings import (
+    APP_OWNER,
+    PROJECT_NAME,
+    PYTHON_VERSION,
+)
 
-APP_OWNER = 'hipikat'
-PYTHON_VERSION = '2.7.6'
-PYTHON_TARBALL_NAME = 'Python-{version}'
-PYTHON_SOURCE_URL = 'http://www.python.org/ftp/python/{version}/' + PYTHON_TARBALL_NAME + '.tgz'
+PYTHON_SRC_DIR = 'Python-{version}'
+PYTHON_SOURCE_URL = 'http://www.python.org/ftp/python/{version}/' + PYTHON_SRC_DIR + '.tgz'
+EZ_SETUP_URL = 'https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py'
 DEBIAN_PACKAGES = (
     'build-essential',
     'libreadline-gplv2-dev',
@@ -39,7 +45,7 @@ def upgrade_deb():
 
 @task
 def install_local_python():
-    python_src_dir = PYTHON_TARBALL_NAME.format(version=PYTHON_VERSION)
+    python_src_dir = PYTHON_SRC_DIR.format(version=PYTHON_VERSION)
     require.directory('$HOME/build-python')
     with cd('$HOME/build-python'):
         run('rm -Rf ./*')
@@ -49,6 +55,16 @@ def install_local_python():
         run('./configure')
         run('make')
         run('make install')
+    run('wget {} -O - | /usr/local/bin/python'.format(EZ_SETUP_URL))
+    run('/usr/local/bin/easy_install pip')
+
+
+@task
+def make_virtualenv(tag=None):
+    require.files.directory('/env', use_sudo=True, owner='root', mode='755')
+    with cd('/env'):
+        project_dir = PROJECT_NAME + ('' if not tag else '-' + tag)
+        run('virtualenv ' + project_dir)
 
 
 @task
