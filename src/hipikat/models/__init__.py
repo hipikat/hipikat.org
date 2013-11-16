@@ -4,7 +4,7 @@
 
 
 #from .fein import Writing, WritingAdmin
-from .fein import Entry
+from .fein import Entry, EntryFactory
 
 
 

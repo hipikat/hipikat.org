@@ -26,9 +26,11 @@
     h2
         font-size: $small-font-size
     ul
+        +margin-leader(1)
         padding-left: 0
         list-style-type: none
         li
+            font-weight: 700
             white-space: nowrap
             display: inline
             //margin-left: 3em
@@ -71,14 +73,17 @@ body.blog.archive
 .blog-detail,
 .blog-entry,
 .blog.entry,
-body.blog.post
+    .categories
+        font-family: $low-font-family
+        +small-rhythmic
+        +margin-leader(2)
     .sidenote
-        font-family: $high-font-family
-        +medium-rhythmic
+        font-family: $low-font-family
+        +small-rhythmic
     h1
         padding-right: 0.5em
     .meta
-        font-family: $high-font-family, sans-serif
+        font-family: $low-font-family, sans-serif
         p
             +small-rhythmic
             display: inline

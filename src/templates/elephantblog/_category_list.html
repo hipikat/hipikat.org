@@ -1,0 +1,8 @@
+
+  {% if entry.fetched_categories %}
+    <ul class="categories">
+    {% for category in entry.fetched_categories %}
+      <li><a href="{{ category.get_absolute_url }}" rel="tag">{{ category }}</a></li>
+    {% endfor %}
+    </ul>
+  {% endif %}

@@ -1,14 +1,16 @@
 
+import random
+from django.contrib.auth import get_user_model
 import factory
+from factory import LazyAttribute
+from faker import Faker
 #from django.utils.translation import ugettext_lazy as _
 from feincms.module.page.models import Page
 from feincms.content.application.models import ApplicationContent
 from feincms.content.raw.models import RawContent
 from feincms.content.richtext.models import RichTextContent
 from feincms.content.medialibrary.models import MediaFileContent
-#import feincms_cleanse
-#from elephantblog.models import Entry as BlogPost
-from elephantblog.models import Entry, EntryManager, EntryAdmin
+from elephantblog.models import Entry
 
 
 #from feincms.content.application.models import retrieve_page_information
@@ -51,7 +53,7 @@ Page.create_content_type(MediaFileContent, TYPE_CHOICES=(
     ('default', 'default'),
 ))
 Page.create_content_type(ApplicationContent, APPLICATIONS=(
-#    ('elephantblog', 'Blog', {'urls': 'elephantblog.urls'}),
+    #('elephantblog', 'Blog', {'urls': 'elephantblog.urls'}),
     ('elephantblog.urls', 'Blog'),
 ))
 
@@ -111,7 +113,6 @@ Page.create_content_type(ApplicationContent, APPLICATIONS=(
 #    is_featured = True
 
 
-
 #################################
 
 # Elephantblog
@@ -140,11 +141,38 @@ Entry.create_content_type(MediaFileContent, TYPE_CHOICES=(
 ))
 
 
+# Fake model generation
+MIN_TITLE_LENGTH, MAX_TITLE_LENGTH = 45, 80
+MIN_PARAGRAPHS, MAX_PARAGRAPHS = 1, 10
+fake = Faker()
+
+
 class EntryFactory(factory.Factory):
     """
     Just starting to play with factory_boy; not used anywhere in code yet.
     """
     FACTORY_FOR = Entry
 
-    is_active = True
-    is_featured = True
+    is_final = LazyAttribute(lambda obj: random.choice((True, False)))
+    is_active = LazyAttribute(lambda obj: random.choice((True, False)))
+    is_featured = LazyAttribute(lambda obj: random.choice((True, False)))
+    entry_type = LazyAttribute(lambda obj: random.choice(Entry.ENTRY_TYPES.keys()))
+
+    @classmethod
+    def _get_title(cls, obj):
+        title_parts = fake.text(random.randrange(MIN_TITLE_LENGTH, MAX_TITLE_LENGTH)).split()
+        info_parts = []
+        for part in ('entry_type', 'is_final', 'is_active', 'is_featured'):
+            info_parts.append('{}={}'.format(part, getattr(obj, part)))
+        title_parts[1:4] = info_parts
+        title = ' '.join(title_parts)
+        while len(title) > 100:
+            title_parts.pop()
+            title = ' '.join(title_parts)
+        return ' '.join(title_parts)
+
+    title = LazyAttribute(lambda obj: EntryFactory._get_title(obj))
+    slug = LazyAttribute(lambda obj: fake.slug(' '.join(obj.title.split()[0:5])))
+    author = get_user_model().objects.all()[0]
+    excerpt = LazyAttribute(lambda obj: '<p>{}</p>'.format('</p><p>'.join(
+                            fake.paragraphs(random.randrange(1, 3)))))

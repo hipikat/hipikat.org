@@ -12,5 +12,9 @@ index = BlogIndexView.as_view()
 
 
 class EntryDetailView(elephantblog_views.DateDetailView):
-    pass
+
+    def get_queryset(self):
+        return elephantblog_views.ElephantblogMixin.get_queryset(self)
+        #return super(EntryDetailView, self).get_queryset()
+
 entry_detail = EntryDetailView.as_view()

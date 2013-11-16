@@ -29,9 +29,12 @@ $row-width: none
 $column-gutter: em-calc(36)
 
 // Typography variables
-$body-font-family: 'Chronicle Text G1 A', 'Chronicle Text G1 B'
+//'$body-font-family: 'Chronicle Text G1 A', 'Chronicle Text G1 B'
+//'$high-font-family: 'Verlag A', 'Verlag B'
+//'$low-font-family: 'Gotham Rounded SSm A', 'Gotham Rounded SSm B'
+$body-font-family: 'Archer A', 'Archer B'
 $high-font-family: 'Verlag A', 'Verlag B'
-$low-font-family: 'Gotham Rounded SSm A', 'Gotham Rounded SSm B'
+$low-font-family: 'Archer A', 'Archer B'
 
 $body-text-color: #404040
 $body-background-color: #f1f5f3
@@ -189,7 +192,7 @@ h4
 @mixin h5-style
     font-family: $low-font-family, sans-serif
     +font-with-margins($h5-font-size, 0.7, 2)
-    font-weight: 400
+    font-weight: 700
     font-style: normal
     //letter-spacing: 0.375px
     +adjust-font-size-to($base-font-size)
@@ -228,8 +231,10 @@ a:hover
 // Page header
 .head
     .menu
-        padding-top: 1em
-        font-family: $high-font-family, sans-serif
+        padding-top: 1.65em
+        font-family: $low-font-family, sans-serif
+        font-size: $base-font-size
+        font-weight: bold
         ul
             margin: 0
             padding: 0
@@ -244,7 +249,7 @@ a:hover
     .site-title
         margin-top: 0.125em
         h1, p
-            font-family: $high-font-family, sans-serif
+            font-family: $low-font-family, sans-serif
             +small-rhythmic
             display: inline
             //@media #{$small}
@@ -286,6 +291,6 @@ a:hover
     margin-top: 5em
     p
         font-size: $small-font-size
-        font-family: $high-font-family, sans-serif
+        font-family: $low-font-family, sans-serif
 
 @import pages
