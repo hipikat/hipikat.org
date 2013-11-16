@@ -6,6 +6,7 @@
                 <div class="small-12 columns title">
                     <h1><a href="{{ entry.get_absolute_url }}">{{ entry }}</a></h1>
                 </div>
+                {% block entry_content_columns %}
                 <div class="small-12 large-8 columns content">
                   {% block entry_content_inner %}
                     {# if entry.first_richtext %}{{ entry.first_richtext.render }}{% endif #}
@@ -16,6 +17,7 @@
                     {% endfor %}
                   {% endblock %}
                 </div>
+                {% block entry_notes_outer %}
                 <div class="small-11 small-offset-1 large-4 large-offset-0 columns note">
                     <ul class="{% block sidenote_class %}sidenote{% endblock %}"><li>
                       {% block sidenote_inner %}
@@ -25,15 +27,17 @@
                         The time has come, the walrus said, to speak of many things.
                         Of shoes and ships and sealing wax… of cabbages and kings.
                       {% endblock %}
-                </li></ul>
+                    </li></ul>
                 </div>
+                {% endblock entry_notes_outer%}
+                {% endblock entry_content_columns %}
             </div>
         </div>
         <div class="meta large-3 columns pull-9">
             <p><span class="bullet">&mdash; </span>
                 Posted {{ entry.published_on|date:"Y-m-d" }}</p>
             <p>at {{ entry.published_on|time:"g:i A" }}</p>
-            <p>(+0800)</p>
+            <!--<p>(+0800)</p>-->
 
             {% block entry_meta_extras %}
                 {% include 'elephantblog/_category_list.html' %}

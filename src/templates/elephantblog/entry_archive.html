@@ -14,7 +14,17 @@
   </div>
 
   {% for entry in object_list %}
-    {% include "rows/blog-post-summary.html" %}
+    {% if forloop.counter <= 10 %}
+        {% include "rows/blog-post-summary.html" %}
+    {% else %}
+        {% if forloop.counter == 11 %}
+            <div class="short-links">
+        {% endif %}
+        {% include "rows/blog-post-short.html" %}
+        {% if forloop.last %}
+            </div>
+        {% endif %}
+    {% endif %}
   {% endfor %}
 
   {% if page_obj.has_previous or page_obj.has_next %}
