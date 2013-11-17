@@ -49,7 +49,7 @@ def get_elephantblog_url(entry):
     else:
         pub_date = entry.published_on
     return reverse_full(
-        host='blog' if entry.is_featured else 'main_site',
+        host='blog' if entry.entry_type == 'blog' else 'main_site',
         view='blog_entry_detail',
         view_kwargs={
             'year': pub_date.strftime('%Y'),

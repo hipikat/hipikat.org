@@ -30,7 +30,7 @@
         padding-left: 0
         list-style-type: none
         li
-            font-weight: 700
+            //font-weight: 700
             white-space: nowrap
             display: inline
             //margin-left: 3em
@@ -60,6 +60,8 @@
 body.blog.archive
     .row.blog.entry
         // TODO: Create function demote-heading-levels (or something)
+        //h1, h2, h3, h4, h5, h6
+        //    line-height: 1.0em
         h1
             +h2-style
         h2
@@ -68,10 +70,24 @@ body.blog.archive
             +h4-style
         h4
             +h5-style
+        h1, h2, h3, h4, h5, h6
+            line-height: 1.08em
+    .page.title.break
+        //margin-top: -5em
+        h2
+            margin: -0.55em 0 -0.25em
     .short-links
         .row.blog.entry
             h1
                 +h3-style
+                line-height: 1.08em
+            @media #{$small}
+                h1
+                    line-height: 1.12em
+
+//.blog.post
+////    +margin-leader(2)
+
 
 .blog-summary,
 .blog-detail,
@@ -80,7 +96,6 @@ body.blog.archive
     .categories
         font-family: $low-font-family
         +small-rhythmic
-        +margin-leader(2)
     .sidenote
         font-family: $low-font-family
         +small-rhythmic
@@ -94,7 +109,7 @@ body.blog.archive
             //padding: ($meta-p-rhythm * (1-$meta-p-offset)) 0 ($meta-p-rhythm * $meta-p-offset) 0;
     @media #{$small}
         .meta
-            +margin-leader(3)
+            +margin-leader(2)
             text-align: right
             p
                 display: block

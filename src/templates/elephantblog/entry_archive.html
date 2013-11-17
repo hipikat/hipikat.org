@@ -9,16 +9,28 @@
 
   <div class="row page title">
     <div class="large-11 push-1 columns">
-      <h1>{% include 'elephantblog/_archive_title.html' %}</h1>
+      <h1>{% block archive_title_inner %}
+        {% if archive_title %}{{ archive_title }}
+        {% else %}{% include 'elephantblog/_archive_title.html' %}
+        {% endif %}
+      {% endblock %}</h1>
     </div>
   </div>
 
   {% for entry in object_list %}
+    {# TODO: Turn this into a setting #}
     {% if forloop.counter <= 10 %}
         {% include "rows/blog-post-summary.html" %}
     {% else %}
         {% if forloop.counter == 11 %}
             <div class="short-links">
+
+  <div class="row page title break">
+    <div class="large-11 push-1 columns">
+      <h2>Earlier&hellip;</h2>
+    </div>
+  </div>
+
         {% endif %}
         {% include "rows/blog-post-short.html" %}
         {% if forloop.last %}

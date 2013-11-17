@@ -142,7 +142,7 @@ Entry.create_content_type(MediaFileContent, TYPE_CHOICES=(
 
 
 # Fake model generation
-MIN_TITLE_LENGTH, MAX_TITLE_LENGTH = 45, 80
+MIN_TITLE_LENGTH, MAX_TITLE_LENGTH = 10, 70
 MIN_PARAGRAPHS, MAX_PARAGRAPHS = 1, 10
 fake = Faker()
 
