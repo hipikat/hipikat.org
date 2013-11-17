@@ -117,7 +117,7 @@ Page.create_content_type(ApplicationContent, APPLICATIONS=(
 
 # Elephantblog
 Entry.register_extensions(
-    #'feincms.module.extensions.changedate',            # Creation and modification dates
+    'feincms.module.extensions.changedate',            # Creation and modification dates
     #'feincms.module.extensions.ct_tracker',            # Content type cache
     #'feincms.module.extensions.datepublisher',         # Date-based publishing
     #'feincms.module.extensions.featured',              # Simple featured flag for a page

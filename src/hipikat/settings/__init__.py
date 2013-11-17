@@ -24,6 +24,7 @@ def get_elephantblog_url(entry):
 class LocalSiteSettings(object):
     """Settings specific to this site."""
     _BLOG_INDEX_PREVIEWS = 10
+    _MAX_RECENT_ACTIVITY_ITEMS = 20
 
 
 class Base(
