@@ -1,6 +1,6 @@
 
 from django.views.generic import TemplateView
-from elephantblog.entries import Entry
+from elephantblog.models import Entry
 
 
 class NotConfiguredView(TemplateView):
@@ -14,8 +14,8 @@ class ActivityItem(object):
     returns at most one event for being published, updated and created.
     """
     #only returns one "most recent thing that's happened", so, for example,
-    #a feed won't contain a 'published' and an 'updated' activity for 
-    ACTIVITY_TYPE = {
+    #a feed won't contain a 'published' and an 'updated' activity for
+    ACTIVITY_TYPES = {
         'blog_update': "updated a blog post",
         'blog_publish': "published a blog post",
         'blog_draft_update': "updated a draft blog post",
@@ -40,24 +40,34 @@ class ActivityItem(object):
         activities = []
         if isinstance(item, Entry):
             entry_type = item.entry_type
-            if item.is_final and item.modification_date > item.published_on:
+            # TODO: Remove check for not modification_date when pre-migration-4 fixtures are gone.
+            if item.modification_date and\
+                    item.is_final and item.modification_date > item.published_on:
                 activities.append((item.modification_date, entry_type + '_update'))
             if item.is_final:
                 activities.append((item.published_on, entry_type + '_publish'))
             else:
-                if item.modification_date > item.creation_date:
+                # TODO: as above
+                if item.modification_date and item.creation_date and\
+                        item.modification_date > item.creation_date:
                     activities.append((item.modification_date, entry_type + '_draft_update'))
-                activities.append((item.creation_date, entry_type + '_draft_create'))
+                # TODO: as above
+                if item.creation_date:
+                    activities.append((item.creation_date, entry_type + '_draft_create'))
         else:
             raise NotImplementedError
         return activities
 
 
-def get_activity_items():
-    # Wrap each event in an ActivityItem, which infers the dates of events on the item
-    activity_items = [ActivityItem(entry) for entry in Entry.objects.filter(is_active=True)]
-
+# TODO: Implement max_items...
+def get_activity_items(max_items=None):
     activity_events = []
-    for item in activity_items:
-        activities = item.
-        activity_events.append(item.)
+    activity_items = [ActivityItem(entry) for entry in Entry.objects.filter(is_active=True)]
+    for activity_item in activity_items:
+        for activity in activity_item.activities:
+            activity_events.append(list(activity) + [activity_item.item])
+    activity_feed = [dict(time=act[0],
+                          activity_type=ActivityItem.ACTIVITY_TYPES[act[1]],
+                          item=act[2])
+                     for act in sorted(activity_events, key=lambda act: act[0], reverse=True)]
+    return activity_feed

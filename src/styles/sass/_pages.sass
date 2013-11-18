@@ -3,13 +3,14 @@
     border-top: 1px solid #cccccc
     border-bottom: 1px solid #cccccc
     color: black
-    padding: 2em 2em
+    padding: 2em 2em 
     .lead-in
         font-size: 160%
         font-weight: 300
     @media #{$small}
         padding: 2em 0
-        margin: 0 $column-gutter/2 2em
+        margin: 0 0 2em
+        //margin: 0 $column-gutter/2 2em
         
 
 .vanity-links
@@ -56,6 +57,21 @@
                 display: block
     @media #{$small}
         text-align: right
+
+.activity-items
+    .activity
+        .meta
+            font-family: $low-font-family
+            font-size: $small-font-size
+        h1
+            +h4-style
+            line-height: 1.2em !important
+            margin-top: 0 !important
+        @media #{$small}
+            h1
+                +h4-style
+                line-height: 1.2em !important
+                margin-top: 0 !important
 
 body.blog.archive
     .row.blog.entry

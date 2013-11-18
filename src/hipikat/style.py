@@ -58,6 +58,7 @@ def stylesheets(minify=None, local=False):
         'cloud-typography': '//cloud.typography.com/7646652/805902/css/fonts.css',
     }
     local_sources = {
+        'pygment-styles': STATIC_URL + 'pygment-styles.css',
         'font-awesome': STATIC_URL + 'font-awesome/css/font-awesome{}.css'.format(dotmin),
         #'roboto': STATIC_URL + 'fonts/roboto.css',
     }

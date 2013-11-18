@@ -11,7 +11,9 @@ class FrontPageView(TemplateView):
     template_name = 'front_page.html'
 
     def get_context_data(self, **kwargs):
-        context['activity'] = get_activity_items(settings._MAX_RECENT_ACTIVITY_ITEMS)
+        context = super(FrontPageView, self).get_context_data(**kwargs)
+        context['activities'] = get_activity_items()
+        return context
 
     def render_to_response(self, *args, **kwargs):
         response = super(FrontPageView, self).render_to_response(*args, **kwargs)

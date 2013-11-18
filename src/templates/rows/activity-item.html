@@ -1,0 +1,8 @@
+
+<div class="activity">
+  <div class="meta">{{ activity.time|date:"Y-m-d" }}
+    &mdash; {{ activity.activity_type }}</div>
+  <div class="content">
+    <h1><a href="{{ activity.item.get_absolute_url }}">{{ activity.item }}</a></h1>
+  </div>
+</div>

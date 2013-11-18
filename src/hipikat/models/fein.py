@@ -140,6 +140,10 @@ Entry.create_content_type(MediaFileContent, TYPE_CHOICES=(
     ('default', 'default'),
 ))
 
+#def highlight_pygments(page, request, response):
+#    import pdb; pdb.set_trace()
+#Entry.register_response_processor(highlight_pygments)
+
 
 # Fake model generation
 MIN_TITLE_LENGTH, MAX_TITLE_LENGTH = 10, 70

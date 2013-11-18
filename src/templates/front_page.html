@@ -5,7 +5,8 @@
 
 {% block content %}
   <div class="row page" style="margin-top: 3em;"">
-    <div class="large-7 push-4 columns epic-hello">
+    <div class="large-7 push-4 columns">
+      <div class="epic-hello">
       <p>
         <span class="lead-in">Hello.</span>
         I'm a software developer
@@ -45,6 +46,17 @@
         <span class="nowrap">the styles.</span></p>
         -->
       </p>
+      </div>
+      <!--<p>Hi i'm a normal paragraph.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc suscipit eu turpis tempor varius. Suspendisse sollicitudin libero consectetur lacinia rutrum. Suspendisse cursus felis et tortor egestas faucibus lobortis vel erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse mi orci, dictum ac sem sit amet, luctus bibendum dui. Donec a consectetur ipsum. Morbi rhoncus sit amet lacus vitae interdum. Nullam et nibh imperdiet, molestie nunc eu, malesuada diam. Suspendisse egestas quam a est cursus, a consequat nulla dapibus. Mauris mollis odio lectus, et accumsan sem tincidunt et. Aliquam mollis sed magna at interdum. Aliquam commodo erat nec varius euismod. Nunc laoreet purus sit amet risus venenatis tincidunt.
+        </p>-->
+      <div class="activity-items">
+      {% for activity in activities %}
+        {% if forloop.counter <= SITE_MAX_RECENT_ACTIVITY_ITEMS %}
+          {% include 'rows/activity-item.html' %}
+        {% endif %}
+      {% endfor %}
+      </div>
     </div>
     <div class="large-3 pull-9 columns vanity-links">
       <div class="portrait"><img src="{% static "images/adam-wright.jpg"  %}"></div>
