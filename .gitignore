@@ -5,4 +5,4 @@ lib/
 !lib/tinymce-*
 src/static/stylesheets/hipikat.css
 var/db
-var/env/SECRET_KEY
+var/env/*SECRET*
