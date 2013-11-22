@@ -7,6 +7,7 @@ from os import getenv, path
 from os.path import dirname
 from cinch import cinch_django_settings, CinchSettings, NormaliseSettings
 from cinch.mixins import FHSDirsMixin
+from project_settings import DIRS as PROJECT_DIRS
 from .logging import FileLoggingMixin
 
 
@@ -29,7 +30,8 @@ class LocalSiteSettings(object):
 
 class Base(
         # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR
-        FHSDirsMixin,
+        #FHSDirsMixin,
+        PROJECT_DIRS,
         # Normalise settings to sensible defaults, add some conveniences
         NormaliseSettings,
         # Hard-coded (bad!) settings specific to hipikat.org
