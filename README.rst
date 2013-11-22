@@ -3,8 +3,8 @@ Hipikat.org
 
 **This project is still under heavy development. :)**
 
-Source code for Adam Wright's personal website at http:/hipikat.org/.
-
+.. Source code for Adam Wright's personal website at http:/hipikat.org/.
+.. 
 .. I put this online:
 .. * As a portfolio; everything here is my own work (except where stated otherwise)
 .. * So I can point to concepts I'm explaining, and as examples for those like me

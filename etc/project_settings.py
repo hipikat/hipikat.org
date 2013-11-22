@@ -3,15 +3,16 @@ from glob import glob
 import os
 from os.path import dirname
 
+
 BASE_DIR = dirname(dirname(__file__))        # [repo]/etc/project_settings.py
 
 ADMINS = [{
-    'full_name': 'Adam Wright',
     'username': 'hipikat',
+    'full_name': 'Adam Wright',
     'email': 'adam@hipikat.org',
-    'ssh_public_keys': [os.path.join(BASE_DIR, 'etc', 'ssh_public_keys', 'trepp_rsa.pub')],
     'shell': '/bin/bash',
-    'skeleton_dir': os.path.join(BASE_DIR, 'etc', 'skel-hipikat')
+    'skeleton_dir': os.path.join(BASE_DIR, 'etc', 'skel-hipikat'),
+    'ssh_public_keys': [os.path.join(BASE_DIR, 'etc', 'ssh_public_keys', 'trepp_rsa.pub')],
 }]
 ALLOWED_HOSTS = ['.hipikat.org']
 LANGUAGE_CODE = 'en-au'

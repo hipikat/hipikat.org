@@ -3,6 +3,9 @@ lib/
 !lib/zurb-foundation/
 !lib/compass/
 !lib/tinymce-*
+# cd src/styles; bundle exec compass watch
 src/static/stylesheets/hipikat.css
+# python scripts/pygment_styles.py > src/static/stylesheets/pygments.css
+src/static/stylesheets/pygments.css
 var/db
 var/env/*SECRET*
