@@ -1,6 +1,6 @@
 
 import getpass
-from glob import glob
+#from glob import glob
 import os
 from os import path
 from textwrap import dedent
@@ -18,7 +18,7 @@ ADMINS = [{
     'email': 'adam@hipikat.org',
     'shell': '/bin/bash',
     'skeleton_dir': os.path.join(DIRS.ETC_DIR, 'skel-hipikat'),
-    'ssh_public_keys': [os.path.join(DIRS.ETC_DIR , 'ssh_public_keys', 'trepp_rsa.pub')],
+    'ssh_public_keys': [os.path.join(DIRS.ETC_DIR, 'ssh_public_keys', 'trepp_rsa.pub')],
     'requires_deb_packages': ('screen', 'mosh'),
 }]
 
@@ -26,14 +26,14 @@ ROOT_FQDN = 'hipikat.org'
 LANGUAGE_CODE = 'en-au'
 TIME_ZONE = 'Australia/Perth'
 
-DATABASES = { 
+DATABASES = {
     'default': {
         'USER': 'hipikat',
         'NAME': 'hipikat.org',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'PASSWORD': 'insecure',
-    }   
-}  
+    }
+}
 
 REQUIRE_DEB_PACKAGES = (
     'bundler',
@@ -45,17 +45,19 @@ PROJECT_NAME = 'hipikat.org'
 PROJECT_GIT_URL = 'https://github.com/hipikat/hipikat.org.git'
 PROJECT_SHARED_SECRET = os.path.join(DIRS.ETC_DIR, 'shared_secret_rsa')
 PROJECT_SHARED_SECRET_PUB = PROJECT_SHARED_SECRET + '.pub'
-PROJECT_LIBS = { 
+PROJECT_LIBS = {
     'django-cinch': 'https://github.com/hipikat/django-cinch.git',
     'django-revkom': 'https://github.com/hipikat/django-revkom.git',
     'django-scow': 'https://github.com/hipikat/django-scow.git',
     'feincms-elephantblog': 'https://github.com/hipikat/feincms-elephantblog.git',
 }
-POST_INSTALL = dedent("""
+POST_INSTALL = dedent(r"""
     (cd src/styles && bundle install)
     rm -f $VIRTUAL_ENV/bin/postactivate
-    ln -s scripts/export_env.sh $VIRTUAL_ENV/bin/postactivate
-    """)
+    cp {prj_postactivate} $VIRTUAL_ENV/bin/postactivate
+    python scripts/make_secret_key.py > var/env/DJANGO_SECRET_KEY
+    """.format(prj_postactivate="`cat $VIRTUAL_ENV/$VIRTUALENVWRAPPER_PROJECT_FILENAME`"
+               "/scripts/export_env.sh"))
 
 
 # TODO: Migrate this functionality to some generic scow.utils function
