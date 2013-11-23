@@ -29,8 +29,9 @@ TIME_ZONE = 'Australia/Perth'
 DATABASES = {
     'default': {
         'USER': 'hipikat',
-        'NAME': 'hipikat.org',
+        'NAME': path.split(BASE_DIR)[1],
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': '127.0.0.1',
         'PASSWORD': 'insecure',
     }
 }
