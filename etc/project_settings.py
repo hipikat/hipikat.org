@@ -38,7 +38,8 @@ PYTHON_VERSION = '2.7.6'
 
 PROJECT_NAME = 'hipikat.org'
 PROJECT_GIT_URL = 'git@github.com:hipikat/hipikat.org.git'
-
+PROJECT_SHARED_SECRET = os.path.join(DIRS.ETC_DIR, 'shared_secret_rsa')
+PROJECT_SHARED_SECRET_PUB = PROJECT_SHARED_SECRET + '.pub'
 PROJECT_LIBS = { 
     'django-cinch': 'git@github.com:hipikat/django-cinch.git',
     'django-revkom': 'git@github.com:hipikat/django-revkom.git',

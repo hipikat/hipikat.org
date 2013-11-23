@@ -1,5 +1,6 @@
 docs/_build
 etc/local
+etc/shared_secret*
 lib/
 !lib/zurb-foundation/
 !lib/compass/

@@ -16,7 +16,7 @@ from fabtools import require
 # Hopefully this isn't too confusing and/or an anti-pattern(??) Certainly, Fabric
 # encourages the importing of a module with tasks rather than importing the tasks
 # directly, because it leads to namespaced tasks… but this looks confusing.
-from scow import tasks as scow
+from scow import tasks as scow, debug
 
 import project_settings
 api.env.project = project_settings
