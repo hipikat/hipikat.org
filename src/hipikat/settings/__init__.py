@@ -7,7 +7,7 @@ from os import getenv, path
 from os.path import dirname
 from cinch import cinch_django_settings, CinchSettings, NormaliseSettings
 from cinch.mixins import FHSDirsMixin
-from project_settings import DIRS as PROJECT_DIRS
+#from project_settings import DIRS as PROJECT_DIRS
 from .logging import FileLoggingMixin
 
 
@@ -30,8 +30,8 @@ class LocalSiteSettings(object):
 
 class Base(
         # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR
-        #FHSDirsMixin,
-        PROJECT_DIRS,
+        FHSDirsMixin,
+        #PROJECT_DIRS,
         # Normalise settings to sensible defaults, add some conveniences
         NormaliseSettings,
         # Hard-coded (bad!) settings specific to hipikat.org
@@ -44,11 +44,13 @@ class Base(
     ### Project metadata
     from project_settings import (
         ADMINS,
-        ALLOWED_HOSTS,
+        ROOT_FQDN,
         BASE_DIR,
+        DATABASES,
         LANGUAGE_CODE,
         TIME_ZONE,
     )
+    ALLOWED_HOSTS = ['.' + ROOT_FQDN]
     ADMINS = tuple((admin['full_name'], admin['email']) for admin in ADMINS)
     PROJECT_MODULE = 'hipikat'
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
@@ -63,15 +65,6 @@ class Base(
 
     ### Debug
     DEBUG = False
-
-    ### Data stores
-    DATABASES = {
-        'default': {
-            'USER': 'hipikat',
-            'NAME': 'hipikat.org',
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        }
-    }
 
     ### Request pipeline
     MIDDLEWARE_CLASSES = [
