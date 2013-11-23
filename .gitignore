@@ -3,9 +3,15 @@ lib/
 !lib/zurb-foundation/
 !lib/compass/
 !lib/tinymce-*
+
+# cd src/styles; bundle exec compass watch
 src/static/stylesheets/hipikat.css
 src/styles/.sass-cache
 src/styles/Gemfile.lock
+
+# python scripts/pygment_styles.py > src/static/stylesheets/pygments.css
+src/static/stylesheets/pygments.css
+
 var/db
 var/env/*SECRET*
 var/env/DJANGO_SETTINGS_CLASS
