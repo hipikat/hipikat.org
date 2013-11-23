@@ -20,14 +20,32 @@ ADMINS = [{
     'ssh_public_keys': [os.path.join(DIRS.ETC_DIR , 'ssh_public_keys', 'trepp_rsa.pub')],
     'requires_deb_packages': ('screen', 'mosh'),
 }]
-ALLOWED_HOSTS = ['.hipikat.org']
+
+ROOT_FQDN = 'hipikat.org'
 LANGUAGE_CODE = 'en-au'
 TIME_ZONE = 'Australia/Perth'
+
+DATABASES = { 
+    'default': {
+        'USER': 'hipikat',
+        'NAME': 'hipikat.org',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'PASSWORD': 'insecure',
+    }   
+}  
 
 PYTHON_VERSION = '2.7.6'
 
 PROJECT_NAME = 'hipikat.org'
 PROJECT_GIT_URL = 'git@github.com:hipikat/hipikat.org.git'
+
+PROJECT_LIBS = { 
+    'django-cinch': 'git@github.com:hipikat/django-cinch.git',
+    'django-revkom': 'git@github.com:hipikat/django-revkom.git',
+    'django-scow': 'git@github.com:hipikat/django-scow.git',
+    'feincms-elephantblog': 'git@github.com:hipikat/feincms-elephantblog.git',
+}
+
 
 # TODO: Migrate this functionality to some generic scow.utils function
 try:

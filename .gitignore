@@ -1,4 +1,5 @@
 docs/_build
+etc/local
 lib/
 !lib/zurb-foundation/
 !lib/compass/
