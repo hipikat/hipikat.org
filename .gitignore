@@ -4,5 +4,8 @@ lib/
 !lib/compass/
 !lib/tinymce-*
 src/static/stylesheets/hipikat.css
+src/styles/.sass-cache
+src/styles/Gemfile.lock
 var/db
 var/env/*SECRET*
+var/env/DJANGO_SETTINGS_CLASS
