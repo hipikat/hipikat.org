@@ -53,6 +53,8 @@ PROJECT_LIBS = {
 }
 POST_INSTALL = dedent("""
     (cd src/styles && bundle install)
+    rm -f $VIRTUAL_ENV/bin/postactivate
+    ln -s scripts/export_env.sh $VIRTUAL_ENV/bin/postactivate
     """)
 
 
