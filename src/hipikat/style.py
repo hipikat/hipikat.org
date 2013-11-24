@@ -94,9 +94,11 @@ class JavaScriptRequirements(object):
         </body> tag of a page.
         TODO: Base sets of required resources should be template-defined…
         """
-        sources = [JavaScriptResource(script[1])
-                   for script in javascripts().items()
-                   if script[0] in ('zepto', 'foundation')]
+        all_sources = javascripts()
+        sources = [
+            JavaScriptResource(all_sources['zepto']),
+            JavaScriptResource(all_sources['foundation']),
+        ]
         return sources
 
 

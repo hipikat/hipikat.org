@@ -12,7 +12,7 @@ src/styles/.sass-cache
 src/styles/Gemfile.lock
 
 # python scripts/pygment_styles.py > src/static/stylesheets/pygments.css
-src/static/stylesheets/pygments.css
+src/static/stylesheets/pygment-styles.css
 
 var/db
 var/env/*SECRET*
