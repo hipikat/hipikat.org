@@ -13,7 +13,8 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
-#import os
+from os.path import join, dirname
+import envdir
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use
@@ -23,8 +24,7 @@ framework.
 
 # TODO: abstraction from where? uwsgi calls the virtualenv's local env
 # stuff but but... not postactivate... so project_settings not in path?
-import envdir
-envdir.read('/opt/hipikat.org-prod/var/env')
+envdir.read(join(dirname(dirname(dirname(__file__))), 'var', 'env'))
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

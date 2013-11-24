@@ -3,12 +3,13 @@
     border-top: 1px solid #cccccc
     border-bottom: 1px solid #cccccc
     color: black
-    padding: 2em 2em 
+    padding: 2em 2em 1em
+    margin-bottom: 2em
     .lead-in
         font-size: 160%
         font-weight: 300
     @media #{$small}
-        padding: 2em 0
+        padding: 2em 0 1em
         margin: 0 0 2em
         //margin: 0 $column-gutter/2 2em
         
@@ -21,6 +22,7 @@
         @media #{$small}
             margin: 0
         img
+            width: 40%
             @media #{$small}
                 width: 100%
                 padding-left: 30%
@@ -35,7 +37,7 @@
             white-space: nowrap
             display: inline
             //margin-left: 3em
-            margin: 0 1.5em
+            margin: 0 2em 0 1em
             line-height: $base-line-height * 2
         @media #{$small}
             li
