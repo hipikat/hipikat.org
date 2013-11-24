@@ -21,9 +21,10 @@ ADMINS = [{
     'ssh_public_keys': [os.path.join(DIRS.ETC_DIR, 'ssh_public_keys', 'trepp_rsa.pub')],
     'requires_deb_packages': ('screen', 'mosh'),
     'post_create': dedent("""
-        git config --global core.excludesfile '~/.gitignore'
+        git config --global core.excludesfile '~/.gitignore_global'
         git config --global user.email "adam@hipikat.org"
         git config --global user.name "Adam Wright"
+        git config --global color.ui true
     """),
 }]
 
@@ -48,6 +49,10 @@ PROJECT_LIBS = {
     'django-scow': 'https://github.com/hipikat/django-scow.git',
     'feincms-elephantblog': 'https://github.com/hipikat/feincms-elephantblog.git',
 }
+PROJECT_MODULE = 'hipikat'
+WSGI_APP_MODULE = PROJECT_MODULE + '.wsgi'
+
+
 POST_INSTALL = dedent(r"""
     (cd src/styles && bundle install)
     rm -f $VIRTUAL_ENV/bin/postactivate
@@ -65,6 +70,7 @@ DATABASES = {
         'PASSWORD': 'insecure',
     }
 }
+
 
 # TODO: Migrate this functionality to some generic scow.utils function
 try:

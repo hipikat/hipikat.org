@@ -49,10 +49,10 @@ class Base(
         DATABASES,
         LANGUAGE_CODE,
         TIME_ZONE,
+        PROJECT_MODULE
     )
     ALLOWED_HOSTS = ['.' + ROOT_FQDN]
     ADMINS = tuple((admin['full_name'], admin['email']) for admin in ADMINS)
-    PROJECT_MODULE = 'hipikat'
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
     SHORT_DATE_FORMAT = 'Y-m-d'
 
