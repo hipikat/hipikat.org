@@ -17,3 +17,5 @@ src/static/stylesheets/pygments.css
 var/db
 var/env/*SECRET*
 var/env/DJANGO_SETTINGS_CLASS
+var/log/*
+var/static/*
