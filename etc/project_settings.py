@@ -2,7 +2,7 @@
 import getpass
 #from glob import glob
 import os
-from os import path
+from os import environ, path
 from textwrap import dedent
 #from cinch import cinch_settings
 #from revkom.mixins import FHSDirsMixin
@@ -20,21 +20,17 @@ ADMINS = [{
     'skeleton_dir': os.path.join(DIRS.ETC_DIR, 'skel-hipikat'),
     'ssh_public_keys': [os.path.join(DIRS.ETC_DIR, 'ssh_public_keys', 'trepp_rsa.pub')],
     'requires_deb_packages': ('screen', 'mosh'),
+    'post_create': dedent("""
+        git config --global core.excludesfile '~/.gitignore'
+        git config --global user.email "adam@hipikat.org"
+        git config --global user.name "Adam Wright"
+    """),
 }]
 
 ROOT_FQDN = 'hipikat.org'
 LANGUAGE_CODE = 'en-au'
 TIME_ZONE = 'Australia/Perth'
 
-DATABASES = {
-    'default': {
-        'USER': 'hipikat',
-        'NAME': path.split(BASE_DIR)[1],
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': '127.0.0.1',
-        'PASSWORD': 'insecure',
-    }
-}
 
 REQUIRE_DEB_PACKAGES = (
     'bundler',
@@ -60,6 +56,15 @@ POST_INSTALL = dedent(r"""
     """.format(prj_postactivate="`cat $VIRTUAL_ENV/$VIRTUALENVWRAPPER_PROJECT_FILENAME`"
                "/scripts/export_env.sh"))
 
+DATABASES = {
+    'default': {
+        'USER': 'hipikat',
+        'NAME': PROJECT_NAME,
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': '127.0.0.1',
+        'PASSWORD': 'insecure',
+    }
+}
 
 # TODO: Migrate this functionality to some generic scow.utils function
 try:
