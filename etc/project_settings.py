@@ -48,6 +48,8 @@ PROJECT_LIBS = {
     'django-revkom': 'https://github.com/hipikat/django-revkom.git',
     'django-scow': 'https://github.com/hipikat/django-scow.git',
     'feincms-elephantblog': 'https://github.com/hipikat/feincms-elephantblog.git',
+    #'zurb-foundation': 'git@github.com:zurb/foundation.git'
+    'zurb-foundation': 'https://github.com/zurb/foundation.git'
 }
 PROJECT_MODULE = 'hipikat'
 WSGI_APP_MODULE = PROJECT_MODULE + '.wsgi'

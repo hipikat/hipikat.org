@@ -23,7 +23,7 @@ def javascripts(minify=None, local=False):
     dotmin = _min_str(minify)
     CDNJS_LIBS = '//cdnjs.cloudflare.com/ajax/libs/'
     cdn_sources = {
-        'foundation': '{}foundation/4.3.2/js/foundation{}.js'.format(CDNJS_LIBS, dotmin),
+        'foundation': '{}foundation/4.3.2/js/foundation.min.js'.format(CDNJS_LIBS),
         'jquery': '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery{}.js'.format(dotmin),
         'tinymce': '{}tinymce/3.5.8/tiny_mce.js'.format(CDNJS_LIBS),
         'zepto': '{}zepto/1.0/zepto{}.js'.format(CDNJS_LIBS, dotmin),
