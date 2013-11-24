@@ -32,13 +32,13 @@ admin_urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 )
+global_urlpatterns = admin_urlpatterns
+
 # Enable views to aid debugging and development
 if settings._DEBUG_URLPATTERNS_ENABLED:
     from . import _debug as debug_urls    # <.<
     debug_urlpatterns = patterns('', url(r'^:D/', include(debug_urls)))
-
-# Sub-modules should extend their urlpatterns with global_urlpatterns
-global_urlpatterns = admin_urlpatterns + debug_urlpatterns
+    global_urlpatterns += debug_urlpatterns
 
 
 ### URL resolution overrides
