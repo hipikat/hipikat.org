@@ -35,6 +35,7 @@ TIME_ZONE = 'Australia/Perth'
 
 REQUIRE_DEB_PACKAGES = (
     'bundler',
+    'unzip',
 )
 
 PYTHON_VERSION = '2.7.6'
