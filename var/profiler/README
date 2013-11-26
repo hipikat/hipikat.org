@@ -1,0 +1,5 @@
+Profiling requests
+==================
+
+* Set DJANGO_SETTINGS_CLASS to ProductionProfiler
+* gprof2dot -f pstats GET.url.request.name.prof > request-profile.dot
