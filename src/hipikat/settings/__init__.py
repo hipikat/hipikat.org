@@ -3,12 +3,14 @@ Settings for the Django project on http://hipikat.org/.
 """
 
 from itertools import chain
-from os import getenv, path
+from os import getenv, path, environ
 from os.path import dirname
+import envdir
 from cinch import cinch_django_settings, CinchSettings, NormaliseSettings
 from cinch.mixins import FHSDirsMixin
 #from project_settings import DIRS as PROJECT_DIRS
 from .logging import FileLoggingMixin
+
 
 
 def get_elephantblog_url(entry):
@@ -51,6 +53,17 @@ class Base(
         TIME_ZONE,
         PROJECT_MODULE
     )
+
+    # Read defaults from var/env/ - envdir writes environment variables for all
+    # files regardless of whether the environ variable is set, so updating the
+    # environment with a copy of the 'original' environment makes envdir's
+    # behaviour effectively only set variables that haven't been set explicitly.
+    # TODO: Write and submit a patch and tests for envdir.read_defaults().
+    original_env = environ.copy()
+    envdir.read(path.join(BASE_DIR, 'var', 'env'))
+    environ.update(original_env)
+
+    ### Project metadata
     ALLOWED_HOSTS = ['.' + ROOT_FQDN]
     ADMINS = tuple((admin['full_name'], admin['email']) for admin in ADMINS)
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
@@ -102,6 +115,8 @@ class Base(
     def setup(self):
         """Configure settings which require initialised base classes/mixins."""
         super(Base, self).setup()
+
+        
 
         ### Debugging, testing, development
         # By default, set to True for debugging, False in production
@@ -223,7 +238,9 @@ class Core(Base):
                                if app.startswith('django.') or app == 'south']
 
 
-class Development(Debug):
+class Development(
+        #WSGIProfilerMixin,
+        Debug):
     """
     Settings to simplify development. TODO: Split into 'local' and 'online'?
     TODO: Document how individual developers should subclass this and each use
@@ -234,10 +251,17 @@ class Development(Debug):
     def setup(self):
         super(Development, self).setup()
         #self.ALLOWED_HOSTS = ['evilspa.dyndns.org'] + list(self.ALLOWED_HOSTS)
+        #self.WSGI_APPLICATION = self.PROJECT_MODULE + '.wsgi.profiled_application'
+        #environ['TEST_FOO_BAR'] = str(True)
 
 
 class Production(Base):
     pass
+
+
+class ProductionProfiler(WSGIProfilerMixin, Production):
+    """Enable the Werkzeug profile around a Production settings profile."""
+    WSGI_PROFILER_ENABLED = True
 
 
 class Staging(Production):
