@@ -1,7 +1,7 @@
 Hipikat.org
 ===========
 
-Source code for Adam Wright's personal website at http:/hipikat.org/. 
+Source code for Adam Wright's personal site at http:/hipikat.org/. 
 I put this online as a portfolio, and in case you'd like to see how
 anything is done or copy my work. Everything required to get the site
 up is included in this repository, with the obvious exception of secret
