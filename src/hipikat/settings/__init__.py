@@ -238,9 +238,7 @@ class Core(Base):
                                if app.startswith('django.') or app == 'south']
 
 
-class Development(
-        #WSGIProfilerMixin,
-        Debug):
+class Development(Debug):
     """
     Settings to simplify development. TODO: Split into 'local' and 'online'?
     TODO: Document how individual developers should subclass this and each use
@@ -259,7 +257,7 @@ class Production(Base):
     pass
 
 
-class ProductionProfiler(WSGIProfilerMixin, Production):
+class ProductionProfiler(Production):
     """Enable the Werkzeug profile around a Production settings profile."""
     WSGI_PROFILER_ENABLED = True
 

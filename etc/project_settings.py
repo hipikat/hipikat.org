@@ -19,18 +19,19 @@ ADMINS = [{
     'shell': '/bin/bash',
     'skeleton_dir': os.path.join(DIRS.ETC_DIR, 'skel-hipikat'),
     'ssh_public_keys': [os.path.join(DIRS.ETC_DIR, 'ssh_public_keys', 'trepp_rsa.pub')],
-    'require_deb_packages': ('screen', 'mosh'),
+    'require_deb_packages': ('screen', 'mosh', 'exuberant-ctags'),
     #'post_create': """""",
 }]
 
 ROOT_FQDN = 'hipikat.org'
 LANGUAGE_CODE = 'en-au'
-TIME_ZONE = 'Australia/Perth'
+TIME_ZONE = 'Australia/West'
 
 
 REQUIRE_DEB_PACKAGES = (
     'bundler',
     'unzip',
+    'postgresql-client-9.1',
 )
 
 PYTHON_VERSION = '2.7.6'
