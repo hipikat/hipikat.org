@@ -5,13 +5,13 @@ Source code for Adam Wright's personal website at http:/hipikat.org/.
 I put this online as a portfolio, and in case you'd like to see how
 anything is done or copy my work. Everything required to get the site
 up is included in this repository, with the obvious exception of secret
-keys and such. 😊
+keys and such. :smile_cat:
 
-Technology stack
-----------------
+Main technology stack
+---------------------
 
-**Backend** • The site is based on the Django_ web framework, with feinCMS_
-and a `modified fork`_ of ElephantBlog_. I use django-hosts_
+**Backend** • The site is based on the Django_ web framework, with
+feinCMS_ and a `modified fork`_ of ElephantBlog_. I use django-hosts_
 for managing links between sub-domains.
 
 .. _Django: https://www.djangoproject.com
@@ -28,26 +28,28 @@ typographic components.
 .. _Sass: http://sass-lang.com
 .. _Compass: http://compass-style.org
 
-My projects
------------
+Personal projects in the mix
+----------------------------
 
-More than anything, having a personal site gives me a low-risk, production
-area to experiment with my own packages.
+More than anything, having a personal site gives me a low-risk (but
+production) area to experiment with my own packages. Currently approaching
+beta, `django-cinch`_ is a package for writing modular, class-based
+settings in Django projects - take a look at `this site's settings module`_,
+to get a quick idea of what it does.
 
-- django-revkom_ - My library for in vitro, generic, not-yet-packaged code
-- django-cinch_ - An app for class-based Django settings
-- django-slater_ - A small suite of debugging tools for Django.
-
-.. _django-revkom: https://github.com/hipikat/django-revkom
 .. _django-cinch: https://github.com/hipikat/django-cinch
-.. _django-slater: https://github.com/hipikat/django-slater
+.. _this site's settings module: https://github.com/hipikat/hipikat.org/blob/develop/src/hipikat/settings/__init__.py
 
-Other tools involved in the creation of the site include PostgreSQL_,
-Git_, Vim_, and and 11-inch, Mid 2011 MacBook Air.
+Besides that, I'm working on a lightweight deployment suite called scow_,
+for projects targetting uWSGI_ + `DigitalOcean`_ + Ubuntu_ + Nginx_,
+which wraps Fabric_. Several other potential projects live in
+`django-revkom`_, which is basically my personal in vitro development
+package.
 
-.. _PostgreSQL: http://www.postgresql.org
-.. _Git: http://git-scm.com
-.. _Vim: http://www.vim.org
-
-TODO: Get deployment working with Salt Stack? Maybe with Vagrant?
-More tests.
+.. _scow: https://github.com/hipikat/scow
+.. _uWSGI: http://projects.unbit.it/uwsgi/
+.. _DigitalOcean: http://digitalocean.com
+.. _Ubuntu: http://www.ubuntu.com
+.. _Nginx: http://nginx.org
+.. _Fabric: http://fabfile.org
+.. _django-revkom: https://github.com/hipikat/django-revkom
