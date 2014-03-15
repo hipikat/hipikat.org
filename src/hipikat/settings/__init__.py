@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Settings for the Django project on http://hipikat.org/.
 """
@@ -43,16 +44,14 @@ class Base(
         # Base class for a django-cinch settings class
         CinchSettings):
 
-    ### Project metadata
-    from project_settings import (
-        ADMINS,
-        ROOT_FQDN,
-        BASE_DIR,
-        DATABASES,
-        LANGUAGE_CODE,
-        TIME_ZONE,
-        PROJECT_MODULE
-    )
+
+    FEINCMS_USE_PAGE_ADMIN = False
+
+
+    #       .../[repo]     /src         /hipikat     /settings    /__init__.py
+    BASE_DIR = path.dirname(path.dirname(path.dirname(path.dirname(__file__))))
+    DEPLOY_NAME = path.basename(BASE_DIR)
+    PROJECT_MODULE = 'hipikat'
 
     # Read defaults from var/env/ - envdir writes environment variables for all
     # files regardless of whether the environ variable is set, so updating the
@@ -64,10 +63,13 @@ class Base(
     environ.update(original_env)
 
     ### Project metadata
+    ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
+    ROOT_FQDN = getenv('DJANGO_ROOT_FQDN', 'hipikat.org')
     ALLOWED_HOSTS = ['.' + ROOT_FQDN]
-    ADMINS = tuple((admin['full_name'], admin['email']) for admin in ADMINS)
-    SECRET_KEY = getenv('DJANGO_SECRET_KEY')
+    LANGUAGE_CODE = 'en-au'
+    TIME_ZONE = 'Australia/West'
     SHORT_DATE_FORMAT = 'Y-m-d'
+    SECRET_KEY = getenv('DJANGO_SECRET_KEY')
 
     ### Private project settings
     # Settings variables injected into context
@@ -78,6 +80,17 @@ class Base(
 
     ### Debug
     DEBUG = False
+
+    ### Databases…
+    DATABASES = { 
+        'default': {
+            'USER': 'hipikat',
+            'NAME': DEPLOY_NAME,
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': '127.0.0.1',
+            'PASSWORD': 'insecure',
+        }   
+    }
 
     ### Request pipeline
     MIDDLEWARE_CLASSES = [

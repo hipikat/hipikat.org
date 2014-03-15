@@ -9,7 +9,7 @@ from textwrap import dedent
 from cinch.utils import FHSDirs
 
 
-BASE_DIR = path.dirname(path.dirname(__file__))        # [repo]/etc/project_settings.py
+BASE_DIR = path.dirname(path.dirname(__file__))     # I.e. project repo path
 DIRS = FHSDirs(BASE_DIR)
 
 ADMINS = [{
@@ -23,7 +23,6 @@ ADMINS = [{
     #'post_create': """""",
 }]
 
-ROOT_FQDN = 'hipikat.org'
 LANGUAGE_CODE = 'en-au'
 TIME_ZONE = 'Australia/West'
 

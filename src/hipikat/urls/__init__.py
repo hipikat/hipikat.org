@@ -22,6 +22,10 @@ urlpatterns = patterns('hipikat.views.common', url(r'.*', 'NotConfiguredView'))
 
 
 # Django admin interface and admin docs
+
+# TODO: This fixes import order issues; fix with app-loading when we get Django 1.7
+#from hipikat.models import fein
+
 admin.autodiscover()
 
 #from hipikat.models import Writing, WritingAdmin
