@@ -1,8 +1,5 @@
-Django==1.5.5
-Fabric==1.8.2
-FeinCMS==1.7.6
-Jinja2==2.7.2
-MarkupSafe==0.19
+Django==1.6.2
+#Jinja2==2.7.2
 Pillow==2.2.1
 Pygments==1.6
 South==0.8.4
@@ -11,21 +8,16 @@ Werkzeug==0.9.4
 django-debug-toolbar==1.0.1
 django-extensions==1.2.5
 django-hosts==0.6
-django-model-utils==1.5.0
-django-mptt==0.6.0
+django-model-utils==2.0.2
+#django-mptt==0.6.0
 docutils==0.11
-ecdsa==0.11
+#ecdsa==0.11
 fabtools==0.17.0
-factory-boy==2.2.1
-fake-factory==0.3.2
-ipython==1.2.1
+#factory-boy==2.2.1
+#fake-factory==0.3.2
 paramiko==1.13.0
 psycopg2==2.5.2
-pycrypto==2.6.1
-selenium==2.40.0
 six==1.6.1
-sqlparse==0.1.11
-textile==2.1.5
 wsgiref==0.1.2
 yolk==0.4.3
 
