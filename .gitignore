@@ -15,7 +15,6 @@ src/styles/Gemfile.lock
 src/static/stylesheets/pygment-styles.css
 
 var/db
-var/env/*SECRET*
-var/env/DJANGO_SETTINGS_CLASS
+var/env
 var/log/*
 var/static/*
