@@ -4,6 +4,7 @@ Settings for the Django project on http://hipikat.org/.
 """
 
 from itertools import chain
+import os
 from os import getenv, path
 from os.path import dirname
 import envdir
@@ -12,14 +13,13 @@ from cinch.mixins import FHSDirsMixin
 from .logging import FileLoggingMixin
 
 
-
 class LocalSiteSettings(object):
     """Settings specific to this site."""
     _BLOG_INDEX_PREVIEWS = 10
 
 
 class Base(
-        # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to BASE_DIR
+        # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to PROJECT_PATH
         FHSDirsMixin,
         #PROJECT_DIRS,
         # Normalise settings to sensible defaults, add some conveniences
@@ -33,22 +33,22 @@ class Base(
 
     PROJECT_MODULE = 'hipikat'
     # Repository root
-    BASE_DIR = path.dirname(path.dirname(path.dirname(path.dirname(__file__))))
+    PROJECT_PATH = path.dirname(path.dirname(path.dirname(path.dirname(__file__))))
     # Repository checkout name
-    DEPLOY_NAME = path.basename(BASE_DIR)
+    DEPLOY_NAME = path.basename(PROJECT_PATH)
 
     # Read defaults from var/env/ - envdir writes environment variables for all
     # files regardless of whether the environ variable is set, so updating the
     # environment with a copy of the 'original' environment makes envdir's
     # behaviour effectively only set variables that haven't been set explicitly.
     # TODO: Write and submit a patch and tests for envdir.read_defaults().
-    envdir.read(path.join(BASE_DIR, 'var', 'env'), no_clobber=True)
+    envdir.read(path.join(PROJECT_PATH, 'var', 'env'), no_clobber=True)
 
     ### Project metadata
     ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
     ROOT_FQDN = getenv('DJANGO_ROOT_FQDN', 'hipikat.org')
     ALLOWED_HOSTS = ['.' + ROOT_FQDN]
-    LANGUAGE_CODE = 'en-au'
+    LANGUAGE_CODE = 'en'
     TIME_ZONE = 'Australia/West'
     SHORT_DATE_FORMAT = 'Y-m-d'
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
@@ -85,6 +85,10 @@ class Base(
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         #PROJECT_MODULE + '.style.CleanHTMLMiddleware',
+        'cms.middleware.page.CurrentPageMiddleware',
+        'cms.middleware.user.CurrentUserMiddleware',
+        'cms.middleware.toolbar.ToolbarMiddleware',
+        'cms.middleware.language.LanguageCookieMiddleware',
     )
     TEMPLATE_CONTEXT_PROCESSORS = [
         'django.contrib.auth.context_processors.auth',
@@ -95,6 +99,8 @@ class Base(
         'django.core.context_processors.tz',
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
+        'cms.context_processors.cms_settings',
+        'sekizai.context_processors.sekizai',
         PROJECT_MODULE + '.project_context_processor',
     ]
     ROOT_URLCONF = PROJECT_MODULE + '.urls'
@@ -140,15 +146,41 @@ class Base(
         ### Local apps
         PROJECT_MODULE,         # This project
         'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
+
         ### Third-party apps
+        'djangocms_text_ckeditor',  # note this needs to be above the 'cms' entry
+        'cms',
+        'mptt',                 # django-mptt: Modified pre-order traversal trees
+        'menus',                # helper for model independent hierarchical website navigation
         'south',                # South: Database-agnostic migrations for Django applications
+        'sekizai',              # for javascript and css management
+        'djangocms_admin_style',    # for the admin skin.
+        #'cms.plugins.file',    # (must define a template first)
+        #'cms.plugins.flash',    # (must define a template first)
+        #'cms.plugins.googlemap',
+        #'cms.plugins.picture',
+        #'cms.plugins.teaser',
+        'djangocms_link',
+        'djangocms_snippet',
+        #'cms.plugins.video',
+
+        'reversion',
+
         'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
         'django_hosts',         # django-hosts: Routes to urlconfs based on the requested domain
-        #'mptt',                 # django-mptt: Modified pre-order traversal trees
+
         ### Django contrib apps
         'django.contrib.admin', 'django.contrib.admindocs', 'django.contrib.auth',
         'django.contrib.contenttypes', 'django.contrib.humanize', 'django.contrib.messages',
         'django.contrib.sessions', 'django.contrib.staticfiles', 'django.contrib.sites',
+    ]
+
+    # Django CMS settings
+    CMS_TEMPLATES = (
+        ('simple.html', 'Simple Template'),
+    )
+    LANGUAGES = [
+        ('en', 'English'),
     ]
 
 
@@ -227,6 +259,7 @@ class Development(Debug):
     their own, in their own development environments.
     """
     _LOCAL_RESOURCES = True
+    _DEBUG_TOOLBAR_ENABLED = False
 
     def setup(self):
         super(Development, self).setup()

@@ -36,6 +36,13 @@ if settings.DEBUG:
         url(r'^__debug__/', include(debug_toolbar.urls)),
     )
 
+    global_urlpatterns = patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+        url(r'', include('django.contrib.staticfiles.urls')),
+    ) + global_urlpatterns
+
+
 if settings._DEBUG_URLPATTERNS_ENABLED:
     from . import _debug as debug_urls    # <.<
     debug_urlpatterns = patterns('', url(r'^:D/', include(debug_urls)))
