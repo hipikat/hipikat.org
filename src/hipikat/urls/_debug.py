@@ -9,6 +9,7 @@ urlpatterns = patterns(
     # A safe way to get a page with not much on it to render; useful when you've
     # broken your base template and you just need some debug-toolbar output.
     url(r"^blank/$", 'blank', name="blank"),
+    url(r"^request/$", 'request_info', name="blank"),
 )
 
 # Template debugging - TODO: Move to a setting

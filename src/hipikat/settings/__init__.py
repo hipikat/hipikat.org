@@ -4,31 +4,18 @@ Settings for the Django project on http://hipikat.org/.
 """
 
 from itertools import chain
-from os import getenv, path, environ
+from os import getenv, path
 from os.path import dirname
 import envdir
 from cinch import cinch_django_settings, CinchSettings, NormaliseSettings
 from cinch.mixins import FHSDirsMixin
-#from project_settings import DIRS as PROJECT_DIRS
 from .logging import FileLoggingMixin
 
-
-
-def get_elephantblog_url(entry):
-    """
-    We can't import antyhing from the urls module before settings are loaded,
-    and ABSOLUTE_URL_OVERRIDES doesn't take dotted-string arguments in place
-    of callables, and this URL resolution function belongs in hipikat.urls,
-    so this function is basically a lazy pass-through for blog URL resolution.
-    """
-    from hipikat.urls import get_elephantblog_url
-    return get_elephantblog_url(entry)
 
 
 class LocalSiteSettings(object):
     """Settings specific to this site."""
     _BLOG_INDEX_PREVIEWS = 10
-    SITE_MAX_RECENT_ACTIVITY_ITEMS = 99
 
 
 class Base(
@@ -44,23 +31,18 @@ class Base(
         # Base class for a django-cinch settings class
         CinchSettings):
 
-
-    FEINCMS_USE_PAGE_ADMIN = False
-
-
-    #       .../[repo]     /src         /hipikat     /settings    /__init__.py
-    BASE_DIR = path.dirname(path.dirname(path.dirname(path.dirname(__file__))))
-    DEPLOY_NAME = path.basename(BASE_DIR)
     PROJECT_MODULE = 'hipikat'
+    # Repository root
+    BASE_DIR = path.dirname(path.dirname(path.dirname(path.dirname(__file__))))
+    # Repository checkout name
+    DEPLOY_NAME = path.basename(BASE_DIR)
 
     # Read defaults from var/env/ - envdir writes environment variables for all
     # files regardless of whether the environ variable is set, so updating the
     # environment with a copy of the 'original' environment makes envdir's
     # behaviour effectively only set variables that haven't been set explicitly.
     # TODO: Write and submit a patch and tests for envdir.read_defaults().
-    original_env = environ.copy()
-    envdir.read(path.join(BASE_DIR, 'var', 'env'))
-    environ.update(original_env)
+    envdir.read(path.join(BASE_DIR, 'var', 'env'), no_clobber=True)
 
     ### Project metadata
     ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
@@ -70,12 +52,11 @@ class Base(
     TIME_ZONE = 'Australia/West'
     SHORT_DATE_FORMAT = 'Y-m-d'
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
+    INTERNAL_IPS = eval(getenv('DJANGO_INTERNAL_IPS', '()'))
 
-    ### Private project settings
-    # Settings variables injected into context
-    _CONTEXT_SETTINGS_VARIABLES = [
+    SETTINGS_AVAILABLE_TO_TEMPLATES = [
+        'ADMINS',
         'PROJECT_MODULE',
-        'SITE_MAX_RECENT_ACTIVITY_ITEMS',
     ]
 
     ### Debug
@@ -93,7 +74,7 @@ class Base(
     }
 
     ### Request pipeline
-    MIDDLEWARE_CLASSES = [
+    MIDDLEWARE_CLASSES = (
         #PROJECT_MODULE + '.style.ResourceRegistryMiddleware',
         'django_hosts.middleware.HostsMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -104,7 +85,7 @@ class Base(
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         #PROJECT_MODULE + '.style.CleanHTMLMiddleware',
-    ]
+    )
     TEMPLATE_CONTEXT_PROCESSORS = [
         'django.contrib.auth.context_processors.auth',
         'django.core.context_processors.debug',
@@ -114,7 +95,6 @@ class Base(
         'django.core.context_processors.tz',
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
-        'feincms.context_processors.add_page_if_missing',
         PROJECT_MODULE + '.project_context_processor',
     ]
     ROOT_URLCONF = PROJECT_MODULE + '.urls'
@@ -122,14 +102,11 @@ class Base(
     # django-hosts
     PARENT_HOST = ALLOWED_HOSTS[0] if ALLOWED_HOSTS[0][0] != '.' else ALLOWED_HOSTS[0][1:]
     ROOT_HOSTCONF = PROJECT_MODULE + '.hosts'
-    #DEFAULT_HOST = 'main_site'
-    DEFAULT_HOST = 'not_configured'
+    DEFAULT_HOST = 'main_site'
 
     def setup(self):
         """Configure settings which require initialised base classes/mixins."""
         super(Base, self).setup()
-
-        
 
         ### Debugging, testing, development
         # By default, set to True for debugging, False in production
@@ -142,27 +119,21 @@ class Base(
             self.setdefault(debug_true_default, self.DEBUG)
         # By default, set to False while debugging, True in production
         for debug_false_default in (
-            '_MINIFY_RESOURCES',            # Request minified JavaScript/CSS resources
+            'MINIFY_RESOURCES',            # Request minified JavaScript/CSS resources
         ):
             self.setdefault(debug_false_default, not self.DEBUG)
 
         ### Static files
-        self.STATICFILES_DIRS = [
-            path.join(self.SRC_DIR, 'static'),
-            ('jquery', path.join(self.LIB_DIR, 'jquery-1.10.2')),
-            ('tinymce', path.join(self.LIB_DIR, 'tinymce-4.0.10', 'js', 'tinymce')),
-            ('zepto', path.join(self.LIB_DIR, 'zepto-1.0')),
-            ('zurb', path.join(self.LIB_DIR, 'zurb-foundation', 'js')),
-            ('font-awesome', path.join(self.LIB_DIR, 'Font-Awesome')),
-        ]
-
-        ### feinCMS
-        self.FEINCMS_RICHTEXT_INIT_CONTEXT = {
-            'TINYMCE_JS_URL': self.STATIC_URL + 'tinymce/tinymce.min.js',
-        }
-        self.FEINCMS_RICHTEXT_INIT_TEMPLATE = 'admin/content/richtext/init_tinymce4.html'
+        #self.STATICFILES_DIRS = [
+        #    path.join(self.SRC_DIR, 'static'),
+        #    ('jquery', path.join(self.LIB_DIR, 'jquery-1.10.2')),
+        #    ('tinymce', path.join(self.LIB_DIR, 'tinymce-4.0.10', 'js', 'tinymce')),
+        #    ('zepto', path.join(self.LIB_DIR, 'zepto-1.0')),
+        #    ('zurb', path.join(self.LIB_DIR, 'zurb-foundation', 'js')),
+        #    ('font-awesome', path.join(self.LIB_DIR, 'Font-Awesome')),
+        #]
     #
-    # end def setup()
+    # end Baes.setup()
 
     ### Application setup
     INSTALLED_APPS = [
@@ -173,23 +144,12 @@ class Base(
         'south',                # South: Database-agnostic migrations for Django applications
         'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
         'django_hosts',         # django-hosts: Routes to urlconfs based on the requested domain
-        'mptt',                 # django-mptt: Modified pre-order traversal trees
-        'feincms', 'feincms.module.page', 'feincms.module.medialibrary',
-        'elephantblog',
+        #'mptt',                 # django-mptt: Modified pre-order traversal trees
         ### Django contrib apps
         'django.contrib.admin', 'django.contrib.admindocs', 'django.contrib.auth',
         'django.contrib.contenttypes', 'django.contrib.humanize', 'django.contrib.messages',
         'django.contrib.sessions', 'django.contrib.staticfiles', 'django.contrib.sites',
     ]
-    ABSOLUTE_URL_OVERRIDES = {
-        'elephantblog.entry': get_elephantblog_url,
-        #'elephantblog.categorytranslation': elephantblog_categorytranslation_url,      # TODO
-    }
-    SOUTH_MIGRATION_MODULES = {
-        'page': PROJECT_MODULE + '.migrate_apps.page',
-        'elephantblog': PROJECT_MODULE + '.migrate_apps.elephantblog',
-        'medialibrary': PROJECT_MODULE + '.migrate_apps.medialibrary',
-    }
 
 
 class Debug(Base):
@@ -207,7 +167,7 @@ class Debug(Base):
     _DEBUG_MIDDLEWARE_ENABLED = True
     _DEBUG_TOOLBAR_ENABLED = True
     _DEBUG_URLPATTERNS_ENABLED = True
-    _MINIFY_RESOURCES = False
+    MINIFY_RESOURCES = False
 
     def setup(self):
         super(Debug, self).setup()
@@ -220,15 +180,24 @@ class Debug(Base):
                 'NAME': path.join(self.DB_DIR, 'test-run.db'),
             }
 
-        # Enable django-debug-toolbar
+        # Enable django-debug-toolbar (as early as possible but no earlier)
         if self._DEBUG_TOOLBAR_ENABLED:
+            insert_at = 0
+            for pre_djtb in (
+                'django.middleware.GZipMiddleware',
+                'django_hosts.middleware.HostsMiddleware',
+                ):
+                try:
+                    insert_at = max(insert_at, (self.MIDDLEWARE_CLASSES.index(pre_djtb) + 1))
+                except ValueError:
+                    pass
             self.MIDDLEWARE_CLASSES = tuple(chain(
-                list(self.MIDDLEWARE_CLASSES),
-                ['debug_toolbar.middleware.DebugToolbarMiddleware']))
-            self.INSTALLED_APPS = list(chain(
-                self.INSTALLED_APPS,
-                ['debug_toolbar']
-            ))
+                self.MIDDLEWARE_CLASSES[0:insert_at],
+                ('debug_toolbar.middleware.DebugToolbarMiddleware',),
+                self.MIDDLEWARE_CLASSES[insert_at:]))
+            self.INSTALLED_APPS.append('debug_toolbar')
+            DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
 
         # Request pipeline
         if self._DEBUG_MIDDLEWARE_ENABLED:

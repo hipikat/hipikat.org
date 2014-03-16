@@ -12,6 +12,10 @@ def blank(request):
     return render(request, "layouts/blank.html")
 
 
+def request_info(request):
+    return render(request, "layouts/dump_data.html", {'data': request})
+
+
 class DebugTemplateDetailView(TemplateView):
     """
     Render a template specified by template_name.
@@ -27,7 +31,7 @@ class DebugTemplateListView(TemplateView):
     List HTML files under each directory in ``settings.TEMPLATE_DIRS``,
     with links to the named URL ``debug_template_detail``. Passes the
     (relative) template path as the keyword ``template_name``.
-    
+
     Templates are listed if they match a pattern in ``include_patterns``,
     and do not match any patterns in ``exclude_patterns``; these can be
     set with keyword arguments during class instantiation.
@@ -71,10 +75,10 @@ class DebugTemplateListView(TemplateView):
         ``self.exclude_patterns``, otherwise return False.
         """
         for pattern in self.exclude_patterns:
-            if re.search(pattern, template_name) != None:
+            if re.search(pattern, template_name) is not None:
                 return False
         for pattern in self.include_patterns:
-            if re.search(pattern, template_name) != None:
+            if re.search(pattern, template_name) is not None:
                 return True
         return False
 

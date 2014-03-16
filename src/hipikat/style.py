@@ -10,7 +10,7 @@ def _min_str(minify=None):
     if minify is not None:
         return '.min' if minify else ''
     else:
-        return '.min' if settings._MINIFY_RESOURCES else ''
+        return '.min' if getattr(settings, 'MINIFY_RESOURCES', True) else ''
 
 
 def javascripts(minify=None, local=False):

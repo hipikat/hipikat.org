@@ -9,6 +9,6 @@ www_urlpatterns = patterns(
     url(r'^$', 'front_page', name="front_page"),
     url(r'^scraps/$', 'scraps.index', name="scraps_index"),
     url(r'^about/$', 'about', name="about"),
-    url(r'', include('feincms.urls')),
+    #url(r'', include('feincms.urls')),
 )
 urlpatterns = global_urlpatterns + www_urlpatterns

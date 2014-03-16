@@ -13,10 +13,9 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
-from os.path import join, dirname
+from os import path
 from django.conf import settings
 from django.core.wsgi import get_wsgi_application
-import envdir
 
 
 # Main application used by WSGI servers pointed at the hipikat.wsgi module
@@ -26,5 +25,4 @@ application = get_wsgi_application()
 if getattr(settings, 'WSGI_PROFILER_ENABLED', False):
     from werkzeug.contrib.profiler import ProfilerMiddleware
     application = ProfilerMiddleware(application,
-                                     profile_dir=join(settings.VAR_DIR, 'profiler'))
-
+                                     profile_dir=path.join(settings.VAR_DIR, 'profiler'))
