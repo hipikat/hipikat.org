@@ -7,76 +7,65 @@ from itertools import chain
 import os
 from os import getenv, path
 from os.path import dirname
+import sys
+
+from cinch import cinch_django_settings, CinchSettings
+from dj_database_url import config as db_config
 import envdir
-from cinch import cinch_django_settings, CinchSettings, NormaliseSettings
-from cinch.mixins import FHSDirsMixin
-from .logging import FileLoggingMixin
+#from cinch.mixins import FHSDirsMixin
+#from .logging import FileLoggingMixin
 
 
 class LocalSiteSettings(object):
     """Settings specific to this site."""
-    _BLOG_INDEX_PREVIEWS = 10
 
 
 class Base(
-        # Set {LIB,VAR,ETC,SRC,DB,LOG}_DIR settings, relative to PROJECT_PATH
-        FHSDirsMixin,
-        #PROJECT_DIRS,
-        # Normalise settings to sensible defaults, add some conveniences
-        NormaliseSettings,
-        # Hard-coded (bad!) settings specific to hipikat.org
+        # Project-specific settings
         LocalSiteSettings,
-        # Basic file logging, to var/log/, with rotating 5M files (or thereabouts).
-        FileLoggingMixin,
         # Base class for a django-cinch settings class
         CinchSettings):
 
-    PROJECT_MODULE = 'hipikat'
-    # Repository root
-    PROJECT_PATH = path.dirname(path.dirname(path.dirname(path.dirname(__file__))))
+    # Main project module name
+    PROJECT_MODULE_NAME = 'hipikat'
+    # Repository root (assuming we are `{repo}/src/{project}/settings.py`)
+    PROJECT_PATH = path.dirname(path.dirname(path.dirname(__file__)))
     # Repository checkout name
     DEPLOY_NAME = path.basename(PROJECT_PATH)
 
-    # Read defaults from var/env/ - envdir writes environment variables for all
-    # files regardless of whether the environ variable is set, so updating the
-    # environment with a copy of the 'original' environment makes envdir's
-    # behaviour effectively only set variables that haven't been set explicitly.
-    # TODO: Write and submit a patch and tests for envdir.read_defaults().
+    # Load environment variables that aren't already set from var/env/*
     envdir.read(path.join(PROJECT_PATH, 'var', 'env'), no_clobber=True)
 
-    ### Project metadata
+    # Site metadata
     ADMINS = (('Adam Wright', 'adam@hipikat.org'),)
+    MANAGERS = ADMINS
+    LANGUAGE_CODE = 'en'
+    SHORT_DATE_FORMAT = 'Y-m-d'
+    SITE_ID = 1
+    TIME_ZONE = 'Australia/West'
+
+    # Runtime, debug & security settings…
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+
     ROOT_FQDN = getenv('DJANGO_ROOT_FQDN', 'hipikat.org')
     ALLOWED_HOSTS = ['.' + ROOT_FQDN]
-    LANGUAGE_CODE = 'en'
-    TIME_ZONE = 'Australia/West'
-    SHORT_DATE_FORMAT = 'Y-m-d'
+    INTERNAL_IPS = tuple(set(eval(getenv('DJANGO_INTERNAL_IPS', '()')) + ('127.0.0.1',)))
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
-    INTERNAL_IPS = eval(getenv('DJANGO_INTERNAL_IPS', '()'))
+    TESTING = True if 'test' in sys.argv else False
+    WSGI_APPLICATION = PROJECT_MODULE_NAME + '.wsgi.application'
 
-    SETTINGS_AVAILABLE_TO_TEMPLATES = [
-        'ADMINS',
-        'PROJECT_MODULE',
-    ]
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    ROOT_URLCONF = PROJECT_MODULE_NAME + '.urls'
 
-    ### Debug
-    DEBUG = False
-
-    ### Databases…
-    DATABASES = { 
-        'default': {
-            'USER': 'hipikat',
-            'NAME': DEPLOY_NAME,
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'HOST': '127.0.0.1',
-            'PASSWORD': 'insecure',
-        }   
-    }
+    # Databases…
+    DATABASES = dict(default=db_config(env='DJANGO_DATABASE_URL'))
 
     ### Request pipeline
     MIDDLEWARE_CLASSES = (
-        #PROJECT_MODULE + '.style.ResourceRegistryMiddleware',
-        'django_hosts.middleware.HostsMiddleware',
+        #PROJECT_MODULE_NAME + '.style.ResourceRegistryMiddleware',
+        #'django_hosts.middleware.HostsMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.locale.LocaleMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
@@ -84,11 +73,11 @@ class Base(
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
-        #PROJECT_MODULE + '.style.CleanHTMLMiddleware',
-        'cms.middleware.page.CurrentPageMiddleware',
-        'cms.middleware.user.CurrentUserMiddleware',
-        'cms.middleware.toolbar.ToolbarMiddleware',
-        'cms.middleware.language.LanguageCookieMiddleware',
+        #PROJECT_MODULE_NAME + '.style.CleanHTMLMiddleware',
+        #'cms.middleware.page.CurrentPageMiddleware',
+        #'cms.middleware.user.CurrentUserMiddleware',
+        #'cms.middleware.toolbar.ToolbarMiddleware',
+        #'cms.middleware.language.LanguageCookieMiddleware',
     )
     TEMPLATE_CONTEXT_PROCESSORS = [
         'django.contrib.auth.context_processors.auth',
@@ -99,34 +88,65 @@ class Base(
         'django.core.context_processors.tz',
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
-        'cms.context_processors.cms_settings',
-        'sekizai.context_processors.sekizai',
-        PROJECT_MODULE + '.project_context_processor',
+        #'cms.context_processors.cms_settings',
+        #'sekizai.context_processors.sekizai',
+        #PROJECT_MODULE_NAME + '.project_context_processor',
     ]
-    ROOT_URLCONF = PROJECT_MODULE + '.urls'
 
     # django-hosts
-    PARENT_HOST = ALLOWED_HOSTS[0] if ALLOWED_HOSTS[0][0] != '.' else ALLOWED_HOSTS[0][1:]
-    ROOT_HOSTCONF = PROJECT_MODULE + '.hosts'
-    DEFAULT_HOST = 'main_site'
+    #PARENT_HOST = ALLOWED_HOSTS[0] if ALLOWED_HOSTS[0][0] != '.' else ALLOWED_HOSTS[0][1:]
+    #ROOT_HOSTCONF = PROJECT_MODULE_NAME + '.hosts'
+    #DEFAULT_HOST = 'main_site'
+
+    # Local file-system logging
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': "\n%(levelname)s [%(asctime)s][%(pathname)s:%(lineno)s]" +
+                          "[p/t:%(process)d/%(thread)d]\n%(message)s"
+            },  
+            'simple': {
+                'format': '%(levelname)s [%(module)s:%(lineno)s] %(message)s'
+            },  
+        },  
+        'filters': {
+            'require_debug_false': {
+                '()': 'django.utils.log.RequireDebugFalse',
+            },  
+        },  
+        'handlers': {
+            'mail_admins': {
+                'level': 'ERROR',
+                'filters': ['require_debug_false'],
+                'class': 'django.utils.log.AdminEmailHandler',
+            },  
+        },  
+        'loggers': {
+            'django.request': {
+                'handlers': ['mail_admins'],
+                'level': 'ERROR',
+                'propagate': True,
+            },  
+        },  
+    }
 
     def setup(self):
         """Configure settings which require initialised base classes/mixins."""
         super(Base, self).setup()
 
-        ### Debugging, testing, development
-        # By default, set to True for debugging, False in production
+        # Settings which are `True` by default when `DEBUG` is `True`
         for debug_true_default in (
-            '_DEBUG_MIDDLEWARE_ENABLED',    # [project].middleware.Debug[Inner|Outer]Middleware
-            '_DEBUG_TOOLBAR_ENABLED',       # django-debug-toolbar
-            '_DEBUG_URLPATTERNS_ENABLED',   # Include [project].urls.debug_urlpatterns
-            '_LOCAL_RESOURCES',             # Prevent linking to external resources
-        ):
+            'DEBUG_MIDDLEWARE_ENABLED',    # [project].middleware.Debug[Inner|Outer]Middleware
+            'DEBUG_TOOLBAR_ENABLED',       # django-debug-toolbar
+            'DEBUG_URLPATTERNS_ENABLED',   # Include [project].urls.debug_urlpatterns
+            'LOCAL_RESOURCES'):             # Prevent linking to external resources
             self.setdefault(debug_true_default, self.DEBUG)
-        # By default, set to False while debugging, True in production
+
+        # Settings which are `False` by default when `DEBUG` is `True`
         for debug_false_default in (
-            'MINIFY_RESOURCES',            # Request minified JavaScript/CSS resources
-        ):
+            'MINIFY_RESOURCES'):            # Request minified JavaScript/CSS resources
             self.setdefault(debug_false_default, not self.DEBUG)
 
         ### Static files
@@ -144,30 +164,30 @@ class Base(
     ### Application setup
     INSTALLED_APPS = [
         ### Local apps
-        PROJECT_MODULE,         # This project
-        'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
+        PROJECT_MODULE_NAME,         # This project
+        #'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
 
         ### Third-party apps
-        'djangocms_text_ckeditor',  # note this needs to be above the 'cms' entry
-        'cms',
-        'mptt',                 # django-mptt: Modified pre-order traversal trees
-        'menus',                # helper for model independent hierarchical website navigation
+        #'djangocms_text_ckeditor',  # note this needs to be above the 'cms' entry
+        #'cms',
+        #'mptt',                 # django-mptt: Modified pre-order traversal trees
+        #'menus',                # helper for model independent hierarchical website navigation
         'south',                # South: Database-agnostic migrations for Django applications
-        'sekizai',              # for javascript and css management
-        'djangocms_admin_style',    # for the admin skin.
+        #'sekizai',              # for javascript and css management
+        #'djangocms_admin_style',    # for the admin skin.
         #'cms.plugins.file',    # (must define a template first)
         #'cms.plugins.flash',    # (must define a template first)
         #'cms.plugins.googlemap',
         #'cms.plugins.picture',
         #'cms.plugins.teaser',
-        'djangocms_link',
-        'djangocms_snippet',
+        #'djangocms_link',
+        #'djangocms_snippet',
         #'cms.plugins.video',
 
-        'reversion',
+        #'reversion',
 
         'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
-        'django_hosts',         # django-hosts: Routes to urlconfs based on the requested domain
+        #'django_hosts',         # django-hosts: Routes to urlconfs based on the requested domain
 
         ### Django contrib apps
         'django.contrib.admin', 'django.contrib.admindocs', 'django.contrib.auth',
@@ -176,12 +196,12 @@ class Base(
     ]
 
     # Django CMS settings
-    CMS_TEMPLATES = (
-        ('simple.html', 'Simple Template'),
-    )
-    LANGUAGES = [
-        ('en', 'English'),
-    ]
+    #CMS_TEMPLATES = (
+    #    ('simple.html', 'Simple Template'),
+    #)
+    #LANGUAGES = [
+    #    ('en', 'English'),
+    #]
 
 
 class Debug(Base):
@@ -196,9 +216,9 @@ class Debug(Base):
     }
     TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
 
-    _DEBUG_MIDDLEWARE_ENABLED = True
-    _DEBUG_TOOLBAR_ENABLED = True
-    _DEBUG_URLPATTERNS_ENABLED = True
+    DEBUG_MIDDLEWARE_ENABLED = True
+    DEBUG_TOOLBAR_ENABLED = True
+    DEBUG_URLPATTERNS_ENABLED = True
     MINIFY_RESOURCES = False
 
     def setup(self):
@@ -212,13 +232,12 @@ class Debug(Base):
                 'NAME': path.join(self.DB_DIR, 'test-run.db'),
             }
 
-        # Enable django-debug-toolbar (as early as possible but no earlier)
-        if self._DEBUG_TOOLBAR_ENABLED:
+        # Enable django-debug-toolbar (as early as possible and no earlier)
+        if self.DEBUG_TOOLBAR_ENABLED:
             insert_at = 0
             for pre_djtb in (
                 'django.middleware.GZipMiddleware',
-                'django_hosts.middleware.HostsMiddleware',
-                ):
+                'django_hosts.middleware.HostsMiddleware'):
                 try:
                     insert_at = max(insert_at, (self.MIDDLEWARE_CLASSES.index(pre_djtb) + 1))
                 except ValueError:
@@ -230,13 +249,12 @@ class Debug(Base):
             self.INSTALLED_APPS.append('debug_toolbar')
             DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
-
         # Request pipeline
-        if self._DEBUG_MIDDLEWARE_ENABLED:
+        if self.DEBUG_MIDDLEWARE_ENABLED:
             self.MIDDLEWARE_CLASSES = tuple(chain([
-                self.PROJECT_MODULE + '.middleware.DebugOuterMiddleware',
+                self.PROJECT_MODULE_NAME + '.middleware.DebugOuterMiddleware',
             ], self.MIDDLEWARE_CLASSES, [
-                self.PROJECT_MODULE + '.middleware.DebugInnerMiddleware',
+                self.PROJECT_MODULE_NAME + '.middleware.DebugInnerMiddleware',
             ]))
 
 
@@ -258,13 +276,13 @@ class Development(Debug):
     TODO: Document how individual developers should subclass this and each use
     their own, in their own development environments.
     """
-    _LOCAL_RESOURCES = True
-    _DEBUG_TOOLBAR_ENABLED = False
+    LOCAL_RESOURCES = True
+    DEBUG_TOOLBAR_ENABLED = False
 
     def setup(self):
         super(Development, self).setup()
         #self.ALLOWED_HOSTS = ['evilspa.dyndns.org'] + list(self.ALLOWED_HOSTS)
-        #self.WSGI_APPLICATION = self.PROJECT_MODULE + '.wsgi.profiled_application'
+        #self.WSGI_APPLICATION = self.PROJECT_MODULE_NAME + '.wsgi.profiled_application'
         #environ['TEST_FOO_BAR'] = str(True)
 
 
