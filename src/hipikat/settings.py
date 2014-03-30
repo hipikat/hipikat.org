@@ -176,7 +176,7 @@ class Base(
         for vend in glob(path.join(self.PROJECT_PATH, 'src', 'vendor', '*')):
             self.STATICFILES_DIRS.append((path.basename(vend), vend))
     #
-    # end Baes.setup()
+    # end Base.setup()
 
     ### Application setup
     INSTALLED_APPS = [
@@ -228,13 +228,10 @@ class Debug(Base):
     increasing logging output. For development, use Development.
     """
     DEBUG = True
-    DEBUG_TOOLBAR_CONFIG = {
-        'INTERCEPT_REDIRECTS': False,
-    }
     #TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
-
     DEBUG_MIDDLEWARE_ENABLED = True
     DEBUG_TOOLBAR_ENABLED = True
+    DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
     DEBUG_URLPATTERNS_ENABLED = True
     MINIFY_RESOURCES = False
 
@@ -294,13 +291,11 @@ class Development(Debug):
     their own, in their own development environments.
     """
     LOCAL_RESOURCES = True
-    DEBUG_TOOLBAR_ENABLED = False
+    DEBUG_TOOLBAR_ENABLED = True
 
     def setup(self):
         super(Development, self).setup()
-        #self.ALLOWED_HOSTS = ['evilspa.dyndns.org'] + list(self.ALLOWED_HOSTS)
-        #self.WSGI_APPLICATION = self.PROJECT_MODULE_NAME + '.wsgi.profiled_application'
-        #environ['TEST_FOO_BAR'] = str(True)
+        self.ALLOWED_HOSTS.append('.evilspa.dyndns.org')
 
 
 class Production(Base):
