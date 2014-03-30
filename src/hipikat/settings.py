@@ -3,6 +3,8 @@
 Settings for the Django project on http://hipikat.org/.
 """
 
+#from functools import partial
+from glob import glob
 from itertools import chain
 import os
 from os import getenv, path
@@ -170,14 +172,9 @@ class Base(
             self.setdefault(debug_false_default, not self.DEBUG)
 
         ### Static files
-        #self.STATICFILES_DIRS = [
-        #    path.join(self.SRC_DIR, 'static'),
-        #    ('jquery', path.join(self.LIB_DIR, 'jquery-1.10.2')),
-        #    ('tinymce', path.join(self.LIB_DIR, 'tinymce-4.0.10', 'js', 'tinymce')),
-        #    ('zepto', path.join(self.LIB_DIR, 'zepto-1.0')),
-        #    ('zurb', path.join(self.LIB_DIR, 'zurb-foundation', 'js')),
-        #    ('font-awesome', path.join(self.LIB_DIR, 'Font-Awesome')),
-        #]
+        self.STATICFILES_DIRS = [path.join(self.PROJECT_PATH, 'src', 'static')]
+        for vend in glob(path.join(self.PROJECT_PATH, 'src', 'vendor', '*')):
+            self.STATICFILES_DIRS.append((path.basename(vend), vend))
     #
     # end Baes.setup()
 
@@ -187,6 +184,13 @@ class Base(
         PROJECT_MODULE_NAME,        # Current project
 
         ### Third-party apps
+        'aldryn_blog',              # Aldryn Blog: https://github.com/aldryn/aldryn-blog
+        'aldryn_common',
+        'django_select2',
+        'easy_thumbnails',
+        'filer',
+        'taggit',
+
         'djangocms_text_ckeditor',  # WSGI text editor for Django CMS (must be above 'cms')
 
         'cms',                      # Django CMS 3

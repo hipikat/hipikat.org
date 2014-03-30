@@ -43,4 +43,4 @@ if settings.DEBUG:
 
 if getattr(settings, 'DEBUG_URLPATTERNS_ENABLED'):
     from . import _debug as debug_urls    # <.<
-    urlpatterns += patterns('', url(r'^_debug/', include(debug_urls)))
+    urlpatterns = patterns('', url(r'^_debug/', include(debug_urls))) + urlpatterns
