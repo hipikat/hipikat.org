@@ -1,4 +1,0 @@
-# This file must be sourced; you cannot run it directly.
-# (But general it will be sourced by Virtualenvwrapper.)
-project_dir=`cat $VIRTUAL_ENV/.project`
-source "$project_dir/scripts/export_env.sh"

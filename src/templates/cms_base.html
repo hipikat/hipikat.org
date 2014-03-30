@@ -1,0 +1,17 @@
+{% load cms_tags sekizai_tags %}
+<html>
+  <head>
+    <title>Template one</title>
+    {% render_block "css" %}
+  </head>
+  <body>
+    {% cms_toolbar %}
+    <div>Header</div>
+    <div>
+        {% placeholder base_content %}
+        {% block base_content %}base content goes here{% endblock %}
+    </div>
+    <div>Footer</div>
+    {% render_block "js" %}
+  </body>
+</html>

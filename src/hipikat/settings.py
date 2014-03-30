@@ -20,10 +20,24 @@ class LocalSiteSettings(object):
     """Settings specific to this site."""
 
 
+class DjangoCMSSettings(object):
+    """Settings for Django CMS 3.0c1"""
+    CMS_TEMPLATES = (
+        ('template_1.html', 'Template One'),
+    )
+    LANGUAGES = [
+        ('en', 'English'),
+    ]
+    CKEDITOR_SETTINGS = {
+        'language': 'en',
+        'toolbar': 'CMS',
+        'skin': 'moono',
+    }
+
+
 class Base(
-        # Project-specific settings
         LocalSiteSettings,
-        # Base class for a django-cinch settings class
+        DjangoCMSSettings,
         CinchSettings):
 
     # Main project module name
@@ -48,16 +62,22 @@ class Base(
     DEBUG = False
     TEMPLATE_DEBUG = False
 
-    ROOT_FQDN = getenv('DJANGO_ROOT_FQDN', 'hipikat.org')
-    ALLOWED_HOSTS = ['.' + ROOT_FQDN]
     INTERNAL_IPS = tuple(set(eval(getenv('DJANGO_INTERNAL_IPS', '()')) + ('127.0.0.1',)))
     SECRET_KEY = getenv('DJANGO_SECRET_KEY')
     TESTING = True if 'test' in sys.argv else False
     WSGI_APPLICATION = PROJECT_MODULE_NAME + '.wsgi.application'
 
+    # Directories, URLs
+    ROOT_FQDN = getenv('DJANGO_ROOT_FQDN', 'hipikat.org')
+    ALLOWED_HOSTS = ['.' + ROOT_FQDN]
+    ROOT_URLCONF = PROJECT_MODULE_NAME + '.urls'
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
-    ROOT_URLCONF = PROJECT_MODULE_NAME + '.urls'
+
+    STATIC_ROOT = path.join(PROJECT_PATH, 'var', 'static')
+    MEDIA_ROOT = path.join(PROJECT_PATH, 'var', 'media')
+    TEMPLATE_DIRS = [path.join(PROJECT_PATH, 'src', 'templates')]
+    FIXTURES_DIRS = [path.join(PROJECT_PATH, 'var', 'fixtures')]
 
     # Databases…
     DATABASES = dict(default=db_config(env='DJANGO_DATABASE_URL'))
@@ -74,10 +94,10 @@ class Base(
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         #PROJECT_MODULE_NAME + '.style.CleanHTMLMiddleware',
-        #'cms.middleware.page.CurrentPageMiddleware',
-        #'cms.middleware.user.CurrentUserMiddleware',
-        #'cms.middleware.toolbar.ToolbarMiddleware',
-        #'cms.middleware.language.LanguageCookieMiddleware',
+        'cms.middleware.page.CurrentPageMiddleware',
+        'cms.middleware.user.CurrentUserMiddleware',
+        'cms.middleware.toolbar.ToolbarMiddleware',
+        'cms.middleware.language.LanguageCookieMiddleware',
     )
     TEMPLATE_CONTEXT_PROCESSORS = [
         'django.contrib.auth.context_processors.auth',
@@ -88,9 +108,9 @@ class Base(
         'django.core.context_processors.tz',
         'django.contrib.messages.context_processors.messages',
         'django.core.context_processors.request',
-        #'cms.context_processors.cms_settings',
-        #'sekizai.context_processors.sekizai',
-        #PROJECT_MODULE_NAME + '.project_context_processor',
+        'cms.context_processors.cms_settings',
+        'sekizai.context_processors.sekizai',
+        PROJECT_MODULE_NAME + '.project_context_processor',
     ]
 
     # django-hosts
@@ -164,17 +184,18 @@ class Base(
     ### Application setup
     INSTALLED_APPS = [
         ### Local apps
-        PROJECT_MODULE_NAME,         # This project
-        #'revkom',               # revkom-helpers: Software patterns, utils, mixins etc
+        PROJECT_MODULE_NAME,        # Current project
 
         ### Third-party apps
-        #'djangocms_text_ckeditor',  # note this needs to be above the 'cms' entry
-        #'cms',
-        #'mptt',                 # django-mptt: Modified pre-order traversal trees
-        #'menus',                # helper for model independent hierarchical website navigation
-        'south',                # South: Database-agnostic migrations for Django applications
-        #'sekizai',              # for javascript and css management
-        #'djangocms_admin_style',    # for the admin skin.
+        'djangocms_text_ckeditor',  # WSGI text editor for Django CMS (must be above 'cms')
+
+        'cms',                      # Django CMS 3
+        'mptt',                     # Modified pre-order traversal trees (for use by menus)
+        'menus',                    # Helper for model-independent hierarchical website navigation
+        'sekizai',                  # Used by Django CMS for JavaScript and CSS management
+        'djangocms_admin_style',    # Django CMS admin skin
+
+
         #'cms.plugins.file',    # (must define a template first)
         #'cms.plugins.flash',    # (must define a template first)
         #'cms.plugins.googlemap',
@@ -186,22 +207,14 @@ class Base(
 
         #'reversion',
 
-        'django_extensions',    # django-extensions: shell_plus, runserver_plus, etc.
-        #'django_hosts',         # django-hosts: Routes to urlconfs based on the requested domain
+        'south',                    # Database-agnostic migrations for Django applications
+        'django_extensions',        # django-extensions: shell_plus, runserver_plus, etc.
 
         ### Django contrib apps
         'django.contrib.admin', 'django.contrib.admindocs', 'django.contrib.auth',
         'django.contrib.contenttypes', 'django.contrib.humanize', 'django.contrib.messages',
         'django.contrib.sessions', 'django.contrib.staticfiles', 'django.contrib.sites',
     ]
-
-    # Django CMS settings
-    #CMS_TEMPLATES = (
-    #    ('simple.html', 'Simple Template'),
-    #)
-    #LANGUAGES = [
-    #    ('en', 'English'),
-    #]
 
 
 class Debug(Base):
@@ -214,7 +227,7 @@ class Debug(Base):
     DEBUG_TOOLBAR_CONFIG = {
         'INTERCEPT_REDIRECTS': False,
     }
-    TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
+    #TEMPLATE_STRING_IF_INVALID = 'INVALID_CONTEXT<%s>'
 
     DEBUG_MIDDLEWARE_ENABLED = True
     DEBUG_TOOLBAR_ENABLED = True

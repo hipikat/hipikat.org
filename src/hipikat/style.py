@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 STATIC_URL = settings.STATIC_URL
-RESOURCE_REGISTRY_NAME = settings.PROJECT_MODULE + '_resource_registry'
+RESOURCE_REGISTRY_NAME = settings.PROJECT_MODULE_NAME + '_resource_registry'
 
 
 def _min_str(minify=None):
