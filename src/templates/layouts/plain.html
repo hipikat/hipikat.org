@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+  <div class="row page">
+    <div class="small-8 small-offset-2 columns">
+      {% block page_content %}
+        {% if page_content %}{{ page_content }}{% endif %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+

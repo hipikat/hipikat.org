@@ -1,0 +1,152 @@
+{% load static %}
+{% load sekizai %}
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7 no-js" lang="en"> <![endif]-->
+<!--[if IE 7]> <html class="lt-ie9 lt-ie8 no-js" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9 no-js" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<!-- Conditional <html> classes following Paul Irish's recommendations as of 2012-01-17 -->
+{% block head_block %}<head>
+
+  {% block head_inner_first %}{% endblock %}
+
+    {# Page title #}
+    {% spaceless %}<title>{% block head_title_inner %}
+        {% block head_title_page %}
+          {% if head_title_page %}{{ head_title_page }}
+          {% elif head_title %}{{ head_title }}{% endif %}
+        {% endblock %}
+        {% block head_title_separator %} • {% endblock %}
+        {% block head_title_site %}Hipikat.org{% endblock %}
+    {% endblock %}</title>{% endspaceless %}
+
+  {% block head_meta %}
+    {# Default meta elements #}
+    {% block head_meta_charset %}
+        <meta charset="utf-8" />{% endblock %}
+    {% block head_meta_viewport %}
+        <meta name="viewport" content="width=device-width, initial-scale=1" />{% endblock %}
+  {% endblock head_meta %}
+
+  {% block head_style %}
+
+    <!-- Site CSS (fonts, Bootstrap-like template base styles, etc. -->
+    {% comment %}
+    {% block style_site %}{% for href in css_site_hrefs %}
+        <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
+    {% endcomment %}
+    {% for style in resources.stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{{ style.href }}">
+    {% endfor %}
+
+    <!-- Project-level CSS (i.e. this project's customisations, overriding framework bases) -->
+    {% block style_project %}{% spaceless %}<link rel="stylesheet" type="text/css"
+      {% with "stylesheets/"|add:PROJECT_MODULE|add:".css" as site_css %}
+        href="{% static site_css  %}" />{% endwith %}{% endspaceless %}{% endblock %}
+
+    {% comment %}
+    {# Page-type CSS (for e.g. blog pages, error pages, galleries, app-specific, etc.) #}
+    {% block style_page_type %}{% for href in css_page_hrefs %}
+        <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
+ 
+    {# Page-specific CSS (typically for style overrides by a view, named url or individual page) #}
+    {% block style_overrides %}{% for href in css_override_hrefs %}
+        <link rel="stylesheet" type="text/css" href="{{ href }}">{% endfor %}{% endblock %}
+    {% endcomment %}
+
+  {% endblock head_style %}
+
+  {# Head JavaScript blocks (which should be kept to a minimum...) #}
+  {% block head_javascripts %}
+    <script src="{% static 'zurb/vendor/custom.modernizr.js' %}"></script>
+  {% endblock head_javascripts %}
+
+  {% block head_inner_last %}{% endblock %}
+
+</head>{% endblock head_block %}
+{% block body_block %}
+<body class="{% block body_tag_class %}{% endblock %}" {% block body_tag_attrs %}{% endblock %}>
+
+  {% block body_inner_first %}{% endblock %}
+
+  {# Page header #}
+  {% block body_header %}
+    <div class="row head">
+        {#  #}
+        <div class="large-3 columns site-title">
+          {% block site_title %}{% spaceless %}
+            <h1><a href="{% host_url front_page on main_site %}">Hipikat.org</a></h1>
+            {% block site_title_tag %}<p>
+            is <span class="nowrap">Adam Wright's</span>
+            very <span class="nowrap">small website</span>
+            </p>{% endblock %}
+          {% endspaceless %}{% endblock %}
+        </div>
+        <div class="large-8 columns right">
+          {% block menu_top_level %}
+            <div class="row menu">
+              <div class="columns">
+                {#% render_menu %#}
+                <ul>
+                  <li class="{% block menu_blog_class %}{% endblock %}"
+                    ><a href="{% host_url blog_index on blog %}">Blog</a></li>
+                  <li><a href="{# host_url projects on main_site #}">Projects</a></li>
+                  <!--<li><a href="{% host_url scraps_index on main_site %}">Scraps</a></li>-->
+                  <li><a href="{% host_url about on main_site %}">About</a></li>
+                </ul>
+              </div>
+            </div>
+          {% endblock menu_top_level %}
+        </div>
+    </div>
+  {% endblock body_header %}
+
+  {# Page content #}
+  {% block body_content %}{% block content %}{% endblock %}{% endblock body_content %}
+
+  {# Page footer #}
+  {% block body_footer %}
+  <div class="row foot">
+    <div class="{% block footer_cols_class %} large-8 push-3 columns{% endblock %}">
+      <p>Copyright &copy; 2013 Adam Wright.</p>
+      <p>The opinions expressed on this website<!--, where the are not expressing sarcasm,-->
+         are entirely my own, except where <span class="nowrap">they aren't.</span></p>
+    </div>
+  </div>
+  {% endblock body_footer %}
+
+  {# Late-loaded JavaScript #}
+  {% block body_javascript %}
+    
+    {# debug_except #}
+    {% for script in resources.javascripts.body %}
+      {% if script.linked %}
+        <script type="text/javascript" src="{{ script.src }}"></script>
+      {% else %}
+        <script type="text/javascript">{{ script.code }}</script>
+      {% endif %}
+    {% endfor %}
+
+  {% comment %}
+    {# Lowest-level JavaScript libraries; replace with jQuery or call super and Backbone, etc. #}
+    {# block body_javascript_stack #}
+      <script type="text/javascript"
+              src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.js"></script>
+    {# endblock #}
+
+    {# block body_javascript_layout #}
+      <script src="{% static 'zurb/foundation/foundation.js' %}"></script>
+    {# endblock #}
+  {% endcomment %}
+    
+    {# block body_javascript_setup #}
+      <script>
+          $(document).foundation();
+      </script>
+    {# endblock body_javascript_setup #}
+
+  {% endblock body_javascript %}
+
+  {% block body_inner_last %}{% endblock %}
+
+</body>{% endblock body_block %}</html>
+
